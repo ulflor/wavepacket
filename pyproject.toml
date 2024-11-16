@@ -1,0 +1,26 @@
+[build-system]
+requires = ["flit_core >=3.2,<4"]
+build-backend = "flit_core.buildapi"
+
+[project]
+name = "wavepacket"
+authors = [{name = "Ulf Lorenz", email = "ulf@wppy.org"}]
+readme = "README.md"
+license = {file = "LICENSE"}
+requires-python = ">=3.12"
+classifiers = [
+    "License :: OSI Approved :: MIT License",
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Science/Research",
+    "Topic :: Scientific/Engineering :: Chemistry",
+    "Topic :: Scientific/Engineering :: Physics"
+]
+dynamic = ["version", "description"]
+
+[project.urls]
+Home = "https://github.com/ulflor/wavepacket"
+
+[project.optional-dependencies]
+test = [
+    "pytest >= 8.3"
+]
