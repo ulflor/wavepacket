@@ -6,8 +6,9 @@ import numpy.typing as npt
 from ..exceptions import InvalidValueError
 
 
-def plane_wave_dof(xmin: float, xmax: float, n: int) \
-        -> Tuple[npt.NDArray[np.floating], npt.NDArray[np.floating], npt.NDArray[np.floating]]:
+DegreeOfFreedom = Tuple[npt.NDArray[np.floating], npt.NDArray[np.floating], npt.NDArray[np.floating]]
+
+def plane_wave_dof(xmin: float, xmax: float, n: int) -> DegreeOfFreedom:
     if xmin >= xmax:
         raise InvalidValueError(f"Range [{xmin}, {xmax}] should be strictly monotonic increasing.")
 
