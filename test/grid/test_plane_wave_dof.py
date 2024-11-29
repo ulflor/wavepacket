@@ -20,50 +20,50 @@ def test_invalid_parameters():
 
 
 def test_dvr_grid():
-    dvr, _, _ = wp.grid.plane_wave_dof(1, 11, 5)
+    dof = wp.grid.plane_wave_dof(1, 11, 5)
 
     expected = np.arange(1, 11.0, 2)
-    assert_allclose(dvr, expected, atol=1e-10)
+    assert_allclose(dof.dvr, expected, atol=1e-10)
 
 
 def test_fbr_grid():
     interval = 10.0
-    _, fbr, _ = wp.grid.plane_wave_dof(-5, interval - 5, 16)
+    dof = wp.grid.plane_wave_dof(-5, interval - 5, 16)
 
     # k points should be equidistant, and have the same period as the grid
     dk = 2 * math.pi / interval
-    delta_fbr = fbr[1:] - fbr[:-1]
+    delta_fbr = dof.fbr[1:] - dof.fbr[:-1]
     assert_allclose(delta_fbr, dk * np.ones(15), atol=1e-10)
 
-    args = 1j * fbr * interval
+    args = 1j * dof.fbr * interval
     assert_allclose(np.exp(args), np.ones(16))
 
     # We could place the grid anywhere in Fourier space, but we want
     # the zero in the center
-    assert_allclose(fbr[8], 0.0, atol=1e-10)
+    assert_allclose(dof.fbr[8], 0.0, atol=1e-10)
 
 
 def test_fbr_grid_for_uneven_points():
     # The same rules hold as for even grids, but the construction is different
     interval = 10.0
     n = 15
-    _, fbr, _ = wp.grid.plane_wave_dof(-5, interval - 5, n)
+    dof = wp.grid.plane_wave_dof(-5, interval - 5, n)
 
     # k points should be equidistant, and have the same period as the grid
     dk = 2 * math.pi / interval
-    delta_fbr = fbr[1:] - fbr[:-1]
-    assert_allclose(delta_fbr, dk * np.ones(n-1), atol=1e-10)
+    delta_fbr = dof.fbr[1:] - dof.fbr[:-1]
+    assert_allclose(delta_fbr, dk * np.ones(n - 1), atol=1e-10)
 
-    args = 1j * fbr * interval
+    args = 1j * dof.fbr * interval
     assert_allclose(np.exp(args), np.ones(n))
 
     # We could place the grid anywhere in Fourier space, but we want
     # the zero in the center
-    assert_allclose(fbr[7], 0.0, atol=1e-10)
+    assert_allclose(dof.fbr[7], 0.0, atol=1e-10)
 
 
 def test_weights():
-    _, _, weights = wp.grid.plane_wave_dof(5, 10, 10)
+    dof = wp.grid.plane_wave_dof(5, 10, 10)
 
     expected = 0.5 * np.ones(10)
-    assert_allclose(weights, expected)
+    assert_allclose(dof.weights, expected)

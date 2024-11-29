@@ -1,12 +1,24 @@
-from typing import Tuple
 import math
+from dataclasses import dataclass
+from enum import Enum
+
 import numpy as np
 import numpy.typing as npt
 
 from ..exceptions import InvalidValueError
 
 
-DegreeOfFreedom = Tuple[npt.NDArray[np.floating], npt.NDArray[np.floating], npt.NDArray[np.floating]]
+class DofType(Enum):
+    PLANE_WAVE = 1
+
+
+@dataclass(frozen=True)
+class DegreeOfFreedom:
+    type: DofType
+    dvr: npt.NDArray[np.floating]
+    fbr: npt.NDArray[np.floating]
+    weights: npt.NDArray[np.floating]
+
 
 def plane_wave_dof(xmin: float, xmax: float, n: int) -> DegreeOfFreedom:
     if xmin >= xmax:
@@ -24,4 +36,4 @@ def plane_wave_dof(xmin: float, xmax: float, n: int) -> DegreeOfFreedom:
         fbr = np.linspace(-math.pi / dx * (n - 1) / n, math.pi / dx * (n - 1) / n, n)
     weights = dx * np.ones(n)
 
-    return dvr, fbr, weights
+    return DegreeOfFreedom(DofType.PLANE_WAVE, dvr, fbr, weights)

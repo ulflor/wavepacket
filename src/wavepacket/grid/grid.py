@@ -1,18 +1,25 @@
-import numpy as np
 from .dof import DegreeOfFreedom
 from ..exceptions import InvalidValueError
 
 
 class Grid:
-    def __init__(self, degrees_of_freedom: list[DegreeOfFreedom]):
+    def __init__(self, degrees_of_freedom: list[DegreeOfFreedom]) -> None:
         if not degrees_of_freedom:
             raise InvalidValueError("Grid requires at least one degree of freedom.")
 
-        for dvr, fbr, weights in degrees_of_freedom:
-            if dvr.size != fbr.size or dvr.size != weights.size:
-                raise InvalidValueError(f"DVR, FBR and weights grid must have same size. "
-                                        f"Got {dvr.size}, {fbr.size}, {weights.size}, respectively.")
-
-        for dvr, _, _ in degrees_of_freedom:
-            if dvr.size == 0:
+        for dof in degrees_of_freedom:
+            if dof.dvr.size == 0:
                 raise InvalidValueError(f"A degree of freedom has zero points.")
+
+            if dof.dvr.ndim != 1:
+                raise InvalidValueError(f"Grids should be one-dimensional.")
+
+            if dof.dvr.shape != dof.fbr.shape or dof.dvr.shape != dof.weights.shape:
+                raise InvalidValueError(f"DVR, FBR and weights grid must have same size. "
+                                        f"Got {dof.dvr.size}, {dof.fbr.size}, {dof.weights.size}, respectively.")
+
+        self._dof = list(degrees_of_freedom)
+
+    @property
+    def dof(self) -> list[DegreeOfFreedom]:
+        return self._dof

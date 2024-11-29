@@ -1,5 +1,7 @@
-from .dof import plane_wave_dof
+from .dof import DofType, DegreeOfFreedom, plane_wave_dof
 from .grid import Grid
 
-__all__ = ['plane_wave_dof',
+__all__ = ['DofType',
+           'DegreeOfFreedom',
+           'plane_wave_dof',
            'Grid']
