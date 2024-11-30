@@ -47,5 +47,5 @@ def test_shapes():
 
     grid = wp.grid.Grid([dof_a, dof_a, dof_b])
 
-    assert grid.shape == [2, 2, 5]
-    assert grid.operator_shape == [2, 2, 5, 2, 2, 5]
+    assert grid.shape == (2, 2, 5)
+    assert grid.operator_shape == (2, 2, 5, 2, 2, 5)
