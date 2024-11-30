@@ -39,3 +39,13 @@ def test_require_nonempty_data():
 
     with pytest.raises(wp.InvalidValueError):
         wp.grid.Grid([empty_dof])
+
+
+def test_shapes():
+    dof_a = wp.grid.DegreeOfFreedom(plane_wave, np.ones(2), np.ones(2), np.ones(2))
+    dof_b = wp.grid.DegreeOfFreedom(plane_wave, np.ones(5), np.ones(5), np.ones(5))
+
+    grid = wp.grid.Grid([dof_a, dof_a, dof_b])
+
+    assert grid.shape == [2, 2, 5]
+    assert grid.operator_shape == [2, 2, 5, 2, 2, 5]

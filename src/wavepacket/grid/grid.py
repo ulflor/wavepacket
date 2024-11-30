@@ -19,7 +19,16 @@ class Grid:
                                         f"Got {dof.dvr.size}, {dof.fbr.size}, {dof.weights.size}, respectively.")
 
         self._dof = list(degrees_of_freedom)
+        self._shape = [dof.dvr.size for dof in degrees_of_freedom]
 
     @property
     def dof(self) -> list[DegreeOfFreedom]:
         return self._dof
+
+    @property
+    def shape(self) -> list[int]:
+        return self._shape
+
+    @property
+    def operator_shape(self) -> list[int]:
+        return self._shape + self._shape
