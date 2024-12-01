@@ -1,7 +1,7 @@
 import numpy as np
 import numpy.typing as npt
 from dataclasses import dataclass
-from .grid import Grid
+from .grid.grid import Grid
 
 
 @dataclass(frozen=True)

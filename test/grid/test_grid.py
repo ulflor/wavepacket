@@ -41,6 +41,26 @@ def test_require_nonempty_data():
         wp.grid.Grid([empty_dof])
 
 
+def test_grid_can_take_dof_directly():
+    dof = wp.grid.DegreeOfFreedom(plane_wave, np.ones(2), np.ones(2), np.ones(2))
+
+    grid = wp.grid.Grid(dof)
+
+    assert len(grid.dof) == 1
+    assert grid.dof[0] == dof
+
+
+def test_grid_offers_dof_as_property():
+    dof_a = wp.grid.DegreeOfFreedom(plane_wave, np.ones(2), np.ones(2), np.ones(2))
+    dof_b = wp.grid.DegreeOfFreedom(plane_wave, np.ones(5), np.ones(5), np.ones(5))
+
+    grid = wp.grid.Grid([dof_a, dof_b])
+
+    assert len(grid.dof) == 2
+    assert grid.dof[0] == dof_a
+    assert grid.dof[1] == dof_b
+
+
 def test_shapes():
     dof_a = wp.grid.DegreeOfFreedom(plane_wave, np.ones(2), np.ones(2), np.ones(2))
     dof_b = wp.grid.DegreeOfFreedom(plane_wave, np.ones(5), np.ones(5), np.ones(5))

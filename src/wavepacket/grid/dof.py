@@ -10,6 +10,7 @@ from ..exceptions import InvalidValueError
 
 class DofType(Enum):
     PLANE_WAVE = 1
+    OTHER = 2
 
 
 @dataclass(frozen=True)

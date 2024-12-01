@@ -1,7 +1,11 @@
-from .dof import DofType, DegreeOfFreedom, plane_wave_dof
-from .grid import Grid
-
-__all__ = ["DofType",
+__all__ = ["FbrTransformation",
+           "Direction",
+           "DofType",
            "DegreeOfFreedom",
            "plane_wave_dof",
-           "Grid"]
+           "Grid",
+           "PlaneWaveTransformation"]
+
+from .dof import DofType, DegreeOfFreedom, plane_wave_dof
+from .fbr_transformation import FbrTransformation, Direction, PlaneWaveTransformation
+from .grid import Grid
