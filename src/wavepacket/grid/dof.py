@@ -20,6 +20,10 @@ class DegreeOfFreedom:
     fbr: npt.NDArray[np.floating]
     weights: npt.NDArray[np.floating]
 
+    @property
+    def size(self):
+        return self.dvr.size
+
 
 def plane_wave_dof(xmin: float, xmax: float, n: int) -> DegreeOfFreedom:
     if xmin >= xmax:

@@ -1,3 +1,6 @@
+import numpy as np
+import numpy.typing as npt
+
 from .dof import DegreeOfFreedom
 from ..exceptions import InvalidValueError
 
@@ -24,14 +27,27 @@ class Grid:
         return self._dof
 
     @property
-    def shape(self) -> tuple[int,...]:
+    def shape(self) -> tuple[int, ...]:
         return self._shape
 
     @property
-    def operator_shape(self) -> tuple[int,...]:
+    def operator_shape(self) -> tuple[int, ...]:
         return self._shape + self._shape
 
-    def _validate_degree_of_freedom(self, dof: DegreeOfFreedom) -> None:
+    def broadcast(self, data: npt.NDArray[np.floating], index: int) -> npt.NDArray[np.floating]:
+        dim = np.ones(len(self._dof), dtype=np.integer)
+        dim[index] = self._dof[index].dvr.size
+
+        return np.reshape(data, dim)
+
+    def operator_broadcast(self, data: npt.NDArray[np.floating], index: int) -> npt.NDArray[np.floating]:
+        dim = np.ones(2*len(self._dof), dtype=np.integer)
+        dim[index] = self._dof[index % len(self._dof)].dvr.size
+
+        return np.reshape(data, dim)
+
+    @staticmethod
+    def _validate_degree_of_freedom(dof: DegreeOfFreedom) -> None:
         if dof.dvr.size == 0:
             raise InvalidValueError(f"A degree of freedom has zero points.")
 

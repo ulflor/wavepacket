@@ -1,3 +1,7 @@
+class BadGridError(Exception):
+    pass
+
+
 class BadStateError(Exception):
     pass
 
