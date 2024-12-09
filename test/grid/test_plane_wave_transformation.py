@@ -11,20 +11,20 @@ def grid() -> wp.grid.Grid:
                          wp.grid.plane_wave_dof(10, 10 + 7, 6)])
 
 
-def plane_wave_dvr(grid: wp.grid.Grid, k_index: int) -> wp.State:
+def plane_wave_dvr(grid: wp.grid.Grid, k_index: int) -> wp.grid.State:
     dof = grid.dof[1]
     k = dof.fbr[k_index]
     exp = np.exp(1j * k * dof.dvr)
 
     psi = math.sqrt(1 / dof.size) * np.ones(grid.shape)
-    return wp.State(grid, psi * exp)
+    return wp.grid.State(grid, psi * exp)
 
 
-def plane_wave_fbr(grid: wp.grid.Grid, k_index: int) -> wp.State:
+def plane_wave_fbr(grid: wp.grid.Grid, k_index: int) -> wp.grid.State:
     psi = np.zeros(grid.shape)
     psi[:, k_index] = 1.0
 
-    return wp.State(grid, psi)
+    return wp.grid.State(grid, psi)
 
 
 def test_reject_invalid_index(grid):
@@ -68,18 +68,18 @@ def test_transform_wave_function_to_fbr(grid):
 def test_transform_density_ket_to_fbr(grid):
     transformation = wp.grid.PlaneWaveTransformation(grid, 1)
     psi_dvr = plane_wave_dvr(grid, 3)
-    rho_dvr = wp.State(grid, np.tensordot(psi_dvr.data, np.conj(psi_dvr.data), axes=((), ())))
+    rho_dvr = wp.grid.State(grid, np.tensordot(psi_dvr.data, np.conj(psi_dvr.data), axes=((), ())))
 
     fbr_dvr = transformation.ket_to_fbr(rho_dvr)
 
     psi_fbr = plane_wave_fbr(grid, 3)
-    expected_fbr_dvr = wp.State(grid, np.tensordot(psi_fbr.data, np.conj(psi_dvr.data), axes=((), ())))
+    expected_fbr_dvr = wp.grid.State(grid, np.tensordot(psi_fbr.data, np.conj(psi_dvr.data), axes=((), ())))
     assert_allclose(fbr_dvr.data, expected_fbr_dvr.data)
 
 
 def test_throw_on_invalid_ket(grid):
     transformation = wp.grid.PlaneWaveTransformation(grid, 1)
-    state = wp.State(grid, np.ones(5))
+    state = wp.grid.State(grid, np.ones(5))
 
     with pytest.raises(wp.BadStateError):
         transformation.ket_to_fbr(state)

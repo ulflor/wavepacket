@@ -4,7 +4,7 @@ from .dof import DofType
 from .grid import Grid
 from ..exceptions import BadGridError, BadStateError
 from ..exceptions import InvalidValueError
-from ..state import State
+from .state import State
 
 
 class FbrTransformation:

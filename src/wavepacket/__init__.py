@@ -7,9 +7,8 @@ __version__ = "0.1.0"
 __all__ = ["__version__",
            "BadGridError",
            "BadStateError",
-           "InvalidValueError",
-           "State"]
+           "InvalidValueError"]
 
+from . import builder
 from . import grid
 from .exceptions import *
-from .state import State
