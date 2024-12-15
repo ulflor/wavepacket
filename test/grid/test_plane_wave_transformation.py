@@ -68,13 +68,13 @@ def test_transform_wave_function_to_fbr(grid):
 def test_transform_density_ket_to_fbr(grid):
     transformation = wp.grid.PlaneWaveTransformation(grid, 1)
     psi_dvr = plane_wave_dvr(grid, 3)
-    rho_dvr = wp.grid.State(grid, np.tensordot(psi_dvr.data, np.conj(psi_dvr.data), axes=((), ())))
+    rho_dvr = wp.builder.pure_density(psi_dvr)
 
-    fbr_dvr = transformation.ket_to_fbr(rho_dvr)
+    rho_fbr = transformation.ket_to_fbr(rho_dvr)
 
     psi_fbr = plane_wave_fbr(grid, 3)
-    expected_fbr_dvr = wp.grid.State(grid, np.tensordot(psi_fbr.data, np.conj(psi_dvr.data), axes=((), ())))
-    assert_close(fbr_dvr, expected_fbr_dvr, 1e-12)
+    expected_rho_fbr = wp.builder.direct_product(psi_fbr, psi_dvr)
+    assert_close(rho_fbr, expected_rho_fbr, 1e-12)
 
 
 def test_throw_on_invalid_ket(grid):
