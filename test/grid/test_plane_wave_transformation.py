@@ -2,7 +2,7 @@ import math
 import numpy as np
 import pytest
 import wavepacket as wp
-from numpy.testing import assert_allclose
+from wavepacket.testing import assert_close
 
 
 @pytest.fixture
@@ -62,7 +62,7 @@ def test_transform_wave_function_to_fbr(grid):
 
     psi_fbr = transformation.ket_to_fbr(psi_dvr)
 
-    assert_allclose(psi_fbr.data, plane_wave_fbr(grid, 1).data, atol=1e-10)
+    assert_close(psi_fbr, plane_wave_fbr(grid, 1), 1e-12)
 
 
 def test_transform_density_ket_to_fbr(grid):
@@ -74,7 +74,7 @@ def test_transform_density_ket_to_fbr(grid):
 
     psi_fbr = plane_wave_fbr(grid, 3)
     expected_fbr_dvr = wp.grid.State(grid, np.tensordot(psi_fbr.data, np.conj(psi_dvr.data), axes=((), ())))
-    assert_allclose(fbr_dvr.data, expected_fbr_dvr.data)
+    assert_close(fbr_dvr, expected_fbr_dvr, 1e-12)
 
 
 def test_throw_on_invalid_ket(grid):

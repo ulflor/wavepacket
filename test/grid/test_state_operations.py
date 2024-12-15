@@ -1,8 +1,7 @@
 import pytest
 import numpy as np
 import wavepacket as wp
-from numpy.testing import assert_allclose
-
+from wavepacket.testing import assert_close
 
 @pytest.fixture
 def grid() -> wp.grid.Grid:
@@ -50,10 +49,8 @@ def test_state_addition(grid):
     result3 = 2j + psi
 
     assert result1.grid == grid
-    assert result2.grid == grid
-    assert result3.grid == grid
-    assert_allclose(result1.data, result2.data)
-    assert_allclose(result1.data, result3.data)
+    assert_close(result2, result1, 1e-12)
+    assert_close(result3, result1, 1e-12)
 
 
 def test_state_subtraction(grid):
@@ -65,10 +62,8 @@ def test_state_subtraction(grid):
     result3 = 2j - psi
 
     assert result1.grid == grid
-    assert result2.grid == grid
-    assert result3.grid == grid
-    assert_allclose(result1.data, result2.data)
-    assert_allclose(result1.data, -result3.data)
+    assert_close(result2, result1, 1e-12)
+    assert_close(result3, (-1) * result1, 1e-12)
 
 
 def test_state_multiplication(grid):
@@ -78,8 +73,7 @@ def test_state_multiplication(grid):
     result2 = 2j * psi
 
     assert result1.grid == grid
-    assert result2.grid == grid
-    assert_allclose(result1.data, result2.data)
+    assert_close(result2, result1, 1e-12)
 
 
 def test_state_division(grid):
@@ -88,5 +82,5 @@ def test_state_division(grid):
     result = psi / 2j
     expected = -0.5j * psi
 
-    assert result.grid == grid
-    assert_allclose(result.data, expected.data)
+    assert expected.grid == grid
+    assert_close(result, expected, 1e-12)
