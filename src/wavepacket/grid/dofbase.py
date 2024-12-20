@@ -36,9 +36,9 @@ class DofBase:
     def from_fbr(self, data: npt.NDArray[np.floating], index: int, index_type: IndexType) -> npt.NDArray[np.floating]:
         pass
 
-    def to_dvr(self, data: npt.NDArray[np.floating], index: int, index_type: IndexType) -> npt.NDArray[np.floating]:
+    def to_dvr(self, data: npt.NDArray[np.floating], index: int) -> npt.NDArray[np.floating]:
         pass
 
-    def from_dvr(self, data: npt.NDArray[np.floating], index: int, index_type: IndexType) -> npt.NDArray[np.floating]:
+    def from_dvr(self, data: npt.NDArray[np.floating], index: int) -> npt.NDArray[np.floating]:
         pass
 
