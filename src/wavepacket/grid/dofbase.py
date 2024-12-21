@@ -1,18 +1,11 @@
-from enum import Enum
-
 import numpy as np
 import numpy.typing as npt
 
 from ..utils import InvalidValueError
 
 
-class IndexType(Enum):
-    BRA = 1,
-    KET = 2
-
-
 class DofBase:
-    def __init__(self, dvr_array: npt.NDArray[np.float64], fbr_array: npt.NDArray[np.float64]):
+    def __init__(self, dvr_array: npt.NDArray[np.floating], fbr_array: npt.NDArray[np.floating]):
         if len(dvr_array) == 0 or len(fbr_array) == 0:
             raise InvalidValueError("Degrees of freedom may not be empty.")
 
@@ -23,22 +16,24 @@ class DofBase:
         self._fbr_array = fbr_array
 
     @property
-    def dvr_array(self) -> npt.NDArray[np.float64]:
+    def dvr_array(self) -> npt.NDArray[np.floating]:
         return self._dvr_array
 
     @property
-    def fbr_array(self):
+    def fbr_array(self) -> npt.NDArray[np.floating]:
         return self._fbr_array
 
-    def to_fbr(self, data: npt.NDArray[np.floating], index: int, index_type: IndexType) -> npt.NDArray[np.floating]:
+    def to_fbr(self, data: npt.NDArray[complex | float], index: int, is_ket: bool = True)\
+            -> npt.NDArray[complex | float]:
         pass
 
-    def from_fbr(self, data: npt.NDArray[np.floating], index: int, index_type: IndexType) -> npt.NDArray[np.floating]:
+    def from_fbr(self, data: npt.NDArray[complex | float], index: int, is_ket: bool = True)\
+            -> npt.NDArray[complex | float]:
         pass
 
-    def to_dvr(self, data: npt.NDArray[np.floating], index: int) -> npt.NDArray[np.floating]:
+    def to_dvr(self, data: npt.NDArray[complex | float], index: int) -> npt.NDArray[complex | float]:
         pass
 
-    def from_dvr(self, data: npt.NDArray[np.floating], index: int) -> npt.NDArray[np.floating]:
+    def from_dvr(self, data: npt.NDArray[complex | float], index: int) -> npt.NDArray[complex | float]:
         pass
 
