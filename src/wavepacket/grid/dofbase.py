@@ -2,10 +2,11 @@ import numpy as np
 import numpy.typing as npt
 
 from ..utils import InvalidValueError
+from ..typing import ComplexData, RealData
 
 
 class DofBase:
-    def __init__(self, dvr_array: npt.NDArray[np.floating], fbr_array: npt.NDArray[np.floating]):
+    def __init__(self, dvr_array: RealData, fbr_array: RealData):
         if len(dvr_array) == 0 or len(fbr_array) == 0:
             raise InvalidValueError("Degrees of freedom may not be empty.")
 
@@ -16,24 +17,22 @@ class DofBase:
         self._fbr_array = fbr_array
 
     @property
-    def dvr_array(self) -> npt.NDArray[np.floating]:
+    def dvr_array(self) -> RealData:
         return self._dvr_array
 
     @property
-    def fbr_array(self) -> npt.NDArray[np.floating]:
+    def fbr_array(self) -> RealData:
         return self._fbr_array
 
-    def to_fbr(self, data: npt.NDArray[complex | float], index: int, is_ket: bool = True)\
-            -> npt.NDArray[complex | float]:
+    def to_fbr(self, data: ComplexData, index: int, is_ket: bool = True) -> ComplexData:
         pass
 
-    def from_fbr(self, data: npt.NDArray[complex | float], index: int, is_ket: bool = True)\
-            -> npt.NDArray[complex | float]:
+    def from_fbr(self, data: ComplexData, index: int, is_ket: bool = True) -> ComplexData:
         pass
 
-    def to_dvr(self, data: npt.NDArray[complex | float], index: int) -> npt.NDArray[complex | float]:
+    def to_dvr(self, data: ComplexData, index: int) -> ComplexData:
         pass
 
-    def from_dvr(self, data: npt.NDArray[complex | float], index: int) -> npt.NDArray[complex | float]:
+    def from_dvr(self, data: ComplexData, index: int) -> ComplexData:
         pass
 

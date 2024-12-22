@@ -1,9 +1,8 @@
 import math
 import numpy as np
-import numpy.typing as npt
 import pytest
 import wavepacket as wp
-
+import wavepacket.typing as wpt
 from numpy.testing import assert_allclose
 
 
@@ -17,7 +16,7 @@ def dx() -> float:
     return 10.0 / 8
 
 
-def plane_wave(dof: wp.PlaneWaveDof, k_index: int) -> npt.NDArray[complex]:
+def plane_wave(dof: wp.PlaneWaveDof, k_index: int) -> wpt.ComplexData:
     weight = 1.0 / len(dof.dvr_array)
     k = dof.fbr_array[k_index]
     psi = np.exp(1j * k * dof.dvr_array)
@@ -26,7 +25,7 @@ def plane_wave(dof: wp.PlaneWaveDof, k_index: int) -> npt.NDArray[complex]:
     return math.sqrt(weight) * np.einsum("ijk, j -> ijk", full_size, psi)
 
 
-def plane_wave_fbr(dof: wp.PlaneWaveDof, k_index: int) -> npt.NDArray[float]:
+def plane_wave_fbr(dof: wp.PlaneWaveDof, k_index: int) -> wpt.RealData:
     psi = np.zeros(len(dof.fbr_array))
     psi[k_index] = 1.0
 

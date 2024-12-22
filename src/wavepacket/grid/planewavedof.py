@@ -1,12 +1,13 @@
 import math
+
 import numpy as np
-import numpy.typing as npt
 
 from .dofbase import DofBase
+from ..typing import ComplexData, RealData
 from ..utils import InvalidValueError
 
 
-def _broadcast(data: npt.NDArray[complex | float], ndim, index: int) -> npt.NDArray[complex | float]:
+def _broadcast(data: ComplexData, ndim, index: int) -> ComplexData:
     shape = np.ones(ndim, dtype=int)
     shape[index] = len(data)
 
@@ -31,12 +32,11 @@ class PlaneWaveDof(DofBase):
 
         super().__init__(dvr, fbr)
 
-        self._sqrt_weights = math.sqrt(dx) * np.ones(n)
-        self._phase = np.exp(-1j * fbr * xmin) / np.sqrt(n)
-        self._conj_phase = n * np.conj(self._phase)
+        self._sqrt_weights: RealData = math.sqrt(dx) * np.ones(n)
+        self._phase: ComplexData = np.exp(-1j * fbr * xmin) / np.sqrt(n)
+        self._conj_phase: ComplexData = n * np.conj(self._phase)
 
-    def to_fbr(self, data: npt.NDArray[complex | float],
-               index: int, is_ket: bool = True) -> npt.NDArray[complex | float]:
+    def to_fbr(self, data: ComplexData, index: int, is_ket: bool = True) -> ComplexData:
         if is_ket:
             phase = _broadcast(self._phase, data.ndim, index)
             transformed = np.fft.fftshift(np.fft.fft(data, axis=index), axes=index)
@@ -46,8 +46,7 @@ class PlaneWaveDof(DofBase):
 
         return phase * transformed
 
-    def from_fbr(self, data: npt.NDArray[complex | float],
-                 index: int, is_ket: bool = True) -> npt.NDArray[complex | float]:
+    def from_fbr(self, data: ComplexData, index: int, is_ket: bool = True) -> ComplexData:
         if is_ket:
             phase = _broadcast(self._conj_phase, data.ndim, index)
             untransformed = phase * data
@@ -57,10 +56,10 @@ class PlaneWaveDof(DofBase):
             untransformed = phase * data
             return np.fft.fft(np.fft.ifftshift(untransformed, axes=index), axis=index)
 
-    def to_dvr(self, data: npt.NDArray[complex | float], index: int) -> npt.NDArray[complex | float]:
+    def to_dvr(self, data: ComplexData, index: int) -> ComplexData:
         conversion_factor = _broadcast(self._sqrt_weights, data.ndim, index)
         return data / conversion_factor
 
-    def from_dvr(self, data: npt.NDArray[complex | float], index: int) -> npt.NDArray[complex | float]:
+    def from_dvr(self, data: ComplexData, index: int) -> ComplexData:
         conversion_factor = _broadcast(self._sqrt_weights, data.ndim, index)
         return data * conversion_factor
