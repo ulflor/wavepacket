@@ -48,6 +48,9 @@ def test_reject_invalid_index(dof):
     with pytest.raises(IndexError):
         dof.from_dvr(psi, 3)
 
+    with pytest.raises(IndexError):
+        dof.to_fbr(psi, -4)
+
 
 def test_ket_to_fbr(dof):
     psi = plane_wave(dof, 5)
@@ -100,3 +103,22 @@ def test_from_dvr(dof, dx):
     result = dof.from_dvr(psi / math.sqrt(dx), 1)
 
     assert_allclose(result, psi, atol=1e-12)
+
+def test_negative_indices(dof):
+    psi = plane_wave(dof, 2)
+
+    positive = dof.to_fbr(psi, 1)
+    negative = dof.to_fbr(psi, -2)
+    assert_allclose(positive, negative, atol=1e-12)
+
+    positive = dof.from_fbr(psi, 1)
+    negative = dof.from_fbr(psi, -2)
+    assert_allclose(positive, negative, atol=1e-12)
+
+    positive = dof.to_dvr(psi, 1)
+    negative = dof.to_dvr(psi, -2)
+    assert_allclose(positive, negative, atol=1e-12)
+
+    positive = dof.from_dvr(psi, 1)
+    negative = dof.from_dvr(psi, -2)
+    assert_allclose(positive, negative, atol=1e-12)
