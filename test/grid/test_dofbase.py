@@ -3,6 +3,24 @@ import wavepacket as wp
 import pytest
 
 from numpy.testing import assert_allclose
+from wavepacket.typing import ComplexData, RealData
+
+
+class DummyDof(wp.DofBase):
+    def __init__(self,  dvr_array: RealData, fbr_array: RealData):
+        super().__init__(dvr_array, fbr_array)
+
+    def from_fbr(self, data: ComplexData, index: int, is_ket: bool = True) -> ComplexData:
+        return data
+
+    def to_dvr(self, data: ComplexData, index: int) -> ComplexData:
+        return data
+
+    def from_dvr(self, data: ComplexData, index: int) -> ComplexData:
+        return data
+
+    def to_fbr(self, data: ComplexData, index: int, is_ket: bool = True) -> ComplexData:
+        return data
 
 
 def test_reject_multidimensional_grids():
@@ -10,13 +28,13 @@ def test_reject_multidimensional_grids():
     bad_array = np.ones([2, 3])
 
     with pytest.raises(wp.InvalidValueError):
-        wp.DofBase(bad_array, good_array)
+        DummyDof(bad_array, good_array)
 
     with pytest.raises(wp.InvalidValueError):
-        wp.DofBase(good_array, bad_array)
+        DummyDof(good_array, bad_array)
 
     # no exception
-    wp.DofBase(good_array, good_array)
+    DummyDof(good_array, good_array)
 
 
 def test_reject_empty_grids():
@@ -24,17 +42,17 @@ def test_reject_empty_grids():
     good_array = np.ones(5)
 
     with pytest.raises(wp.InvalidValueError):
-        wp.DofBase(empty, good_array)
+        DummyDof(empty, good_array)
 
     with pytest.raises(wp.InvalidValueError):
-        wp.DofBase(good_array, empty)
+        DummyDof(good_array, empty)
 
 
 def test_access_properties():
     dvr_array = np.ones(5)
     fbr_array = np.zeros(4)
 
-    dof = wp.DofBase(dvr_array, fbr_array)
+    dof = DummyDof(dvr_array, fbr_array)
 
     assert_allclose(dof.dvr_array, dvr_array)
     assert_allclose(dof.fbr_array, fbr_array)

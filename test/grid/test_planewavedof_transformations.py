@@ -104,6 +104,7 @@ def test_from_dvr(dof, dx):
 
     assert_allclose(result, psi, atol=1e-12)
 
+
 def test_negative_indices(dof):
     psi = plane_wave(dof, 2)
 

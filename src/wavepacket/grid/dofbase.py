@@ -1,11 +1,10 @@
-import numpy as np
-import numpy.typing as npt
+from abc import abstractmethod, ABC
 
-from ..utils import InvalidValueError
 from ..typing import ComplexData, RealData
+from ..utils import InvalidValueError
 
 
-class DofBase:
+class DofBase(ABC):
     def __init__(self, dvr_array: RealData, fbr_array: RealData):
         if len(dvr_array) == 0 or len(fbr_array) == 0:
             raise InvalidValueError("Degrees of freedom may not be empty.")
@@ -24,15 +23,18 @@ class DofBase:
     def fbr_array(self) -> RealData:
         return self._fbr_array
 
+    @abstractmethod
     def to_fbr(self, data: ComplexData, index: int, is_ket: bool = True) -> ComplexData:
         pass
 
+    @abstractmethod
     def from_fbr(self, data: ComplexData, index: int, is_ket: bool = True) -> ComplexData:
         pass
 
+    @abstractmethod
     def to_dvr(self, data: ComplexData, index: int) -> ComplexData:
         pass
 
+    @abstractmethod
     def from_dvr(self, data: ComplexData, index: int) -> ComplexData:
         pass
-

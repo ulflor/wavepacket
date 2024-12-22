@@ -16,5 +16,3 @@ from . import typing
 __all__ = list({'__version__'} |
                set(grid.__all__) |
                set(utils.__all__))
-
-
