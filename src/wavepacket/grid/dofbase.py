@@ -12,6 +12,9 @@ class DofBase(ABC):
         if dvr_array.ndim != 1 or fbr_array.ndim != 1:
             raise InvalidValueError("A degree of freedom represents only one-dimensional data.")
 
+        if dvr_array.size != fbr_array.size:
+            raise InvalidValueError("The DVR and FBR grids must have the same size.")
+
         self._dvr_array = dvr_array
         self._fbr_array = fbr_array
 
@@ -22,6 +25,10 @@ class DofBase(ABC):
     @property
     def fbr_array(self) -> RealData:
         return self._fbr_array
+
+    @property
+    def size(self) -> int:
+        return self._dvr_array.size
 
     @abstractmethod
     def to_fbr(self, data: ComplexData, index: int, is_ket: bool = True) -> ComplexData:

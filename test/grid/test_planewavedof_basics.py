@@ -31,10 +31,10 @@ def test_fbr_grid():
     # k points should be equidistant, and have the same period as the grid
     dk = 2 * math.pi / interval
     delta_fbr = dof.fbr_array[1:] - dof.fbr_array[:-1]
-    assert_allclose(delta_fbr, dk * np.ones(15), atol=1e-10)
+    assert_allclose(delta_fbr, dk * np.ones(dof.size - 1), atol=1e-10)
 
     args = 1j * dof.fbr_array * interval
-    assert_allclose(np.exp(args), np.ones(16))
+    assert_allclose(np.exp(args), np.ones(dof.size))
 
     # We could place the grid anywhere in Fourier space, but we want
     # the zero in the center
@@ -44,16 +44,15 @@ def test_fbr_grid():
 def test_fbr_grid_for_uneven_points():
     # The same rules hold as for even grids, but the construction is different
     interval = 10.0
-    n = 15
-    dof = wp.PlaneWaveDof(-5, interval - 5, n)
+    dof = wp.PlaneWaveDof(-5, interval - 5, 15)
 
     # k points should be equidistant, and have the same period as the grid
     dk = 2 * math.pi / interval
     delta_fbr = dof.fbr_array[1:] - dof.fbr_array[:-1]
-    assert_allclose(delta_fbr, dk * np.ones(n - 1), atol=1e-10)
+    assert_allclose(delta_fbr, dk * np.ones(dof.size - 1), atol=1e-10)
 
     args = 1j * dof.fbr_array * interval
-    assert_allclose(np.exp(args), np.ones(n))
+    assert_allclose(np.exp(args), np.ones(dof.size))
 
     # We could place the grid anywhere in Fourier space, but we want
     # the zero in the center

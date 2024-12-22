@@ -78,3 +78,15 @@ def test_operator_broadcast():
 
     result2 = grid.operator_broadcast(data, -2, is_ket=False)
     assert_array_equal(result, result2)
+
+
+def test_bad_broadcast():
+    shape = (4, 3, 2)
+    data = np.arange(5)
+    grid = build_grid(shape)
+
+    with pytest.raises(ValueError):
+        grid.broadcast(data, 0)
+
+    with pytest.raises(ValueError):
+        grid.operator_broadcast(data, 0)

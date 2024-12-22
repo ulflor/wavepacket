@@ -23,7 +23,7 @@ class DummyDof(wp.DofBase):
         return data
 
 
-def test_reject_multidimensional_grids():
+def test_reject_multidimensional_arrays():
     good_array = np.ones(5)
     bad_array = np.ones([2, 3])
 
@@ -37,7 +37,7 @@ def test_reject_multidimensional_grids():
     DummyDof(good_array, good_array)
 
 
-def test_reject_empty_grids():
+def test_reject_empty_arrays():
     empty = np.ones(0)
     good_array = np.ones(5)
 
@@ -48,11 +48,17 @@ def test_reject_empty_grids():
         DummyDof(good_array, empty)
 
 
+def test_reject_different_array_sizes():
+    with pytest.raises(wp.InvalidValueError):
+        DummyDof(np.ones(3), np.ones(4))
+
+
 def test_access_properties():
     dvr_array = np.ones(5)
-    fbr_array = np.zeros(4)
+    fbr_array = np.zeros(5)
 
     dof = DummyDof(dvr_array, fbr_array)
 
+    assert dof.size == 5
     assert_allclose(dof.dvr_array, dvr_array)
     assert_allclose(dof.fbr_array, fbr_array)

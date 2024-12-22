@@ -12,8 +12,8 @@ def dof() -> wp.PlaneWaveDof:
 
 
 @pytest.fixture
-def dx() -> float:
-    return 10.0 / 8
+def dx(dof) -> float:
+    return 10.0 / dof.size
 
 
 def plane_wave(dof: wp.PlaneWaveDof, k_index: int) -> wpt.ComplexData:

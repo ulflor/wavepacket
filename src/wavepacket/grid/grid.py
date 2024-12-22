@@ -17,7 +17,7 @@ class Grid:
         else:
             self._dofs = list(dofs)
 
-        self._shape = tuple(len(dof.dvr_array) for dof in self._dofs)
+        self._shape = tuple(dof.size for dof in self._dofs)
 
     @property
     def shape(self) -> tuple[int, ...]:
@@ -34,7 +34,7 @@ class Grid:
     def broadcast(self, data: ComplexData, index: int) -> ComplexData:
         # Note: rather slow, only use for precomputation
         new_shape = len(self._dofs) * [1]
-        new_shape[index] = len(self._dofs[index].dvr_array)
+        new_shape[index] = self._dofs[index].size
         return np.reshape(data, new_shape)
 
     def operator_broadcast(self, data: ComplexData, dof_index: int, is_ket: bool = True) -> ComplexData:
@@ -48,5 +48,5 @@ class Grid:
         else:
             shape_index = dof_index + len(self._dofs)
 
-        new_shape[shape_index] = len(self._dofs[dof_index].dvr_array)
+        new_shape[shape_index] = self._dofs[dof_index].size
         return np.reshape(data, new_shape)
