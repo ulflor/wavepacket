@@ -21,18 +21,17 @@ def test_set_and_access_dofs():
     dof1 = wp.PlaneWaveDof(10, 20, 10)
     dof2 = wp.PlaneWaveDof(0, 10, 5)
 
-    grid = wp.Grid(dof1)
-
-    assert grid[0] == dof1
-    with pytest.raises(IndexError):
-        _ = grid[1]
-
     grid = wp.Grid([dof1, dof2])
 
-    assert grid[0] == dof1
-    assert grid[1] == dof2
-    with pytest.raises(IndexError):
-        _ = grid[2]
+    assert grid.dofs == [dof1, dof2]
+
+
+def test_size_of_grid():
+    grid = wp.Grid([wp.PlaneWaveDof(1, 2, 3),
+                    wp.PlaneWaveDof(1, 2, 10),
+                    wp.PlaneWaveDof(1, 2, 4)])
+
+    assert grid.size == 3 * 10 * 4
 
 
 def test_shapes():

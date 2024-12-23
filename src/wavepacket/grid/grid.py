@@ -1,6 +1,6 @@
-from typing import Sequence
-
+import math
 import numpy as np
+from typing import Sequence
 
 from .dofbase import DofBase
 from ..typing import ComplexData
@@ -28,8 +28,13 @@ class Grid:
     def operator_shape(self) -> tuple[int, ...]:
         return self._shape + self._shape
 
-    def __getitem__(self, index: int) -> DofBase:
-        return self._dofs[index]
+    @property
+    def dofs(self) -> list[DofBase]:
+        return self._dofs
+
+    @property
+    def size(self) -> int:
+        return math.prod(dof.size for dof in self._dofs)
 
     def broadcast(self, data: ComplexData, index: int) -> ComplexData:
         # Note: rather slow, only use for precomputation

@@ -2,22 +2,13 @@ import numpy as np
 import pytest
 import wavepacket as wp
 
-from wavepacket.testing import assert_close
+from wavepacket.testing import assert_close, random_state
 
 
 @pytest.fixture
 def grid() -> wp.Grid:
     dofs = [wp.PlaneWaveDof(10, 20, 7), wp.PlaneWaveDof(1, 2, 3)]
     return wp.Grid(dofs)
-
-
-def random_state(grid, seed) -> wp.State:
-    # Note: We do not require high-quality randomization here,
-    # we just want to avoid accidental symmetries and cumbersome setup.
-    rng = np.random.default_rng(seed)
-    data = rng.random(grid.shape) + 1j * rng.random(grid.shape)
-
-    return wp.State(grid, data)
 
 
 def test_state_is_something(grid):
