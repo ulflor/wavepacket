@@ -4,9 +4,9 @@ build-backend = "flit_core.buildapi"
 
 [project]
 name = "wavepacket"
-authors = [{name = "Ulf Lorenz", email = "ulf@wppy.org"}]
+authors = [{ name = "Ulf Lorenz", email = "ulf@wppy.org" }]
 readme = "README.md"
-license = {file = "LICENSE"}
+license = { file = "LICENSE" }
 requires-python = ">=3.12"
 classifiers = [
     "License :: OSI Approved :: MIT License",

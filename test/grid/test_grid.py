@@ -72,7 +72,7 @@ def test_operator_broadcast():
     assert_array_equal(result, result2)
 
     bra_result = grid.operator_broadcast(data, 1, is_ket=False)
-    assert  bra_result.shape == (1, 1, 1, 1, 4, 1)
+    assert bra_result.shape == (1, 1, 1, 1, 4, 1)
     assert_array_equal(np.ravel(result), data)
 
     result2 = grid.operator_broadcast(data, -2, is_ket=False)
