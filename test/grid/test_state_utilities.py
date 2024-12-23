@@ -18,6 +18,9 @@ def test_reject_invalid_states(grid):
     with pytest.raises(wp.BadStateError):
         wp.dvr_density(invalid_state)
 
+    with pytest.raises(wp.BadStateError):
+        wp.trace(invalid_state)
+
 
 def test_wave_function_density(grid):
     psi = random_state(grid, 42)
@@ -37,3 +40,15 @@ def test_density_operator_density(grid):
     density_from_rho = wp.dvr_density(rho)
 
     assert_allclose(density_from_rho, density_from_psi, atol=1e-14)
+
+
+def test_trace():
+    grid = wp.Grid(wp.PlaneWaveDof(1, 3, 4))
+    psi = wp.State(grid, np.array([0.5, 0.5j, 1, 2]))
+
+    result = wp.trace(psi)
+    assert_allclose(result, 5.5, atol=1e-12)
+
+    rho = wp.pure_density(psi)
+    result_rho = wp.trace(rho)
+    assert_allclose(result_rho, result, atol=1e-12)
