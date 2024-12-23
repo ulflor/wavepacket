@@ -1,12 +1,10 @@
 import math
 import numpy as np
-from typing import Callable, Iterable, TypeAlias, Sequence
+from typing import Iterable, Sequence
 
 from ..grid import Grid, State, trace
-from ..typing import ComplexData, RealData
+from ..typing import Generator
 from ..utils import InvalidValueError
-
-Generator: TypeAlias = Callable[[RealData], ComplexData]
 
 
 def build_product_wave_function(grid: Grid,
