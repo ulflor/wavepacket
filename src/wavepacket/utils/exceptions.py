@@ -1,3 +1,7 @@
+class BadFunctionCall(Exception):
+    pass
+
+
 class BadGridError(Exception):
     pass
 
