@@ -60,5 +60,5 @@ def test_access_properties():
     dof = DummyDof(dvr_array, fbr_array)
 
     assert dof.size == 5
-    assert_allclose(dof.dvr_array, dvr_array)
-    assert_allclose(dof.fbr_array, fbr_array)
+    assert_allclose(dof.dvr_points, dvr_array)
+    assert_allclose(dof.fbr_points, fbr_array)

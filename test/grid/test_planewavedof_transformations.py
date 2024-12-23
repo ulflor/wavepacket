@@ -17,19 +17,19 @@ def dx(dof) -> float:
 
 
 def plane_wave(dof: wp.PlaneWaveDof, k_index: int) -> wpt.ComplexData:
-    weight = 1.0 / len(dof.dvr_array)
-    k = dof.fbr_array[k_index]
-    psi = np.exp(1j * k * dof.dvr_array)
+    weight = 1.0 / len(dof.dvr_points)
+    k = dof.fbr_points[k_index]
+    psi = np.exp(1j * k * dof.dvr_points)
 
-    full_size = np.ones([2, len(dof.dvr_array), 4])
+    full_size = np.ones([2, len(dof.dvr_points), 4])
     return math.sqrt(weight) * np.einsum("ijk, j -> ijk", full_size, psi)
 
 
 def plane_wave_fbr(dof: wp.PlaneWaveDof, k_index: int) -> wpt.RealData:
-    psi = np.zeros(len(dof.fbr_array))
+    psi = np.zeros(len(dof.fbr_points))
     psi[k_index] = 1.0
 
-    full_size = np.ones([2, len(dof.fbr_array), 4])
+    full_size = np.ones([2, len(dof.fbr_points), 4])
     return np.einsum("ijk, j -> ijk", full_size, psi)
 
 
