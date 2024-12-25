@@ -42,6 +42,19 @@ def test_shapes():
     assert grid.operator_shape == (7, 5, 3, 7, 5, 3)
 
 
+def test_indices():
+    grid = build_grid([1, 2, 3, 1, 2])
+
+    assert grid.normalize_index(4) == 4
+    assert grid.normalize_index(-1) == 4
+
+    with pytest.raises(IndexError):
+        grid.normalize_index(5)
+
+    with pytest.raises(IndexError):
+        grid.normalize_index(-6)
+
+
 def test_broadcast():
     shape = (7, 5, 3)
     data = [i + np.arange(shape[i]) for i in range(3)]
@@ -75,8 +88,8 @@ def test_operator_broadcast():
     assert bra_result.shape == (1, 1, 1, 1, 4, 1)
     assert_array_equal(np.ravel(result), data)
 
-    result2 = grid.operator_broadcast(data, -2, is_ket=False)
-    assert_array_equal(result, result2)
+    bra_result2 = grid.operator_broadcast(data, -2, is_ket=False)
+    assert_array_equal(bra_result, bra_result2)
 
 
 def test_bad_broadcast():

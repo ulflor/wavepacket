@@ -36,6 +36,15 @@ class Grid:
     def size(self) -> int:
         return math.prod(dof.size for dof in self._dofs)
 
+    def normalize_index(self, index: int) -> int:
+        if index < -len(self._dofs) or index >= len(self._dofs):
+            raise IndexError("Index of degree of freedom out of bounds.")
+
+        if index < 0:
+            return index + len(self._dofs)
+        else:
+            return index
+
     def broadcast(self, data: ComplexData, index: int) -> ComplexData:
         # Note: rather slow, only use for precomputation
         new_shape = len(self._dofs) * [1]
@@ -46,12 +55,9 @@ class Grid:
         # Note: rather slow, only use for precomputation
         new_shape = (2 * len(self._dofs)) * [1]
 
-        if is_ket:
-            shape_index = dof_index
-            if dof_index < 0:
-                shape_index -= len(self._dofs)
-        else:
-            shape_index = dof_index + len(self._dofs)
+        shape_index = self.normalize_index(dof_index)
+        if not is_ket:
+            shape_index += len(self._dofs)
 
         new_shape[shape_index] = self._dofs[dof_index].size
         return np.reshape(data, new_shape)

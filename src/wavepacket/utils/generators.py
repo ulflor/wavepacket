@@ -31,3 +31,11 @@ class Gaussian(Generator):
         shifted = x - self._x
         arg = - shifted ** 2 / (2 * self._rms ** 2) + 1j * self._p * shifted
         return np.exp(arg)
+
+
+class PlaneWave:
+    def __init__(self, k: float):
+        self._k = k
+
+    def __call__(self, x: RealData) -> ComplexData:
+        return np.exp(1j * self._k * x)
