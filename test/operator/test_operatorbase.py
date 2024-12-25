@@ -7,6 +7,9 @@ from wavepacket.typing import ComplexData
 
 
 class DummyOperator(wp.OperatorBase):
+    def __init__(self, grid: wp.Grid):
+        super().__init__(grid)
+
     def apply_to_wave_function(self, psi: ComplexData) -> ComplexData:
         return 2.0 * psi
 
@@ -18,13 +21,22 @@ class DummyOperator(wp.OperatorBase):
 
 
 grid = wp.Grid(wp.PlaneWaveDof(1, 2, 3))
-op = DummyOperator()
+op = DummyOperator(grid)
 
 
-def test_reject_bad_state():
+def test_properties():
+    assert op.grid == grid
+
+
+def test_reject_invalid_states():
     bad_state = wp.State(grid, np.ones(1))
     with pytest.raises(wp.BadStateError):
         op.apply(bad_state)
+
+    other_grid = wp.Grid(wp.PlaneWaveDof(1, 2, 3))
+    other_grid_state = random_state(other_grid, 1)
+    with pytest.raises(wp.BadGridError):
+        op.apply(other_grid_state)
 
 
 def test_apply_operator():
