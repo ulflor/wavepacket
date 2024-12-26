@@ -40,4 +40,4 @@ def test_gaussian():
 
     generator = wp.Gaussian(x=5, rms=2.0 / np.sqrt(2 * np.log(2)))
     vals2 = generator(points)
-    assert_allclose(vals, vals2, 1e-12)
+    assert_allclose(vals, vals2, atol=1e-12, rtol=0)

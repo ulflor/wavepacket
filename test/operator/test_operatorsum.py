@@ -27,12 +27,12 @@ def test_apply():
 
     result = sum_op.apply_to_wave_function(psi.data)
     expected = op1.apply_to_wave_function(psi.data) + op2.apply_to_wave_function(psi.data)
-    assert_allclose(result, expected, atol=1e-12)
+    assert_allclose(result, expected, atol=1e-12, rtol=0)
 
     result = sum_op.apply_from_left(rho.data)
     expected = op1.apply_from_left(rho.data) + op2.apply_from_left(rho.data)
-    assert_allclose(result, expected, atol=1e-12)
+    assert_allclose(result, expected, atol=1e-12, rtol=0)
 
     result = sum_op.apply_from_right(rho.data)
     expected = op1.apply_from_right(rho.data) + op2.apply_from_right(rho.data)
-    assert_allclose(result, expected, atol=1e-12)
+    assert_allclose(result, expected, atol=1e-12, rtol=0)

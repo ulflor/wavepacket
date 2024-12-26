@@ -1,6 +1,6 @@
 import numpy as np
 import pytest
-from numpy.testing import assert_allclose
+from numpy.testing import assert_array_equal
 
 import wavepacket as wp
 from wavepacket.testing import DummyDof
@@ -43,5 +43,5 @@ def test_access_properties():
     dof = DummyDof(dvr_array, fbr_array)
 
     assert dof.size == 5
-    assert_allclose(dof.dvr_points, dvr_array)
-    assert_allclose(dof.fbr_points, fbr_array)
+    assert_array_equal(dof.dvr_points, dvr_array)
+    assert_array_equal(dof.fbr_points, fbr_array)

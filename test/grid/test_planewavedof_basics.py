@@ -22,7 +22,7 @@ def test_dvr_grid():
     dof = wp.PlaneWaveDof(1, 11, 5)
 
     expected = np.arange(1, 11.0, 2)
-    assert_allclose(dof.dvr_points, expected, atol=1e-10)
+    assert_allclose(dof.dvr_points, expected, atol=1e-12, rtol=0)
 
 
 def test_fbr_grid():
@@ -32,14 +32,14 @@ def test_fbr_grid():
     # k points should be equidistant, and have the same period as the grid
     dk = 2 * math.pi / interval
     delta_fbr = dof.fbr_points[1:] - dof.fbr_points[:-1]
-    assert_allclose(delta_fbr, dk * np.ones(dof.size - 1), atol=1e-10)
+    assert_allclose(delta_fbr, dk * np.ones(dof.size - 1), atol=1e-12, rtol=0)
 
     args = 1j * dof.fbr_points * interval
     assert_allclose(np.exp(args), np.ones(dof.size))
 
     # We could place the grid anywhere in Fourier space, but we want
     # the zero in the center
-    assert_allclose(dof.fbr_points[8], 0.0, atol=1e-10)
+    assert_allclose(dof.fbr_points[8], 0.0, atol=1e-12, rtol=0)
 
 
 def test_fbr_grid_for_uneven_points():
@@ -50,11 +50,11 @@ def test_fbr_grid_for_uneven_points():
     # k points should be equidistant, and have the same period as the grid
     dk = 2 * math.pi / interval
     delta_fbr = dof.fbr_points[1:] - dof.fbr_points[:-1]
-    assert_allclose(delta_fbr, dk * np.ones(dof.size - 1), atol=1e-10)
+    assert_allclose(delta_fbr, dk * np.ones(dof.size - 1), atol=1e-12, rtol=0)
 
     args = 1j * dof.fbr_points * interval
     assert_allclose(np.exp(args), np.ones(dof.size))
 
     # We could place the grid anywhere in Fourier space, but we want
     # the zero in the center
-    assert_allclose(dof.fbr_points[7], 0.0, atol=1e-10)
+    assert_allclose(dof.fbr_points[7], 0.0, atol=1e-12, rtol=0)

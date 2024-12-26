@@ -58,7 +58,7 @@ def test_ket_to_fbr(dof):
     result = dof.to_fbr(psi, 1)
 
     expected = plane_wave_fbr(dof, 5)
-    assert_allclose(result, expected, atol=1e-12)
+    assert_allclose(result, expected, atol=1e-12, rtol=0)
 
 
 def test_bra_to_fbr(dof):
@@ -67,7 +67,7 @@ def test_bra_to_fbr(dof):
     result = dof.to_fbr(psi, 1, is_ket=False)
 
     expected = plane_wave_fbr(dof, 6)
-    assert_allclose(result, expected, atol=1e-12)
+    assert_allclose(result, expected, atol=1e-12, rtol=0)
 
 
 def test_ket_from_fbr(dof):
@@ -76,7 +76,7 @@ def test_ket_from_fbr(dof):
     result = dof.from_fbr(psi, 1)
 
     expected = plane_wave(dof, 2)
-    assert_allclose(result, expected, atol=1e-12)
+    assert_allclose(result, expected, atol=1e-12, rtol=0)
 
 
 def test_bra_from_fbr(dof):
@@ -85,7 +85,7 @@ def test_bra_from_fbr(dof):
     result = dof.from_fbr(psi, 1, is_ket=False)
 
     expected = np.conj(plane_wave(dof, 1))
-    assert_allclose(result, expected, atol=1e-12)
+    assert_allclose(result, expected, atol=1e-12, rtol=0)
 
 
 def test_to_dvr(dof, dx):
@@ -94,7 +94,7 @@ def test_to_dvr(dof, dx):
     result = dof.to_dvr(psi, 1)
 
     expected = psi / np.sqrt(dx)
-    assert_allclose(result, expected, atol=1e-12)
+    assert_allclose(result, expected, atol=1e-12, rtol=0)
 
 
 def test_from_dvr(dof, dx):
@@ -102,7 +102,7 @@ def test_from_dvr(dof, dx):
 
     result = dof.from_dvr(psi / np.sqrt(dx), 1)
 
-    assert_allclose(result, psi, atol=1e-12)
+    assert_allclose(result, psi, atol=1e-12, rtol=0)
 
 
 def test_negative_indices(dof):
@@ -110,16 +110,16 @@ def test_negative_indices(dof):
 
     positive = dof.to_fbr(psi, 1)
     negative = dof.to_fbr(psi, -2)
-    assert_allclose(positive, negative, atol=1e-12)
+    assert_allclose(positive, negative, atol=1e-12, rtol=0)
 
     positive = dof.from_fbr(psi, 1)
     negative = dof.from_fbr(psi, -2)
-    assert_allclose(positive, negative, atol=1e-12)
+    assert_allclose(positive, negative, atol=1e-12, rtol=0)
 
     positive = dof.to_dvr(psi, 1)
     negative = dof.to_dvr(psi, -2)
-    assert_allclose(positive, negative, atol=1e-12)
+    assert_allclose(positive, negative, atol=1e-12, rtol=0)
 
     positive = dof.from_dvr(psi, 1)
     negative = dof.from_dvr(psi, -2)
-    assert_allclose(positive, negative, atol=1e-12)
+    assert_allclose(positive, negative, atol=1e-12, rtol=0)

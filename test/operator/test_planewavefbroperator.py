@@ -38,15 +38,15 @@ def test_apply_to_data(grid, op):
     rho = wp.pure_density(psi)
 
     result = op.apply_to_wave_function(psi.data)
-    assert_allclose(result, psi.data * k, atol=1e-12)
+    assert_allclose(result, psi.data * k, atol=1e-12, rtol=0)
 
     result = op.apply_from_left(rho.data)
     expected = wp.direct_product(k * psi, psi).data
-    assert_allclose(result, expected, atol=1e-12)
+    assert_allclose(result, expected, atol=1e-12, rtol=0)
 
     result = op.apply_from_right(rho.data)
     expected = wp.direct_product(psi, k * psi).data
-    assert_allclose(result, expected, atol=1e-12)
+    assert_allclose(result, expected, atol=1e-12, rtol=0)
 
 
 def test_negative_indices(grid):
@@ -57,12 +57,12 @@ def test_negative_indices(grid):
 
     result_positive = op_positive.apply_to_wave_function(psi.data)
     result_negative = op_negative.apply_to_wave_function(psi.data)
-    assert_allclose(result_positive, result_negative)
+    assert_allclose(result_positive, result_negative, atol=1e-12, rtol=0)
 
     result_positive = op_positive.apply_from_left(rho.data)
     result_negative = op_negative.apply_from_left(rho.data)
-    assert_allclose(result_positive, result_negative, atol=1e-12)
+    assert_allclose(result_positive, result_negative, atol=1e-12, rtol=0)
 
     result_positive = op_positive.apply_from_right(rho.data)
     result_negative = op_negative.apply_from_right(rho.data)
-    assert_allclose(result_positive, result_negative, atol=1e-12)
+    assert_allclose(result_positive, result_negative, atol=1e-12, rtol=0)

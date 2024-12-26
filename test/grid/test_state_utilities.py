@@ -29,7 +29,7 @@ def test_wave_function_density(grid):
 
     dx = 1 / 3.0 * 2 / 5.0
     expected = np.abs(psi.data ** 2) / dx
-    assert_allclose(result, expected, atol=1e-14)
+    assert_allclose(result, expected, atol=1e-14, rtol=0)
 
 
 def test_density_operator_density(grid):
@@ -39,7 +39,7 @@ def test_density_operator_density(grid):
     density_from_psi = wp.dvr_density(psi)
     density_from_rho = wp.dvr_density(rho)
 
-    assert_allclose(density_from_rho, density_from_psi, atol=1e-14)
+    assert_allclose(density_from_rho, density_from_psi, atol=1e-14, rtol=0)
 
 
 def test_trace():
@@ -47,8 +47,8 @@ def test_trace():
     psi = wp.State(grid, np.array([0.5, 0.5j, 1, 2]))
 
     result = wp.trace(psi)
-    assert_allclose(result, 5.5, atol=1e-12)
+    assert_allclose(result, 5.5, atol=1e-12, rtol=0)
 
     rho = wp.pure_density(psi)
     result_rho = wp.trace(rho)
-    assert_allclose(result_rho, result, atol=1e-12)
+    assert_allclose(result_rho, result, atol=1e-12, rtol=0)
