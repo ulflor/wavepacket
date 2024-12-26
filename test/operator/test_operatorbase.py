@@ -20,15 +20,20 @@ class DummyOperator(wp.OperatorBase):
         return 5.0 * rho
 
 
-grid = wp.Grid(wp.PlaneWaveDof(1, 2, 3))
-op = DummyOperator(grid)
+@pytest.fixture
+def grid() -> wp.Grid:
+    return wp.Grid(wp.PlaneWaveDof(1, 2, 3))
+
+@pytest.fixture
+def op(grid) -> DummyOperator:
+    return DummyOperator(grid)
 
 
-def test_properties():
+def test_properties(grid, op):
     assert op.grid == grid
 
 
-def test_reject_invalid_states():
+def test_reject_invalid_states(grid, op):
     bad_state = wp.State(grid, np.ones(1))
     with pytest.raises(wp.BadStateError):
         op.apply(bad_state)
@@ -39,7 +44,7 @@ def test_reject_invalid_states():
         op.apply(other_grid_state)
 
 
-def test_apply_operator():
+def test_apply_operator(grid, op):
     psi = random_state(grid, 100)
     result = op.apply(psi)
     assert_close(result, 2.0 * psi, 1e-12)
@@ -47,3 +52,13 @@ def test_apply_operator():
     rho = wp.pure_density(psi)
     result = op.apply(rho)
     assert_close(result, 3.0 * rho, 1e-12)
+
+
+def test_summation(grid, op):
+    psi = random_state(grid, 42)
+    sum_op = op + op
+
+    result = op.apply(psi)
+    sum_result = sum_op.apply(psi)
+
+    assert_close(sum_result, 2 * result, 1e-12)

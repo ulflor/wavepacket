@@ -12,10 +12,7 @@ def test_reject_invalid_arguments():
     op2 = wp.CartesianKineticEnergy(grid2, 0, 1.0)
 
     with pytest.raises(wp.BadGridError):
-        wp.OperatorSum([op1, op2])
-
-    with pytest.raises(wp.InvalidValueError):
-        wp.OperatorSum([])
+        op1 + op2
 
 
 def test_apply():
@@ -23,7 +20,7 @@ def test_apply():
     op1 = wp.CartesianKineticEnergy(grid, 0, 2.0)
     op2 = wp.CartesianKineticEnergy(grid, 0, 5.0)
 
-    sum_op = wp.OperatorSum([op1, op2])
+    sum_op = op1 + op2
     psi = random_state(grid, 128)
     rho = wp.pure_density(psi)
 
