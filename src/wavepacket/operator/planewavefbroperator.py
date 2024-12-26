@@ -1,15 +1,15 @@
 import numpy as np
 
+import wavepacket as wp
+import wavepacket.typing as wpt
 from .operatorbase import OperatorBase
-from ..grid import Grid, PlaneWaveDof
-from ..typing import ComplexData, Generator
-from ..utils import InvalidValueError
+from ..grid import Grid
 
 
 class PlaneWaveFbrOperator(OperatorBase):
-    def __init__(self, grid: Grid, dof_index: int, generator: Generator):
-        if not isinstance(grid.dofs[dof_index], PlaneWaveDof):
-            raise InvalidValueError(
+    def __init__(self, grid: Grid, dof_index: int, generator: wpt.Generator):
+        if not isinstance(grid.dofs[dof_index], wp.PlaneWaveDof):
+            raise wp.InvalidValueError(
                 f"PlaneWaveFbrOperator requires a PlaneWaveDof, but got {grid.dofs[dof_index].__class__}")
 
         self._wf_index = dof_index
@@ -25,14 +25,14 @@ class PlaneWaveFbrOperator(OperatorBase):
 
         super().__init__(grid)
 
-    def apply_to_wave_function(self, psi: ComplexData) -> ComplexData:
+    def apply_to_wave_function(self, psi: wpt.ComplexData) -> wpt.ComplexData:
         psi_fft = np.fft.fft(psi, axis=self._wf_index)
         return np.fft.ifft(psi_fft * self._wf_data, axis=self._wf_index)
 
-    def apply_from_left(self, rho: ComplexData) -> ComplexData:
+    def apply_from_left(self, rho: wpt.ComplexData) -> wpt.ComplexData:
         rho_fft = np.fft.fft(rho, axis=self._ket_index)
         return np.fft.ifft(rho_fft * self._ket_data, axis=self._ket_index)
 
-    def apply_from_right(self, rho: ComplexData) -> ComplexData:
+    def apply_from_right(self, rho: wpt.ComplexData) -> wpt.ComplexData:
         rho_fft = np.fft.ifft(rho, axis=self._bra_index)
         return np.fft.fft(rho_fft * self._bra_data, axis=self._bra_index)

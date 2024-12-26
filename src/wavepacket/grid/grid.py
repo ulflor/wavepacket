@@ -3,15 +3,15 @@ from typing import Sequence
 
 import numpy as np
 
+import wavepacket as wp
+import wavepacket.typing as wpt
 from .dofbase import DofBase
-from ..typing import ComplexData
-from ..utils import InvalidValueError
 
 
 class Grid:
     def __init__(self, dofs: Sequence[DofBase] | DofBase):
         if dofs is None:
-            raise InvalidValueError("A grid needs at least one Degree of freedom defined.")
+            raise wp.InvalidValueError("A grid needs at least one Degree of freedom defined.")
 
         if isinstance(dofs, DofBase):
             self._dofs = [dofs]
@@ -46,13 +46,13 @@ class Grid:
         else:
             return index
 
-    def broadcast(self, data: ComplexData, index: int) -> ComplexData:
+    def broadcast(self, data: wpt.ComplexData, index: int) -> wpt.ComplexData:
         # Note: rather slow, only use for precomputation
         new_shape = len(self._dofs) * [1]
         new_shape[index] = self._dofs[index].size
         return np.reshape(data, new_shape)
 
-    def operator_broadcast(self, data: ComplexData, dof_index: int, is_ket: bool = True) -> ComplexData:
+    def operator_broadcast(self, data: wpt.ComplexData, dof_index: int, is_ket: bool = True) -> wpt.ComplexData:
         # Note: rather slow, only use for precomputation
         new_shape = (2 * len(self._dofs)) * [1]
 

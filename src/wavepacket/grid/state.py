@@ -1,16 +1,16 @@
 import numbers
 from dataclasses import dataclass
 
+import wavepacket as wp
+import wavepacket.typing as wpt
 from .grid import Grid
-from ..utils import BadGridError, BadStateError
-from ..typing import ComplexData
 
 
 @dataclass(frozen=True)
 class State:
     # Note: The State is _always_ in the default representation, never FBR or DVR
     grid: Grid
-    data: ComplexData
+    data: wpt.ComplexData
 
     def is_wave_function(self) -> bool:
         return self.data.shape == self.grid.shape
@@ -55,7 +55,7 @@ class State:
 
     def _check_states(self, other):
         if self.grid != other.grid:
-            raise BadGridError("Binary operations with states on different grids are not supported.")
+            raise wp.BadGridError("Binary operations with states on different grids are not supported.")
 
         if self.data.shape != other.data.shape:
-            raise BadStateError("Binary operations can only be performed for two wave_functions or density operators.")
+            raise wp.BadStateError("Binary operations can only be performed for two wave_functions or density operators.")

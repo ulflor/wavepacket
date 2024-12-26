@@ -1,7 +1,7 @@
 import numpy as np
 
+import wavepacket as wp
 from ..grid import State
-from ..utils import BadGridError, BadStateError
 
 
 def pure_density(psi: State) -> State:
@@ -10,10 +10,10 @@ def pure_density(psi: State) -> State:
 
 def direct_product(ket: State, bra: State) -> State:
     if not ket.is_wave_function() or not bra.is_wave_function():
-        raise BadStateError("Density operator can only be constructed from wave functions.")
+        raise wp.BadStateError("Density operator can only be constructed from wave functions.")
 
     if ket.grid != bra.grid:
-        raise BadGridError("Grid for bra and ket states does not match")
+        raise wp.BadGridError("Grid for bra and ket states does not match")
 
     rho_matrix = np.outer(ket.data, np.conj(bra.data))
 
