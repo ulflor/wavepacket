@@ -1,7 +1,8 @@
-import wavepacket as wp
 import pytest
 from numpy.testing import assert_allclose
-from wavepacket.testing import random_state
+
+import wavepacket as wp
+import wavepacket.testing
 
 
 def test_reject_invalid_arguments():
@@ -21,7 +22,7 @@ def test_apply():
     op2 = wp.CartesianKineticEnergy(grid, 0, 5.0)
 
     sum_op = op1 + op2
-    psi = random_state(grid, 128)
+    psi = wp.testing.random_state(grid, 128)
     rho = wp.pure_density(psi)
 
     result = sum_op.apply_to_wave_function(psi.data)

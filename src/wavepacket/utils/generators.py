@@ -1,6 +1,6 @@
-import numpy as np
-
 from typing import Optional
+
+import numpy as np
 
 from ..typing import RealData, ComplexData, Generator
 from .exceptions import BadFunctionCall, InvalidValueError

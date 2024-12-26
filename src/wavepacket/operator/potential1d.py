@@ -1,6 +1,6 @@
 from .operatorbase import OperatorBase
 from ..grid import Grid
-from ..typing import ComplexData , RealGenerator
+from ..typing import ComplexData, RealGenerator
 
 
 class Potential1D(OperatorBase):

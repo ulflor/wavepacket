@@ -1,6 +1,7 @@
 import math
-import numpy as np
 from typing import Sequence
+
+import numpy as np
 
 from .dofbase import DofBase
 from ..typing import ComplexData

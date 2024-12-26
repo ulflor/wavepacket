@@ -1,9 +1,9 @@
 import numpy as np
 import pytest
-import wavepacket as wp
-
 from numpy.testing import assert_allclose
-from wavepacket.typing import ComplexData, RealData
+
+import wavepacket as wp
+import wavepacket.typing as wpt
 
 
 @pytest.fixture
@@ -11,11 +11,11 @@ def grid() -> wp.Grid:
     return wp.Grid([wp.PlaneWaveDof(1, 5, 10), wp.PlaneWaveDof(10, 13, 3)])
 
 
-def generator(dvr_points: RealData) -> ComplexData:
+def generator(dvr_points: wpt.RealData) -> wpt.ComplexData:
     return 1j * dvr_points
 
 
-def zero_generator(dvr_points: RealData) -> ComplexData:
+def zero_generator(dvr_points: wpt.RealData) -> wpt.ComplexData:
     return np.zeros(dvr_points.shape)
 
 

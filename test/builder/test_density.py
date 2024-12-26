@@ -1,9 +1,9 @@
 import numpy as np
 import pytest
-import wavepacket as wp
-
 from numpy.testing import assert_allclose
-from wavepacket.testing import random_state
+
+import wavepacket as wp
+import wavepacket.testing
 
 
 @pytest.fixture
@@ -14,7 +14,7 @@ def grid() -> wp.Grid:
 
 @pytest.fixture
 def psi(grid) -> wp.State:
-    return random_state(grid, 42)
+    return wp.testing.random_state(grid, 42)
 
 
 def test_throw_on_bad_input_state(grid, psi):

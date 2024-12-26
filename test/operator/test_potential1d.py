@@ -1,10 +1,10 @@
 import numpy as np
-import wavepacket as wp
-import wavepacket.typing as wpt
 import pytest
-
 from numpy.testing import assert_allclose
-from wavepacket.testing import random_state
+
+import wavepacket as wp
+import wavepacket.testing
+import wavepacket.typing as wpt
 
 
 def dummy_func(data: wpt.RealData) -> wpt.RealData:
@@ -24,11 +24,11 @@ def op(grid) -> wp.Potential1D:
 
 def test_reject_invalid_degree_of_freedom(grid):
     with pytest.raises(IndexError):
-        op = wp.Potential1D(grid, 2, dummy_func)
+        wp.Potential1D(grid, 2, dummy_func)
 
 
 def test_apply_to_data(grid, op):
-    psi = random_state(grid, 42)
+    psi = wp.testing.random_state(grid, 42)
     rho = wp.pure_density(psi)
     dvr_points = grid.dofs[0].dvr_points
 
@@ -48,7 +48,7 @@ def test_apply_to_data(grid, op):
 def test_negative_indices(grid):
     op_positive = wp.Potential1D(grid, 0, dummy_func)
     op_negative = wp.Potential1D(grid, -2, dummy_func)
-    psi = random_state(grid, 42)
+    psi = wp.testing.random_state(grid, 42)
     rho = wp.pure_density(psi)
 
     result_positive = op_positive.apply_to_wave_function(psi.data)

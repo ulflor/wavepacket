@@ -1,9 +1,10 @@
 import math
+
 import numpy as np
 import pytest
-import wavepacket as wp
-
 from numpy.testing import assert_allclose
+
+import wavepacket as wp
 
 
 def test_reject_invalid_constructor_values():

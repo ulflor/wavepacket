@@ -1,9 +1,10 @@
+from typing import Sequence
+
 import numpy as np
 import pytest
-import wavepacket as wp
-
 from numpy.testing import assert_array_equal
-from typing import Sequence
+
+import wavepacket as wp
 
 
 def build_grid(sizes: Sequence[int]) -> wp.Grid:

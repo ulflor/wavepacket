@@ -1,5 +1,4 @@
 import numbers
-
 from dataclasses import dataclass
 
 from .grid import Grid

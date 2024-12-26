@@ -1,7 +1,7 @@
-import numpy as np
-
 from abc import ABC, abstractmethod
 from typing import Sequence
+
+import numpy as np
 
 from ..grid import Grid, State
 from ..typing import ComplexData

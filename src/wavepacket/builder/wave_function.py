@@ -1,6 +1,6 @@
-import math
-import numpy as np
 from typing import Iterable, Sequence
+
+import numpy as np
 
 from ..grid import Grid, State, trace
 from ..typing import Generator
@@ -27,7 +27,7 @@ def build_product_wave_function(grid: Grid,
         result_data *= grid.broadcast(array, dof_index)
 
     result = State(grid, result_data)
-    norm = math.sqrt(trace(result))
+    norm = np.sqrt(trace(result))
     if normalize and norm > 0:
         return result / norm
     else:

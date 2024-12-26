@@ -1,9 +1,9 @@
 import numpy as np
-import wavepacket as wp
 import pytest
-
 from numpy.testing import assert_allclose
-from wavepacket.testing import random_state
+
+import wavepacket as wp
+import wavepacket.testing
 
 
 @pytest.fixture
@@ -23,7 +23,7 @@ def test_reject_invalid_states(grid):
 
 
 def test_wave_function_density(grid):
-    psi = random_state(grid, 42)
+    psi = wp.testing.random_state(grid, 42)
 
     result = wp.dvr_density(psi)
 
@@ -33,7 +33,7 @@ def test_wave_function_density(grid):
 
 
 def test_density_operator_density(grid):
-    psi = random_state(grid, 42)
+    psi = wp.testing.random_state(grid, 42)
     rho = wp.pure_density(psi)
 
     density_from_psi = wp.dvr_density(psi)

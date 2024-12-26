@@ -1,11 +1,12 @@
 import math
-import numpy as np
-import wavepacket as wp
-import wavepacket.typing as wpt
-import pytest
 
+import numpy as np
+import pytest
 from numpy.testing import assert_allclose
-from wavepacket.testing import random_state, DummyDof
+
+import wavepacket as wp
+import wavepacket.testing
+import wavepacket.typing as wpt
 
 
 def dummy_func(data: wpt.RealData) -> wpt.RealData:
@@ -15,7 +16,7 @@ def dummy_func(data: wpt.RealData) -> wpt.RealData:
 @pytest.fixture
 def grid() -> wp.Grid:
     return wp.Grid([wp.PlaneWaveDof(10, 20, 10),
-                    DummyDof(np.ones(2), np.ones(2))])
+                    wp.testing.DummyDof(np.ones(2), np.ones(2))])
 
 
 @pytest.fixture
@@ -51,7 +52,7 @@ def test_apply_to_data(grid, op):
 def test_negative_indices(grid):
     op_positive = wp.PlaneWaveFbrOperator(grid, 0, dummy_func)
     op_negative = wp.PlaneWaveFbrOperator(grid, -2, dummy_func)
-    psi = random_state(grid, 42)
+    psi = wp.testing.random_state(grid, 42)
     rho = wp.pure_density(psi)
 
     result_positive = op_positive.apply_to_wave_function(psi.data)

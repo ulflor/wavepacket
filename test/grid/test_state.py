@@ -1,8 +1,9 @@
 import numpy as np
 import pytest
-import wavepacket as wp
 
-from wavepacket.testing import assert_close, random_state
+import wavepacket as wp
+import wavepacket.testing
+from wavepacket.testing import assert_close
 
 
 @pytest.fixture
@@ -27,10 +28,10 @@ def test_state_is_something(grid):
 
 
 def test_operations_fail_on_different_grids(grid):
-    psi = random_state(grid, 1)
+    psi = wp.testing.random_state(grid, 1)
 
     other_grid = wp.Grid(wp.PlaneWaveDof(1, 2, 3))
-    other_psi = random_state(other_grid, 2)
+    other_psi = wp.testing.random_state(other_grid, 2)
 
     with pytest.raises(wp.BadGridError):
         psi + other_psi
@@ -40,7 +41,7 @@ def test_operations_fail_on_different_grids(grid):
 
 
 def test_operations_fail_on_different_types(grid):
-    psi = random_state(grid, 1)
+    psi = wp.testing.random_state(grid, 1)
     rho = wp.State(grid, np.ones(grid.operator_shape))
 
     with pytest.raises(wp.BadStateError):
@@ -51,7 +52,7 @@ def test_operations_fail_on_different_types(grid):
 
 
 def test_state_addition(grid):
-    psi = random_state(grid, 1)
+    psi = wp.testing.random_state(grid, 1)
     two_j = wp.grid.State(grid, 2j * np.ones(grid.shape))
 
     result1 = psi + two_j
@@ -65,7 +66,7 @@ def test_state_addition(grid):
 
 
 def test_state_subtraction(grid):
-    psi = random_state(grid, 2)
+    psi = wp.testing.random_state(grid, 2)
     minus_psi = wp.State(grid, -psi.data)
     two_j = wp.grid.State(grid, 2j * np.ones(grid.shape))
 
@@ -80,7 +81,7 @@ def test_state_subtraction(grid):
 
 
 def test_state_multiplication(grid):
-    psi = random_state(grid, 3)
+    psi = wp.testing.random_state(grid, 3)
 
     result1 = psi * 2.0
     result2 = 2.0 * psi
@@ -90,7 +91,7 @@ def test_state_multiplication(grid):
 
 
 def test_state_division(grid):
-    psi = random_state(grid, 4)
+    psi = wp.testing.random_state(grid, 4)
 
     result = psi / 4.0
     assert_close(result, 0.25 * psi, 1e-12)
@@ -100,7 +101,7 @@ def test_state_division(grid):
 
 
 def test_state_unary_minus(grid):
-    psi = random_state(grid, 5)
+    psi = wp.testing.random_state(grid, 5)
     zero = wp.State(grid, np.zeros(grid.shape))
 
     result = -psi
