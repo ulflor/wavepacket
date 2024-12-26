@@ -16,7 +16,7 @@ class PlaneWaveFbrOperator(OperatorBase):
         self._ket_index = grid.normalize_index(dof_index)
         self._bra_index = self._ket_index + len(grid.dofs)
 
-        # shifting the data here allows us to skip the fftshift on the input data in apply*()
+        # shifting the data here allows us to skip the fftshift() on the input data in apply*()
         data = generator(grid.dofs[dof_index].fbr_points)
         shifted_data = np.fft.ifftshift(data)
         self._wf_data = grid.broadcast(shifted_data, dof_index)
@@ -36,3 +36,11 @@ class PlaneWaveFbrOperator(OperatorBase):
     def apply_from_right(self, rho: wpt.ComplexData) -> wpt.ComplexData:
         rho_fft = np.fft.ifft(rho, axis=self._bra_index)
         return np.fft.fft(rho_fft * self._bra_data, axis=self._bra_index)
+
+
+class CartesianKineticEnergy(PlaneWaveFbrOperator):
+    def __init__(self, grid: Grid, dof_index: int, mass: float):
+        if mass <= 0:
+            raise wp.InvalidValueError(f"Particle mass must be positive, but is {mass}")
+
+        super().__init__(grid, dof_index, lambda fbr_points: fbr_points ** 2 / (2 * mass))
