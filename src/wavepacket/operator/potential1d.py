@@ -10,6 +10,8 @@ class Potential1D(OperatorBase):
         self._ket_data = grid.operator_broadcast(data, dof_index)
         self._bra_data = grid.operator_broadcast(data, dof_index, False)
 
+        super().__init__(grid)
+
     def apply_to_wave_function(self, psi: ComplexData) -> ComplexData:
         return self._wf_data * psi
 

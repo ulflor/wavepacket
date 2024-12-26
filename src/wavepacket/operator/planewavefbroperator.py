@@ -23,6 +23,8 @@ class PlaneWaveFbrOperator(OperatorBase):
         self._ket_data = grid.operator_broadcast(shifted_data, dof_index)
         self._bra_data = grid.operator_broadcast(shifted_data, dof_index, is_ket=False)
 
+        super().__init__(grid)
+
     def apply_to_wave_function(self, psi: ComplexData) -> ComplexData:
         psi_fft = np.fft.fft(psi, axis=self._wf_index)
         return np.fft.ifft(psi_fft * self._wf_data, axis=self._wf_index)
