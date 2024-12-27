@@ -7,18 +7,12 @@ import wavepacket.testing
 
 
 @pytest.fixture
-def grid() -> wp.Grid:
-    return wp.Grid([wp.PlaneWaveDof(0, 10, 5),
-                    wp.PlaneWaveDof(10, 10 + 7, 3)])
+def psi(grid_2d) -> wp.State:
+    return wp.testing.random_state(grid_2d, 42)
 
 
-@pytest.fixture
-def psi(grid) -> wp.State:
-    return wp.testing.random_state(grid, 42)
-
-
-def test_throw_on_bad_input_state(grid, psi):
-    bad_input = wp.State(grid, np.ones(grid.operator_shape))
+def test_throw_on_bad_input_state(grid_2d, psi):
+    bad_input = wp.State(grid_2d, np.ones(grid_2d.operator_shape))
 
     with pytest.raises(wp.BadStateError):
         wp.pure_density(bad_input)
@@ -29,10 +23,10 @@ def test_throw_on_bad_input_state(grid, psi):
         wp.direct_product(psi, bad_input)
 
 
-def test_require_all_grids_to_be_same(grid):
+def test_require_all_grids_to_be_same(grid_2d):
     grid2 = wp.grid.Grid(wp.PlaneWaveDof(0, 10, 5))
 
-    wf1 = wp.State(grid, np.ones(grid.shape))
+    wf1 = wp.State(grid_2d, np.ones(grid_2d.shape))
     wf2 = wp.State(grid2, np.ones(grid2.shape))
 
     with pytest.raises(wp.BadGridError):

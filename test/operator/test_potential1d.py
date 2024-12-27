@@ -12,25 +12,19 @@ def dummy_func(data: wpt.RealData) -> wpt.RealData:
 
 
 @pytest.fixture
-def grid() -> wp.Grid:
-    return wp.Grid([wp.PlaneWaveDof(10, 20, 6),
-                    wp.PlaneWaveDof(0, 10, 5)])
+def op(grid_2d) -> wp.Potential1D:
+    return wp.Potential1D(grid_2d, 0, dummy_func)
 
 
-@pytest.fixture
-def op(grid) -> wp.Potential1D:
-    return wp.Potential1D(grid, 0, dummy_func)
-
-
-def test_reject_invalid_degree_of_freedom(grid):
+def test_reject_invalid_degree_of_freedom(grid_2d):
     with pytest.raises(IndexError):
-        wp.Potential1D(grid, 2, dummy_func)
+        wp.Potential1D(grid_2d, 2, dummy_func)
 
 
-def test_apply_to_data(grid, op):
-    psi = wp.testing.random_state(grid, 42)
+def test_apply_to_data(grid_2d, op):
+    psi = wp.testing.random_state(grid_2d, 42)
     rho = wp.pure_density(psi)
-    dvr_points = grid.dofs[0].dvr_points
+    dvr_points = grid_2d.dofs[0].dvr_points
 
     result = op.apply_to_wave_function(psi.data)
     expected = psi.data * np.reshape(dvr_points, (len(dvr_points), 1))
@@ -45,10 +39,10 @@ def test_apply_to_data(grid, op):
     assert_allclose(result, expected, 1e-12)
 
 
-def test_negative_indices(grid):
-    op_positive = wp.Potential1D(grid, 0, dummy_func)
-    op_negative = wp.Potential1D(grid, -2, dummy_func)
-    psi = wp.testing.random_state(grid, 42)
+def test_negative_indices(grid_2d):
+    op_positive = wp.Potential1D(grid_2d, 0, dummy_func)
+    op_negative = wp.Potential1D(grid_2d, -2, dummy_func)
+    psi = wp.testing.random_state(grid_2d, 42)
     rho = wp.pure_density(psi)
 
     result_positive = op_positive.apply_to_wave_function(psi.data)
