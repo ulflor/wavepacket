@@ -1,5 +1,6 @@
 import numbers
 from dataclasses import dataclass
+import typing
 
 import wavepacket as wp
 import wavepacket.typing as wpt
@@ -18,44 +19,45 @@ class State:
     def is_density_operator(self) -> bool:
         return self.data.shape == self.grid.operator_shape
 
-    def __add__(self, other):
+    def __add__(self, other: typing.Self | numbers.Number) -> typing.Self:
         if isinstance(other, State):
             self._check_states(other)
             return State(self.grid, self.data + other.data)
         else:
             return State(self.grid, self.data + other)
 
-    def __radd__(self, other: numbers.Number):
+    def __radd__(self, other: numbers.Number) -> typing.Self:
         return self + other
 
-    def __sub__(self, other):
+    def __sub__(self, other: typing.Self | numbers.Number) -> typing.Self:
         if isinstance(other, State):
             self._check_states(other)
             return State(self.grid, self.data - other.data)
         else:
             return State(self.grid, self.data - other)
 
-    def __rsub__(self, other: numbers.Number):
+    def __rsub__(self, other: numbers.Number) -> typing.Self:
         return State(self.grid, other - self.data)
 
-    def __mul__(self, other: numbers.Number):
+    def __mul__(self, other: numbers.Number) -> typing.Self:
         return State(self.grid, self.data * other)
 
-    def __rmul__(self, other: numbers.Number):
+    def __rmul__(self, other: numbers.Number) -> typing.Self:
         return self * other
 
-    def __truediv__(self, other: numbers.Number):
+    def __truediv__(self, other: numbers.Number) -> typing.Self:
         if other == 0.0:
             raise ZeroDivisionError("State cannot be divided by zero.")
 
         return State(self.grid, self.data / other)
 
-    def __neg__(self):
+    def __neg__(self) -> typing.Self:
         return State(self.grid, -self.data)
 
-    def _check_states(self, other):
+    def _check_states(self, other: typing.Self) -> None:
         if self.grid != other.grid:
             raise wp.BadGridError("Binary operations with states on different grids are not supported.")
 
         if self.data.shape != other.data.shape:
-            raise wp.BadStateError("Binary operations can only be performed for two wave_functions or density operators.")
+            raise wp.BadStateError(
+                "Binary operations can only be performed for two wave_functions or density operators.")

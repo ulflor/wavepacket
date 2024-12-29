@@ -1,4 +1,5 @@
-from typing import Iterable, Sequence
+from collections.abc import Sequence
+from typing import Iterable
 
 import numpy as np
 

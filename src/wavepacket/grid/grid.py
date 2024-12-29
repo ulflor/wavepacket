@@ -1,5 +1,5 @@
+from collections.abc import Sequence
 import math
-from typing import Sequence
 
 import numpy as np
 
@@ -30,7 +30,7 @@ class Grid:
         return self._shape + self._shape
 
     @property
-    def dofs(self) -> list[DofBase]:
+    def dofs(self) -> Sequence[DofBase]:
         return self._dofs
 
     @property

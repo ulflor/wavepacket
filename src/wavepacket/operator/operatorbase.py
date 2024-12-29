@@ -1,5 +1,6 @@
 from abc import ABC, abstractmethod
-from typing import Sequence
+from collections.abc import Sequence
+import typing
 
 import numpy as np
 
@@ -27,7 +28,7 @@ class OperatorBase(ABC):
     def grid(self):
         return self._grid
 
-    def __add__(self, other):
+    def __add__(self, other: typing.Self) -> typing.Self:
         return OperatorSum([self, other])
 
     @abstractmethod

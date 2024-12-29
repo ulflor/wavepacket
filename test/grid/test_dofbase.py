@@ -45,3 +45,7 @@ def test_access_properties():
     assert dof.size == 5
     assert_array_equal(dof.dvr_points, dvr_array)
     assert_array_equal(dof.fbr_points, fbr_array)
+
+    # Always return copies of the internal arrays.
+    dof.dvr_points[0] = 5
+    assert_array_equal(dof.dvr_points, dvr_array)

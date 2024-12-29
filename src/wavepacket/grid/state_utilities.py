@@ -36,9 +36,9 @@ def dvr_density(state: State) -> wpt.RealData:
 
 def trace(state: State) -> float:
     if state.is_wave_function():
-        return np.sum(np.abs(state.data ** 2))
+        return np.abs(state.data ** 2).sum()
     elif state.is_density_operator():
         diagonal = _take_diagonal(state.data, state.grid)
-        return np.sum(diagonal)
+        return diagonal.sum()
     else:
         raise wp.BadStateError("Input is not a valid state.")
