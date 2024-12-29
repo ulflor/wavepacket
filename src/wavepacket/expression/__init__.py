@@ -1,3 +1,4 @@
-__all__ = ['ExpressionBase']
+__all__ = ['ExpressionBase', 'SchroedingerEquation']
 
 from .expressionbase import ExpressionBase
+from .schroedingerequation import SchroedingerEquation
