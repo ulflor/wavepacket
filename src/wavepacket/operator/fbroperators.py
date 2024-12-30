@@ -25,15 +25,15 @@ class PlaneWaveFbrOperator(OperatorBase):
 
         super().__init__(grid)
 
-    def apply_to_wave_function(self, psi: wpt.ComplexData) -> wpt.ComplexData:
+    def apply_to_wave_function(self, psi: wpt.ComplexData, t: float) -> wpt.ComplexData:
         psi_fft = np.fft.fft(psi, axis=self._wf_index)
         return np.fft.ifft(psi_fft * self._wf_data, axis=self._wf_index)
 
-    def apply_from_left(self, rho: wpt.ComplexData) -> wpt.ComplexData:
+    def apply_from_left(self, rho: wpt.ComplexData, t: float) -> wpt.ComplexData:
         rho_fft = np.fft.fft(rho, axis=self._ket_index)
         return np.fft.ifft(rho_fft * self._ket_data, axis=self._ket_index)
 
-    def apply_from_right(self, rho: wpt.ComplexData) -> wpt.ComplexData:
+    def apply_from_right(self, rho: wpt.ComplexData, t: float) -> wpt.ComplexData:
         rho_fft = np.fft.ifft(rho, axis=self._bra_index)
         return np.fft.fft(rho_fft * self._bra_data, axis=self._bra_index)
 

@@ -26,15 +26,15 @@ def test_apply_to_data(grid_2d, op):
     rho = wp.pure_density(psi)
     dvr_points = grid_2d.dofs[0].dvr_points
 
-    result = op.apply_to_wave_function(psi.data)
+    result = op.apply_to_wave_function(psi.data, 0.0)
     expected = psi.data * np.reshape(dvr_points, (len(dvr_points), 1))
     assert_allclose(result, expected, 1e-12)
 
-    result = op.apply_from_left(rho.data)
+    result = op.apply_from_left(rho.data, 0.0)
     expected = rho.data * np.reshape(dvr_points, (len(dvr_points), 1, 1, 1))
     assert_allclose(result, expected, 1e-12)
 
-    result = op.apply_from_right(rho.data)
+    result = op.apply_from_right(rho.data, 0.0)
     expected = rho.data * np.reshape(dvr_points, (1, 1, len(dvr_points), 1))
     assert_allclose(result, expected, 1e-12)
 
@@ -45,14 +45,14 @@ def test_negative_indices(grid_2d):
     psi = wp.testing.random_state(grid_2d, 42)
     rho = wp.pure_density(psi)
 
-    result_positive = op_positive.apply_to_wave_function(psi.data)
-    result_negative = op_negative.apply_to_wave_function(psi.data)
+    result_positive = op_positive.apply_to_wave_function(psi.data, 0.0)
+    result_negative = op_negative.apply_to_wave_function(psi.data, 0.0)
     assert_allclose(result_positive, result_negative, atol=1e-12, rtol=0)
 
-    result_positive = op_positive.apply_from_left(rho.data)
-    result_negative = op_negative.apply_from_left(rho.data)
+    result_positive = op_positive.apply_from_left(rho.data, 0.0)
+    result_negative = op_negative.apply_from_left(rho.data, 0.0)
     assert_allclose(result_positive, result_negative, atol=1e-12, rtol=0)
 
-    result_positive = op_positive.apply_from_right(rho.data)
-    result_negative = op_negative.apply_from_right(rho.data)
+    result_positive = op_positive.apply_from_right(rho.data, 0.0)
+    result_negative = op_negative.apply_from_right(rho.data, 0.0)
     assert_allclose(result_positive, result_negative, atol=1e-12, rtol=0)

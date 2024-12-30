@@ -5,5 +5,5 @@ from ..grid import State
 
 class ExpressionBase(ABC):
     @abstractmethod
-    def apply(self, state: State) -> State:
+    def apply(self, state: State, t: float) -> State:
         pass

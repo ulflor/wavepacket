@@ -8,7 +8,7 @@ class CommutatorLiouvillian(ExpressionBase):
     def __init__(self, op: OperatorBase):
         self._op = op
 
-    def apply(self, rho: State) -> State:
+    def apply(self, rho: State, t: float) -> State:
         if rho.grid != self._op.grid:
             raise wp.BadGridError("Input state is defined on the wrong grid.")
 
@@ -16,4 +16,4 @@ class CommutatorLiouvillian(ExpressionBase):
             raise wp.BadStateError("CommutatorLiouvillian requires a density operator.")
 
         return State(rho.grid,
-                     -1j * (self._op.apply_from_left(rho.data) - self._op.apply_from_right(rho.data)))
+                     -1j * (self._op.apply_from_left(rho.data, t) - self._op.apply_from_right(rho.data, t)))
