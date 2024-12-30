@@ -7,12 +7,12 @@ class DummyOperator(wp.OperatorBase):
         super().__init__(grid)
 
     def apply_to_wave_function(self, psi: wpt.ComplexData, t: float) -> wpt.ComplexData:
-        return 2.0 * t * psi
+        raise wp.BadFunctionCall("Should be patched.")
 
     def apply_from_left(self, rho: wpt.ComplexData, t: float) -> wpt.ComplexData:
-        return 3.0 * t * rho
+        raise wp.BadFunctionCall("Should be patched.")
 
     def apply_from_right(self, rho: wpt.ComplexData, t: float) -> wpt.ComplexData:
-        return 5.0 * t * rho
+        raise wp.BadFunctionCall("Should be patched.")
 
 

@@ -6,16 +6,15 @@ import wavepacket.testing
 from wavepacket.testing import assert_close
 
 
-@pytest.fixture
-def op(grid_1d) -> wp.testing.DummyOperator:
-    return wp.testing.DummyOperator(grid_1d)
+def test_properties(grid_1d):
+    op = wp.testing.DummyOperator(grid_1d)
 
-
-def test_properties(grid_1d, op):
     assert op.grid == grid_1d
 
 
-def test_reject_invalid_states(grid_1d, op):
+def test_reject_invalid_states(grid_1d, monkeypatch):
+    op = wp.testing.DummyOperator(grid_1d)
+
     bad_state = wp.State(grid_1d, np.ones(1))
     with pytest.raises(wp.BadStateError):
         op.apply(bad_state, 0.0)
@@ -26,7 +25,13 @@ def test_reject_invalid_states(grid_1d, op):
         op.apply(other_grid_state, 0.0)
 
 
-def test_apply_operator(grid_1d, op):
+def test_apply_operator(grid_1d, monkeypatch):
+    op = wp.testing.DummyOperator(grid_1d)
+    monkeypatch.setattr(op,
+                        "apply_to_wave_function", lambda data, t: 2.0 * t * data)
+    monkeypatch.setattr(op,
+                        "apply_from_left", lambda data, t: 3.0 * t * data)
+
     psi = wp.testing.random_state(grid_1d, 100)
     t = 7.0
     result = op.apply(psi, t)

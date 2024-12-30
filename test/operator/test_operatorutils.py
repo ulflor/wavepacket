@@ -2,6 +2,7 @@ import pytest
 from numpy.testing import assert_allclose
 
 import wavepacket as wp
+import wavepacket.testing
 
 
 def test_expectation_value():
@@ -20,3 +21,21 @@ def test_expectation_value():
         other_grid = wp.Grid(wp.PlaneWaveDof(1, 2, 3))
         other_op = wp.Potential1D(other_grid, 0, lambda x: x)
         wp.expectation_value(other_op, psi1)
+
+
+def test_forward_time_correctly(grid_1d, monkeypatch):
+    t = 17.0
+
+    def check(data, time):
+        assert time == t
+        return data
+
+    op = wp.testing.DummyOperator(grid_1d)
+    monkeypatch.setattr(op, "apply_to_wave_function", check)
+    monkeypatch.setattr(op, "apply_from_left", check)
+
+    psi = wp.testing.random_state(grid_1d, 42)
+    rho = wp.pure_density(psi)
+
+    wp.expectation_value(op, psi, t)
+    wp.expectation_value(op, rho, t)

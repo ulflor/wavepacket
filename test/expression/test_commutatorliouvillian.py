@@ -24,11 +24,28 @@ def test_apply_commutator(grid_1d):
 
     psi = wp.testing.random_state(grid_1d, 42)
     rho = wp.pure_density(psi)
-    t = 17.0
 
-    dot_rho = liouvillian.apply(rho, t)
+    dot_rho = liouvillian.apply(rho, 0.0)
 
     # Follows from the derivation of the Liouville-von-Neumann equation
-    dot_psi = eq.apply(psi, t)
+    dot_psi = eq.apply(psi, 0.0)
     expected = wp.direct_product(dot_psi, psi) + wp.direct_product(psi, dot_psi)
     wp.testing.assert_close(dot_rho, expected, 1e-12)
+
+
+def test_propagate_time_correctly(grid_1d, monkeypatch):
+    t = 42.0
+
+    def check(data, time):
+        assert time == t
+        return data
+
+    op = wp.testing.DummyOperator(grid_1d)
+    monkeypatch.setattr(op, "apply_from_left", check)
+    monkeypatch.setattr(op, "apply_from_right", check)
+
+    eq = wp.CommutatorLiouvillian(op)
+    psi = wp.testing.random_state(grid_1d, 42)
+    rho = wp.pure_density(psi)
+    eq.apply(rho, t)
+

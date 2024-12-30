@@ -21,15 +21,13 @@ def test_reject_invalid_states(grid_1d, grid_2d):
 
 def test_equation(grid_1d, monkeypatch):
     op = wp.testing.DummyOperator(grid_1d)
+    monkeypatch.setattr(op, 'apply_to_wave_function',
+                        lambda data, t: t * data)
+
     eq = wp.SchroedingerEquation(op)
     psi = wp.testing.random_state(grid_1d, 42)
-
-    def apply(state, time):
-        return time * state
-
-    monkeypatch.setattr(op, 'apply_to_wave_function', apply)
 
     t = 17
     result = eq.apply(psi, t)
 
-    assert_close(result, -1j * apply(psi, t), 1e-12)
+    assert_close(result, -1j * t * psi, 1e-12)

@@ -13,7 +13,7 @@ def test_reject_invalid_arguments(grid_1d, grid_2d):
         op1 + op2
 
 
-def test_apply(grid_1d):
+def test_apply(grid_1d, monkeypatch):
     op = wp.testing.DummyOperator(grid_1d)
 
     sum_op = op + op
@@ -21,14 +21,20 @@ def test_apply(grid_1d):
     psi = wp.testing.random_state(grid_1d, 128)
     rho = wp.pure_density(psi)
 
+    monkeypatch.setattr(op,
+                        "apply_to_wave_function", lambda data, t: t * data)
     result = sum_op.apply_to_wave_function(psi.data, t)
     expected = 2 * op.apply_to_wave_function(psi.data, t)
     assert_allclose(result, expected, atol=1e-12, rtol=0)
 
+    monkeypatch.setattr(op,
+                        "apply_from_left", lambda data, t: 2.0 * t * data)
     result = sum_op.apply_from_left(rho.data, t)
     expected = 2 * op.apply_from_left(rho.data, t)
     assert_allclose(result, expected, atol=1e-12, rtol=0)
 
+    monkeypatch.setattr(op,
+                        "apply_from_right", lambda data, t: 3.0 * t * data)
     result = sum_op.apply_from_right(rho.data, t)
     expected = 2 * op.apply_from_right(rho.data, t)
     assert_allclose(result, expected, atol=1e-12, rtol=0)
