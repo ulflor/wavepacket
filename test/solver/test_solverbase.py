@@ -1,15 +1,16 @@
 import pytest
 
 import wavepacket as wp
-from wavepacket import State
+import wavepacket.testing
+from wavepacket.testing import assert_close
 
 
 class DummySolver(wp.SolverBase):
     def __init__(self, dt):
         super().__init__(dt)
 
-    def step(self, state: State, t: float) -> State:
-        pass
+    def step(self, state: wp.State, t: float) -> wp.State:
+        return state + 1
 
 
 def test_throw_on_invalid_timestep():
@@ -25,3 +26,33 @@ def test_return_timestep():
     solver = DummySolver(dt)
 
     assert solver.dt == dt
+
+
+def test_propagate_edge_cases(grid_1d):
+    solver = DummySolver(2.0)
+    psi0 = wp.testing.random_state(grid_1d, 1)
+
+    with pytest.raises(wp.InvalidValueError):
+        for t, psi in solver.propagate(psi0, 0.0, -1):
+            pass
+
+    results = [x for x in solver.propagate(psi0, 0.0, 0)]
+    assert len(results) == 1
+    assert results[0][0] == 0.0
+    assert_close(results[0][1], psi0)
+
+    results = [x for x in solver.propagate(psi0, 0.0, 0, False)]
+    assert len(results) == 0
+
+
+def test_propagation(grid_1d):
+    solver = DummySolver(2.0)
+    psi0 = wp.testing.random_state(grid_1d, 1)
+
+    results = [x for x in solver.propagate(psi0, 0.0, 3)]
+    times = [x[0] for x in results]
+    psis = [x[1] for x in results]
+
+    assert times == [0.0, 2.0, 4.0, 6.0]
+    for i in range(4):
+        assert_close(psis[i], psi0 + i)

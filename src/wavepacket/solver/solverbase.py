@@ -18,3 +18,17 @@ class SolverBase(ABC):
     @abstractmethod
     def step(self, state: State, t: float) -> State:
         pass
+
+    def propagate(self, state0: State, t0: float,
+                  num_steps: int, include_first: bool = True):
+        if num_steps < 0:
+            raise wp.InvalidValueError("Cannot propagate for negative number of steps.")
+
+        if include_first:
+            yield t0, state0
+
+        state = state0
+        for step in range(num_steps):
+            t = t0 + step * self._dt
+            state = self.step(state, t)
+            yield t + self._dt, state
