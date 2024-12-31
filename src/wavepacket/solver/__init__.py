@@ -1,3 +1,4 @@
-__all__ = ['SolverBase']
+__all__ = ['OdeSolver', 'SolverBase']
 
+from .odesolver import OdeSolver
 from .solverbase import SolverBase
