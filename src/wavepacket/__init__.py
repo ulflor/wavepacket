@@ -18,11 +18,13 @@ from .operator import *
 from .solver import *
 from .utils import *
 
+from .logging import log
+
 # not imported into the top-level namespace.
 # It seems to make sense to use a separate package for that.
 from . import typing
 
-__all__ = list({'__version__'} |
+__all__ = list({'__version__', 'log'} |
                set(builder.__all__) |
                set(expression.__all__) |
                set(grid.__all__) |
