@@ -12,4 +12,5 @@ def expectation_value(op: OperatorBase, state: State, t: float = None) -> comple
     if state.is_wave_function():
         return np.vdot(state.data, new.data)
     else:
-        return wp.trace(new)
+        matrix_data = np.reshape(new.data, [new.grid.size, new.grid.size])
+        return np.trace(matrix_data)
