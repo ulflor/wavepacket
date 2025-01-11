@@ -1,11 +1,13 @@
 import math
+import numbers
 
 from .grid import State, trace
 from .operator import Potential1D, expectation_value
 
 
-def log(t: float, state: State, precision: int = 6) -> None:
-    print(f"\n\nt = {t:.{precision}},     trace = {trace(state):.{precision}}\n")
+def log(t: numbers.Real, state: State, precision: int = 6) -> None:
+    time = float(t)
+    print(f"\n\nt = {time:.{precision}},     trace = {trace(state):.{precision}}\n")
 
     for index, dof in enumerate(state.grid.dofs):
         x = Potential1D(state.grid, 0, lambda dvr_grid: dvr_grid)
