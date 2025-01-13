@@ -6,8 +6,7 @@ from .operator import Potential1D, expectation_value
 
 
 def log(t: numbers.Real, state: State, precision: int = 6) -> None:
-    time = float(t)
-    print(f"\n\nt = {time:.{precision}},     trace = {trace(state):.{precision}}\n")
+    print(f"\n\nt = {float(t):.{precision}},     trace = {trace(state):.{precision}}\n")
 
     for index, dof in enumerate(state.grid.dofs):
         x = Potential1D(state.grid, 0, lambda dvr_grid: dvr_grid)
