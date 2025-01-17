@@ -1,8 +1,10 @@
 Description
 -----------
 
-Wavepacket is a Python package to numerically solve Schrödinger and
-Liouville-von-Neumann equations for distinguishable particles.
+Wavepacket is a Python package to define and simulate small
+quantum systems. Or, more technically, it allows you to numerically
+solve Schrödinger and Liouville-von-Neumann equations for
+distinguishable particles.
 
 There are many different quantum systems and consequently approaches
 to solve them. Here we focus on a particular niche:
