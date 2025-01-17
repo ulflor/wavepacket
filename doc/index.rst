@@ -10,12 +10,16 @@ development, there is also a maintained Matlab implementation and a
 superseded C++ implementation.
 
 
-Links
------
+.. toctree::
+    :caption: Introduction
 
-- The project homepage <https://github.com/ulflor/wavepacket>
-- The Wavepacket wiki <https://sourceforge.net/p/wavepacket/wiki>
-    contains many more examples and numerical background articles.
+    getting-started
+
+.. toctree::
+    :caption: Useful links
+
+    Project homepage <https://github.com/ulflor/wavepacket>
+    Wavepacket wiki <https://sourceforge.net/p/wavepacket/wiki>
 
 
 Features

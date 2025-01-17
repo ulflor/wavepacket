@@ -29,3 +29,6 @@ Home = "https://github.com/ulflor/wavepacket"
 test = [
     "pytest >= 8.3"
 ]
+doc = [
+    "sphinx >= 8.1.3"
+]
