@@ -1,3 +1,7 @@
+"""
+Definition of an abstract Degree of Freedom (DOF).
+"""
+
 from abc import abstractmethod, ABC
 
 import wavepacket as wp
@@ -5,6 +9,51 @@ import wavepacket.typing as wpt
 
 
 class DofBase(ABC):
+    """
+    Abstract base class of a one-dimensional grid.
+
+    We assemble a multidimensional grid as direct product of one-dimensional grids.
+    To distinguish these two forms of grids, we call the one-dimensional grids DOF
+    (Degree of Freedom). They are defined by a grid definition in real space (which we
+    call DVR) and some descriptive values for the underlying basis (the FBR).
+
+    Usually, you only construct a DOF and assemble a multidimensional grid from one or
+    more of those. The provided functionality is accessible in a more convenient way
+    by higher-level helper methods, for example `wavepacket.dvr_density`.
+
+    Parameters
+    ----------
+    dvr_points: real-valued array_like
+        The grid points in real space.
+    fbr_points: real-valued array_like
+        This is typically used to assign useful numbers to the underlying basis.
+        For example, in a plane-wave expansion, we would use the wave vectors as fbr_grid.
+        The size must match that of the dvr_points.
+
+    Attributes
+    ----------
+    dvr_points : real-valued NumPy array
+        The grid points in real space given in the constructor.
+    fbr_points : real-valued NumPy array
+        The grid points of the underlying basis as given in the constructor.
+    size : int
+        The size of the grid (number of elements of `dvr_points`/`fbr_points`)
+
+    See Also
+    --------
+    wavepacket.Grid : The multidimensional grid formed from one or more degrees of freedom.
+    wavepacket.PlaneWaveDof: An implementation of a degree of freedom
+                             based on a plane wave expansion.
+
+    Notes
+    -----
+    We always define a grid based on the pseudo-spectral representation, also known as
+    Discrete Variable Representation (DVR) in the literature. The idea is to expand a
+    wave function or density operator in a basis, but also allow a lossless representation
+    on certain points in real space. A hopefully comprehensive summary can be found on
+    the `Wavepacket wiki <https://sf.net/p/wavepacket/wiki/Numerics.DVR>`_
+    """
+
     def __init__(self, dvr_points: wpt.RealData, fbr_points: wpt.RealData):
         if len(dvr_points) == 0 or len(fbr_points) == 0:
             raise wp.InvalidValueError("Degrees of freedom may not be empty.")
@@ -20,6 +69,8 @@ class DofBase(ABC):
 
     @property
     def dvr_points(self) -> wpt.RealData:
+        """
+        """
         return self._dvr_points
 
     @property
