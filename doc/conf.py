@@ -16,7 +16,8 @@ release = '0.1'
 
 extensions = [
     "autoapi.extension",
-    "numpydoc"
+    "numpydoc",
+    "myst_nb"
 ]
 
 templates_path = ['_templates']

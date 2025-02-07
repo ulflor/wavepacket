@@ -16,6 +16,11 @@ superseded C++ implementation.
     getting-started
 
 .. toctree::
+   :caption: Demos for typical usages
+
+   demos/schroedinger_cat
+
+.. toctree::
     :caption: Useful links
 
     Project homepage <https://github.com/ulflor/wavepacket>
