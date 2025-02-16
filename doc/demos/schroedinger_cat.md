@@ -63,7 +63,7 @@ Also, the equations are motion are now governed by a Liouvillian.
 
 Besides these unavoidable changes, the interface works the same
 as for the wave function case.
-Convenience functions, such as `wavepacket.dvr_density`_ work for both states.
+Convenience functions, such as `wavepacket.grid.dvr_density()` work for both states.
 
 Note how the small peak at the zero coordinate and the wiggles are gone now.
 This is the effect of the summation;

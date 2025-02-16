@@ -15,6 +15,8 @@ release = '0.1'
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#general-configuration
 
 extensions = [
+    "sphinx.ext.autodoc",
+    "sphinx.ext.inheritance_diagram",
     "autoapi.extension",
     "numpydoc",
     "myst_nb"
@@ -26,6 +28,7 @@ exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store']
 
 # ------ AutoApi configuration
 autoapi_dirs = ["../src/wavepacket"]
+      
 
 
 # -- Options for HTML output -------------------------------------------------

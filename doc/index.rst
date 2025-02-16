@@ -26,6 +26,11 @@ superseded C++ implementation.
     Project homepage <https://github.com/ulflor/wavepacket>
     Wavepacket wiki <https://sourceforge.net/p/wavepacket/wiki>
 
+.. toctree::
+   :hidden:
+
+    wavepacket
+
 
 Features
 --------

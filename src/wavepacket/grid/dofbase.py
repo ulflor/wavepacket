@@ -32,11 +32,11 @@ class DofBase(ABC):
 
     Attributes
     ----------
-    dvr_points : real-valued NumPy array
+    dvr_points: real-valued NumPy array
         The grid points in real space given in the constructor.
-    fbr_points : real-valued NumPy array
+    fbr_points: real-valued NumPy array
         The grid points of the underlying basis as given in the constructor.
-    size : int
+    size: int
         The size of the grid (number of elements of `dvr_points`/`fbr_points`)
 
     See Also
