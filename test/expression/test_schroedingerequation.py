@@ -7,10 +7,10 @@ from wavepacket.testing import assert_close
 
 def test_reject_invalid_states(grid_1d, grid_2d):
     op = wp.testing.DummyOperator(grid_1d)
-    eq = wp.SchroedingerEquation(op)
+    eq = wp.expression.SchroedingerEquation(op)
     psi = wp.testing.random_state(grid_1d, 42)
 
-    rho = wp.pure_density(psi)
+    rho = wp.builder.pure_density(psi)
     with pytest.raises(wp.BadStateError):
         eq.apply(rho, 0.0)
 
@@ -22,9 +22,9 @@ def test_reject_invalid_states(grid_1d, grid_2d):
 def test_equation(grid_1d, monkeypatch):
     op = wp.testing.DummyOperator(grid_1d)
     monkeypatch.setattr(op, 'apply_to_wave_function',
-                        lambda data, t: t * data)
+                        lambda data, _t: _t * data)
 
-    eq = wp.SchroedingerEquation(op)
+    eq = wp.expression.SchroedingerEquation(op)
     psi = wp.testing.random_state(grid_1d, 42)
 
     t = 17

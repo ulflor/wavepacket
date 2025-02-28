@@ -7,8 +7,8 @@ import wavepacket.typing as wpt
 
 
 @pytest.fixture
-def dof() -> wp.PlaneWaveDof:
-    return wp.PlaneWaveDof(10, 20, 8)
+def dof() -> wp.grid.PlaneWaveDof:
+    return wp.grid.PlaneWaveDof(10, 20, 8)
 
 
 @pytest.fixture
@@ -16,7 +16,7 @@ def dx(dof) -> float:
     return 10.0 / dof.size
 
 
-def plane_wave(dof: wp.PlaneWaveDof, k_index: int) -> wpt.ComplexData:
+def plane_wave(dof: wp.grid.PlaneWaveDof, k_index: int) -> wpt.ComplexData:
     weight = 1.0 / len(dof.dvr_points)
     k = dof.fbr_points[k_index]
     psi = np.exp(1j * k * dof.dvr_points)
@@ -25,7 +25,7 @@ def plane_wave(dof: wp.PlaneWaveDof, k_index: int) -> wpt.ComplexData:
     return np.sqrt(weight) * np.einsum("ijk, j -> ijk", full_size, psi)
 
 
-def plane_wave_fbr(dof: wp.PlaneWaveDof, k_index: int) -> wpt.RealData:
+def plane_wave_fbr(dof: wp.grid.PlaneWaveDof, k_index: int) -> wpt.RealData:
     psi = np.zeros(len(dof.fbr_points))
     psi[k_index] = 1.0
 

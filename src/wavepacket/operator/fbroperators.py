@@ -8,7 +8,7 @@ from ..grid import Grid
 
 class PlaneWaveFbrOperator(OperatorBase):
     def __init__(self, grid: Grid, dof_index: int, generator: wpt.Generator):
-        if not isinstance(grid.dofs[dof_index], wp.PlaneWaveDof):
+        if not isinstance(grid.dofs[dof_index], wp.grid.PlaneWaveDof):
             raise wp.InvalidValueError(
                 f"PlaneWaveFbrOperator requires a PlaneWaveDof, but got {grid.dofs[dof_index].__class__}")
 

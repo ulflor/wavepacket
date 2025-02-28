@@ -15,9 +15,11 @@ from . import utils
 
 from .exceptions import (BadFunctionCall, BadGridError, BadStateError, ExecutionError,
                          InvalidValueError)
+from .generators import Gaussian, PlaneWave
 from .logging import log
 
 
 __all__ = ['__version__', 'log', 'BadFunctionCall', 'BadGridError', 'BadStateError',
            'ExecutionError', 'InvalidValueError',
+           'Gaussian', 'PlaneWave',
            'builder', 'expression', 'grid', 'operator', 'solver', 'typing', 'utils']

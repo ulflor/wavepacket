@@ -5,11 +5,11 @@ import wavepacket.testing
 from wavepacket.testing import assert_close
 
 
-class DummySolver(wp.SolverBase):
+class DummySolver(wp.solver.SolverBase):
     def __init__(self, dt):
         super().__init__(dt)
 
-    def step(self, state: wp.State, t: float) -> wp.State:
+    def step(self, state: wp.grid.State, t: float) -> wp.grid.State:
         return state + 1
 
 
@@ -33,7 +33,7 @@ def test_propagate_edge_cases(grid_1d):
     psi0 = wp.testing.random_state(grid_1d, 1)
 
     with pytest.raises(wp.InvalidValueError):
-        for t, psi in solver.propagate(psi0, 0.0, -1):
+        for _ in solver.propagate(psi0, 0.0, -1):
             pass
 
     results = [x for x in solver.propagate(psi0, 0.0, 0)]

@@ -7,30 +7,30 @@ from numpy.testing import assert_array_equal
 import wavepacket as wp
 
 
-def build_grid(sizes: Sequence[int]) -> wp.Grid:
-    dofs = [wp.PlaneWaveDof(1, 2, n) for n in sizes]
-    return wp.Grid(dofs)
+def build_grid(sizes: Sequence[int]) -> wp.grid.Grid:
+    dofs = [wp.grid.PlaneWaveDof(1, 2, n) for n in sizes]
+    return wp.grid.Grid(dofs)
 
 
 def test_require_at_least_one_dof():
     with pytest.raises(wp.InvalidValueError):
         # noinspection PyTypeChecker
-        wp.Grid(None)
+        wp.grid.Grid(None)
 
 
 def test_set_and_access_dofs():
-    dof1 = wp.PlaneWaveDof(10, 20, 10)
-    dof2 = wp.PlaneWaveDof(0, 10, 5)
+    dof1 = wp.grid.PlaneWaveDof(10, 20, 10)
+    dof2 = wp.grid.PlaneWaveDof(0, 10, 5)
 
-    grid = wp.Grid([dof1, dof2])
+    grid = wp.grid.Grid([dof1, dof2])
 
     assert grid.dofs == [dof1, dof2]
 
 
 def test_size_of_grid():
-    grid = wp.Grid([wp.PlaneWaveDof(1, 2, 3),
-                    wp.PlaneWaveDof(1, 2, 10),
-                    wp.PlaneWaveDof(1, 2, 4)])
+    grid = wp.grid.Grid([wp.grid.PlaneWaveDof(1, 2, 3),
+                         wp.grid.PlaneWaveDof(1, 2, 10),
+                         wp.grid.PlaneWaveDof(1, 2, 4)])
 
     assert grid.size == 3 * 10 * 4
 

@@ -15,4 +15,4 @@ class SchroedingerEquation(ExpressionBase):
         if not psi.is_wave_function():
             raise wp.BadStateError("SchroedingerEquation requires a wave function.")
 
-        return wp.State(psi.grid, -1j * self._op.apply_to_wave_function(psi.data, t))
+        return State(psi.grid, -1j * self._op.apply_to_wave_function(psi.data, t))

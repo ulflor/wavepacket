@@ -72,10 +72,10 @@ there is no coherence between the left and right Gaussian.
 ```{code-cell}
 rho_0 = 0.5 * (wp.builder.pure_density(psi_left) + wp.builder.pure_density(psi_right))
 
-liouvillian = wp.builder.CommutatorLiouvillian(hamiltonian)
-solver = wp.builder.OdeSolver(liouvillian, dt=math.pi/5)
+liouvillian = wp.expression.CommutatorLiouvillian(hamiltonian)
+solver = wp.solver.OdeSolver(liouvillian, dt=math.pi/5)
 
 for t, rho in solver.propagate(rho_0, t0=0.0, num_steps=5):
     # TODO: Better and more convenient plotting
-    plt.plot(grid.dofs[0].dvr_points, wp.dvr_density(rho))
+    plt.plot(grid.dofs[0].dvr_points, wp.grid.dvr_density(rho))
 ```
