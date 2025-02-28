@@ -17,9 +17,10 @@ class DofBase(ABC):
     (Degree of Freedom). They are defined by a grid definition in real space (which we
     call DVR) and some descriptive values for the underlying basis (the FBR).
 
-    Usually, you only construct a DOF and assemble a multidimensional grid from one or
-    more of those. The provided functionality is accessible in a more convenient way
-    by higher-level helper methods, for example `wavepacket.dvr_density`.
+    You need to instantiate some DOFs and assemble a multidimensional grid from
+    one or more of those. The provided functionality is accessible in a more
+    convenient way by higher-level helper methods, for example
+    :py:func:`wavepacket.grid.dvr_density`.
 
     Parameters
     ----------
