@@ -28,6 +28,7 @@ superseded C++ implementation.
 
 .. toctree::
    :caption: API
+   :maxdepth: 4
 
     wavepacket
 
