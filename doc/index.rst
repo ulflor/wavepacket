@@ -27,7 +27,7 @@ superseded C++ implementation.
     Wavepacket wiki <https://sourceforge.net/p/wavepacket/wiki>
 
 .. toctree::
-   :hidden:
+   :caption: API
 
     wavepacket
 

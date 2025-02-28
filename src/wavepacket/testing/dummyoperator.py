@@ -2,8 +2,8 @@ import wavepacket as wp
 import wavepacket.typing as wpt
 
 
-class DummyOperator(wp.OperatorBase):
-    def __init__(self, grid: wp.Grid):
+class DummyOperator(wp.operator.OperatorBase):
+    def __init__(self, grid: wp.grid.Grid):
         super().__init__(grid)
 
     def apply_to_wave_function(self, psi: wpt.ComplexData, t: float) -> wpt.ComplexData:
