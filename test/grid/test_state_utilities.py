@@ -3,7 +3,6 @@ import pytest
 from numpy.testing import assert_allclose
 
 import wavepacket as wp
-import wavepacket.testing
 
 
 def test_reject_invalid_states(grid_2d):

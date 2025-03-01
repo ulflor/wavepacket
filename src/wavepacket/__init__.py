@@ -9,6 +9,7 @@ from . import expression
 from . import grid
 from . import operator
 from . import solver
+from . import testing
 from . import typing
 
 

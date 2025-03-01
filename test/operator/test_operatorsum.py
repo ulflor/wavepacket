@@ -2,7 +2,6 @@ import pytest
 from numpy.testing import assert_allclose
 
 import wavepacket as wp
-import wavepacket.testing
 
 
 def test_reject_invalid_arguments(grid_1d, grid_2d):

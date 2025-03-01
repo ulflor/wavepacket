@@ -1,7 +1,6 @@
 import pytest
 
 import wavepacket as wp
-import wavepacket.testing
 
 
 def test_reject_invalid_states(grid_1d, grid_2d):

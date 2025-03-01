@@ -1,8 +1,8 @@
-import wavepacket as wp
 import wavepacket.typing as wpt
+from ..grid import DofBase
 
 
-class DummyDof(wp.grid.DofBase):
+class DummyDof(DofBase):
     def __init__(self, dvr_array: wpt.RealData, fbr_array: wpt.RealData):
         super().__init__(dvr_array, fbr_array)
 

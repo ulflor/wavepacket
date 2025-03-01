@@ -3,7 +3,6 @@ import pytest
 from numpy.testing import assert_allclose
 
 import wavepacket as wp
-import wavepacket.testing
 
 
 @pytest.fixture
