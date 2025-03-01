@@ -1,8 +1,43 @@
 Getting started
 ===============
 
-Let us start with the simplest possible quantum system: the free particle.
-To spice things up, we consider the time evolution of a coherent and an
-incoherent state.
+A one-dimensional free particle
+-------------------------------
 
-We start with a degree of freedom, see :py:class:`wavepacket.grid.DofBase`.
+To demonstrate the usage of Wavepacket, let us dive right into
+a simulation of a one-dimensional free particle.
+
+.. code-block:: python
+
+    import wavepacket as wp
+
+    dof = wp.grid.PlaneWaveDof(-20, 20, 128)
+    grid = wp.grid.Grid(dof)
+
+    hamiltonian = wp.operator.CartesianKineticEnergy(grid, 0, mass=1.0)
+    equation = wp.expression.SchroedingerEquation(hamiltonian)
+
+    psi0 = wp.builder.product_wave_function(grid,
+                                            wp.Gaussian(x=0, p=0, fwhm=1))
+
+    solver = wp.solver.OdeSolver(equation, dt=math.pi/5)
+    for t, psi in solver.propagate(psi0, t0=0, num_steps=20):
+        # do something with the solution
+
+This program already highlights the basic structure of a Wavepacket simulation:
+
+# You first need to set up a grid / basis expansion for your system.
+  For that, you first define the grid along each degree of freedom,
+  and then form the multidimensional grid as the direct product of the
+  one-dimensional grids.
+# Given a grid, you can define your equations of motion.
+  Again, this step consists of two parts: First, you define all relevant
+  operators, for example the Hamiltonian, then you wrap these operators
+  into components for your equation of motion. For Wavepacket dynamics,
+  you usually want to setup a Schroedinger equation, but for density operators,
+  you may compose your equation from various commutators, anticommutators,
+  Lindblad Liouvillians etc.
+# As the next step, you need to specify your initial state that you want to
+  propagate.
+# Finally, you set the solver for your equations of motion, and propagate
+  your initial state in time.

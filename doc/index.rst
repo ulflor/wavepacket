@@ -30,7 +30,7 @@ superseded C++ implementation.
    :caption: API
    :maxdepth: 4
 
-    wavepacket
+   autoapi/index
 
 
 Features
@@ -40,10 +40,12 @@ Features
   potentials directly as functions in real space.
 - Directly solves the differential equations numerically.
   This scales poorly to large systems, but is easy to use.
-- Most of the code can handle wave functions and density operators,
-  allowing you to move easily between closed and open quantum systems.
+- Most of the code handles wave functions and density operators
+  on the same footing, allowing you to move easily between closed
+  and open quantum systems.
 - You can easily define complex setups: Want to use an ensemble of
-  random thermal wave functions? No problem.
+  random thermal wave functions? Summing over all quantum numbers m
+  for a given initial angular momentum? No problem.
 
 
 Bugs / Requests

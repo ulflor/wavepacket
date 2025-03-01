@@ -10,7 +10,6 @@ from . import grid
 from . import operator
 from . import solver
 from . import typing
-from . import utils
 
 
 from .exceptions import (BadFunctionCall, BadGridError, BadStateError, ExecutionError,
@@ -22,4 +21,4 @@ from .logging import log
 __all__ = ['__version__', 'log', 'BadFunctionCall', 'BadGridError', 'BadStateError',
            'ExecutionError', 'InvalidValueError',
            'Gaussian', 'PlaneWave',
-           'builder', 'expression', 'grid', 'operator', 'solver', 'typing', 'utils']
+           'builder', 'expression', 'grid', 'operator', 'solver', 'testing', 'typing']
