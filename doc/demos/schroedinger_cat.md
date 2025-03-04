@@ -4,15 +4,14 @@ kernelspec:
     name: python3
 ---
 
-# Schroedinger cat states
-
+(demo-schroedinger-cat)=
+# Schrödinger cat states
 
 This demo demonstrates one of the core features of Wavepacket:
 Switching between wave functions and density operators with minimal overhead
 
 We consider a simple free particle as a coherent or incoherent sum of two Gaussians.
 This shows the main features without too much detracting physics.
-
 
 ```{code-cell}
 import math
@@ -21,7 +20,6 @@ import matplotlib.pyplot as plt
 import numpy as np
 import wavepacket as wp
 ```
-
 
 Both descriptions, wave function and density operator, share the grid, and
 the operator structure.
@@ -32,9 +30,8 @@ grid = wp.grid.Grid(degree_of_freedom)
 hamiltonian = wp.operator.CartesianKineticEnergy(grid, dof_index=0, mass=1.0)
 ```
 
-
 For wave functions, we set up an initial wave function,
-and create a Schroedinger equation that we then solve.
+and create a Schrödinger equation that we then solve.
 The dynamics are not terribly surprising:
 The initial Gaussians only broaden over time.
 
@@ -56,9 +53,8 @@ for t, psi in solver.propagate(psi_0, t0=0.0, num_steps=5):
     plt.plot(grid.dofs[0].dvr_points, wp.grid.dvr_density(psi))
 ```
 
-
 We can equally use a density operator description.
-For that, we have to setup the initial state as an operator.
+For that, we have to set up the initial state as an operator.
 Also, the equations are motion are now governed by a Liouvillian.
 
 Besides these unavoidable changes, the interface works the same

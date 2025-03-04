@@ -29,7 +29,7 @@ This program already highlights the basic structure of a Wavepacket simulation:
 # You first need to set up a grid / basis expansion for your system.
   For that, you first define the grid along each degree of freedom,
   and then form the multidimensional grid as the direct product of the
-  one-dimensional grids.
+  one-dimensional grids. Note that Wavepacket uses exclusively the DVR / pseudo-spectral method [#dvr]_.
 # Given a grid, you can define your equations of motion.
   Again, this step consists of two parts: First, you define all relevant
   operators, for example the Hamiltonian, then you wrap these operators
@@ -40,4 +40,17 @@ This program already highlights the basic structure of a Wavepacket simulation:
 # As the next step, you need to specify your initial state that you want to
   propagate.
 # Finally, you set the solver for your equations of motion, and propagate
-  your initial state in time.
+  your initial state in time [#solvers]_.
+
+This programmatic approach is rather complex and verbose when compared to more rigid programs.
+For example, Matlab Wavepacket only requires you to set the various parameters, which makes the scripts
+shorter and simpler.
+However, the Python version allows more flexibility when you use more complex setups.
+For example, you can almost seamlessly switch between density operator and wavepacket descriptions,
+see the :ref:`demo-schroedinger-cat` demo.
+
+
+.. [#dvr] See the explanation of the DVR method in the
+   `Wavepacket wiki <https://sourceforge.net/p/wavepacket/wiki/Numerics.DVR>`_.
+.. [#solvers] See the
+   `discussion of ODE solvers <https://sourceforge.net/p/wavepacket/cpp/blog/2021/04/convergence-2/>`_.
