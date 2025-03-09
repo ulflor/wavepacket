@@ -27,7 +27,7 @@ a simulation of a one-dimensional free particle.
 This program already highlights the basic structure of a Wavepacket simulation:
 
 # You first need to set up a grid / basis expansion for your system.
-  For that, you first define the grid along each degree of freedom,
+  For that, you need to define the grid along each degree of freedom,
   and then form the multidimensional grid as the direct product of the
   one-dimensional grids. Note that Wavepacket uses exclusively the DVR / pseudo-spectral method [#dvr]_.
 # Given a grid, you can define your equations of motion.
@@ -37,9 +37,8 @@ This program already highlights the basic structure of a Wavepacket simulation:
   you usually want to setup a Schroedinger equation, but for density operators,
   you may compose your equation from various commutators, anticommutators,
   Lindblad Liouvillians etc.
-# As the next step, you need to specify your initial state that you want to
-  propagate.
-# Finally, you set the solver for your equations of motion, and propagate
+# Next you specify your initial state that you want to propagate.
+# Finally, you set up the solver for your equations of motion, and propagate
   your initial state in time [#solvers]_.
 
 This programmatic approach is rather complex and verbose when compared to more rigid programs.
@@ -47,7 +46,8 @@ For example, Matlab Wavepacket only requires you to set the various parameters, 
 shorter and simpler.
 However, the Python version allows more flexibility when you use more complex setups.
 For example, you can almost seamlessly switch between density operator and wavepacket descriptions,
-see the :ref:`demo-schroedinger-cat` demo.
+see the :ref:`demo-schroedinger-cat` demo, or propagate an ensemble of random thermal
+wave functions to replicate a thermal system (TODO: translate demo).
 
 
 .. [#dvr] See the explanation of the DVR method in the

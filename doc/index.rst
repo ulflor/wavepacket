@@ -14,6 +14,7 @@ superseded C++ implementation.
     :caption: Introduction
 
     getting-started
+    architecture
 
 .. toctree::
    :caption: Demos for typical usages
