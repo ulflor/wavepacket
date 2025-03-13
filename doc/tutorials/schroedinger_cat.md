@@ -31,7 +31,8 @@ hamiltonian = wp.operator.CartesianKineticEnergy(grid, dof_index=0, mass=1.0)
 ```
 
 For wave functions, we set up an initial wave function,
-and create a Schrödinger equation that we then solve.
+a Hamiltonian, and then create a Schrödinger equation,
+{math}`\dot \psi = -\imath \hat H \psi`, that we then solve.
 The dynamics are not terribly surprising:
 The initial Gaussians only broaden over time.
 
@@ -54,8 +55,14 @@ for t, psi in solver.propagate(psi_0, t0=0.0, num_steps=5):
 ```
 
 We can equally use a density operator description.
-For that, we have to set up the initial state as an operator.
-Also, the equations are motion are now governed by a Liouvillian.
+For that, we have to set up the initial state as an operator
+instead of a wave function,
+{math}`\hat \rho_ = |\psi_0\rangle\langle\psi_0|`
+Also, the equations are motion are now governed by a Liouville von Neumann equation, (LvNE)
+{math}`\frac{\partial \rho}{\partial t} = \mathcal{L}(\hat \rho) = [\hat H, \hat \rho]_-`.
+Note that both the Schrödinger equation and the LvNE contain the same
+Hamiltonian, which can thus be recycled. This is the reason for separating
+operators from "expressions".
 
 Besides these unavoidable changes, the interface works the same
 as for the wave function case.

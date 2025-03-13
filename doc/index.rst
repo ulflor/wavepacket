@@ -19,7 +19,7 @@ superseded C++ implementation.
 .. toctree::
    :caption: Demos for typical usages
 
-   demos/schroedinger_cat
+   tutorials/schroedinger_cat
 
 .. toctree::
     :caption: Useful links
