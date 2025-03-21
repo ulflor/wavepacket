@@ -6,8 +6,9 @@ A more formula-heavy introduction of the DVR method can be found in the
 Here we only introduce the most important elements. The takeaway message is:
 
 * States in Wavepacket are represented by a coefficient vector in a
-  special basis. You should generally transform them, for example into a
-  grid (DVR) representation, before, say, plotting them.
+  special basis. For most purposes, you should transform the state into
+  a more suited basis. For example, you should transform to the DVR if
+  you want to plot a state.
 * A grid is built as the direct product of one or more one-dimensional grids
   called degrees of freedom.
 
