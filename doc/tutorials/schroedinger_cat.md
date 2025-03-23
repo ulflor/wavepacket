@@ -13,6 +13,10 @@ Switching between wave functions and density operators with minimal overhead
 We consider a simple free particle as a coherent or incoherent sum of two Gaussians.
 This shows the main features without too much detracting physics.
 
+## General setup
+
+We start with a few convenience imports and shortcuts
+
 ```{code-cell}
 import math
 
@@ -22,7 +26,7 @@ import wavepacket as wp
 ```
 
 Both descriptions, wave function and density operator, share the grid, and
-the operator structure.
+the operator structure, so only set it up once.
 
 ```{code-cell}
 degree_of_freedom = wp.grid.PlaneWaveDof(-15, 15, 128)
@@ -30,9 +34,12 @@ grid = wp.grid.Grid(degree_of_freedom)
 hamiltonian = wp.operator.CartesianKineticEnergy(grid, dof_index=0, mass=1.0)
 ```
 
+## Wave functions
+
 For wave functions, we set up an initial wave function,
-a Hamiltonian, and then create a Schrödinger equation,
-{math}`\dot \psi = -\imath \hat H \psi`, that we then solve.
+and create a Schrödinger equation,
+{math}`\frac{\partial \psi}{\partial t} = -\imath \hat H \psi`,
+that we then solve.
 The dynamics are not terribly surprising:
 The initial Gaussians only broaden over time.
 
@@ -54,11 +61,13 @@ for t, psi in solver.propagate(psi_0, t0=0.0, num_steps=5):
     plt.plot(grid.dofs[0].dvr_points, wp.grid.dvr_density(psi))
 ```
 
-We can equally use a density operator description.
-For that, we have to set up the initial state as an operator
-instead of a wave function,
-{math}`\hat \rho_ = |\psi_0\rangle\langle\psi_0|`
-Also, the equations are motion are now governed by a Liouville von Neumann equation, (LvNE)
+## Density operators
+
+For the equivalent density operator description, we have to set up the initial state
+as an operator instead of a wave function. Here, we choose an incoherent summation
+of the two Gaussians,
+{math}`\hat \rho_0 = \frac{1}{2}(|\psi_L\rangle\langle\psi_L| + |\psi_R\rangle\langle\psi_R|)`.
+Also, the equations are motion are now governed by a Liouville von Neumann equation (LvNE),
 {math}`\frac{\partial \rho}{\partial t} = \mathcal{L}(\hat \rho) = [\hat H, \hat \rho]_-`.
 Note that both the Schrödinger equation and the LvNE contain the same
 Hamiltonian, which can thus be recycled. This is the reason for separating
@@ -66,11 +75,15 @@ operators from "expressions".
 
 Besides these unavoidable changes, the interface works the same
 as for the wave function case.
-Convenience functions, such as {py:func}`wavepacket.grid.dvr_density` work for both states.
+{py:func}`wavepacket.grid.dvr_density` in particular works for both types of states.
 
 Note how the small peak at the zero coordinate and the wiggles are gone now.
-This is the effect of the summation;
+This is the effect of the incoherent summation;
 there is no coherence between the left and right Gaussian.
+Had we chosen a coherent summation,
+{math}`\hat \rho_0 = |\psi_0\rangle\langle\psi_0|`,
+we would have obtained the same result as for the wave function case including
+the interference spike at {math}`x=0`.
 
 ```{code-cell}
 rho_0 = 0.5 * (wp.builder.pure_density(psi_left) + wp.builder.pure_density(psi_right))
