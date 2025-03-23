@@ -23,16 +23,17 @@ Take a set of orthonormal basis functions, and expand your wave function,
 
 .. math::
 
-   \psi(x) = \sum_k c_k f_k(x).
+   \psi(x) = \sum_k c_k f_k(x),
 
+where in numerical computations, the sum is always truncated.
 The coefficient vector provides a unique representation of the wave function.
-Each degree of freedom (DOF) class in Wavepacket is modelled around a
-specific set of orthonormal basis functions. For example,
+Each degree of freedom (DOF) class in Wavepacket is modelled around
+specific basis functions, for example
 :py:class:`wavepacket.grid.PlaneWaveDof` uses plane waves as underlying basis.
 Calculations can then use the coefficient vector; for example the trace
 can be calculated as :math:`\|\psi\|^2 = \sum_k |c_k|^2`.
 
-In general, the FBR is only used for special applications, such as operators
+We only use the FBR for special applications, such as operators
 that are diagonal in the basis. In general, we much prefer the DVR.
 
 DVR representation
@@ -40,15 +41,16 @@ DVR representation
 
 The underlying idea of the Discrete Variable Representation is again an
 expansion in an orthonormal basis
+
 .. math::
    :label: representation_dvr
 
-   \psi(x) = \sim_i \psi_i g_i(x)
+   \psi(x) = \sum_i \psi_i g_i(x)
 
 such that the coefficients are the values of the wave function at some
-fixed grid points, :math:`\psi_i = \psi(x_i)`. It can be shown for
-common basis functions that a truncated FBR with N coefficients is convertible
-into a DVR with N grid points without loss.
+fixed grid points, :math:`\psi_i = \psi(x_i)`. It can be shown 
+that a truncated FBR with N coefficients can be converted
+into a DVR with N grid points without loss of information.
 
 The DVR is used for numerics with the DVR approximation: You apply
 a space-local operator like a potential by multiplying the operator
@@ -58,14 +60,15 @@ plot them.
 
 .. note::
 
-    In theory, the functional forms are complex. For example, the density
+    In theory, the DVR is not simple. For example, the density
     is given in the DVR as
-    :math:`|\psi(x)|^2 = \sum_{i,j} \psi_i \psi_j^\ast g_i(x) g_j^\ast(x)`,
+    :math:`|\psi(x)|^2 = \sum_{i,j=1}^N \psi_i \psi_j^\ast g_i(x;N) g_j^\ast(x;N)`,
     where the basis functions also depend on the number of grid points.
-    In practice, we never use this form, but let the plot interpolate between
-    the points :math:`(x_i, |\psi(x_i)|^2)`. This performs poorly if the
-    grid has few grid points. However, in these cases, it is usually more
-    promising to analyse the system in the FBR.
+    In practice, we completely ignore the functions :math:`g_i(x;N)`, and just plot
+    the density at the grid points, :math:`(x_i, |\psi(x_i)|^2)`.
+    
+    This performs poorly if the grid has few grid points. However, in these cases,
+    it is usually more insightful to study the system in a well-chosen FBR.
 
 However, for actual computations, the DVR requires additional weight functions
 associated with the grid points. For example, the trace of the wave function
@@ -97,8 +100,8 @@ Multidimensional grids
 ----------------------
 
 A multidimensional :py:class:`wavepacket.grid.Grid` is constructed as the direct
-product of one-dimensional grids, using the weighted DVR. Hence, for example
-a two-dimensional wave function is given as
+product of one-dimensional degrees of freedom using the weighted DVR. Hence,
+for example a two-dimensional wave function is given as
 
 .. math::
    :label: representation_2dgrid
@@ -123,6 +126,6 @@ the result is:
    \tilde g_i(x_1) \tilde h_j(y_1) \tilde g_k^\ast(x_2) \tilde h_l^\ast(y_2)
 
 so that the resulting density operator is a four-dimensional tensor
-:math:`\rho_{ijkl} = \psi_{ij}\psi_{kl}`, also for non-pure states.
+:math:`\rho_{ijkl} = \psi_{ij}\psi_{kl}^\ast`, also for non-pure states.
 As it is still given in the weighted DVR, you can for example calculate the
 trace as :math:`Tr[\hat \rho] = \sum_{i=1}^N \sum_{k=1}^M \rho_{ikik}`.
