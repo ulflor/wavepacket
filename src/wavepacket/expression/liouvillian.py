@@ -5,10 +5,52 @@ from ..operator import OperatorBase
 
 
 class CommutatorLiouvillian(ExpressionBase):
+    """
+    Represents a commutator expression in a Liouville von-Neumann equation.
+
+    Given an operator :math:`\hat H`, this commutator expression is given by
+    :math:`\mathcal{L}(\hat \rho) = -\imath (\hat H \hat \rho - \hat \rho \hat \H)`.
+
+    Parameters
+    ----------
+    op: wp.operator.OperatorBase
+        The operator to commute with the density operator.
+
+    Note
+    ----
+    The extra factor of -i is added to ensure that the commutator can be directly
+    plugged into a Liouville von-Neumann equation. defined as
+    :math:`\frac{\partial \hat \rho}{\partial t} = \mathcal{L}(\hat \rho)`.
+    If, for some reason, you need the raw commutator, need to multiply the result with
+    the imaginary number.
+    """
+
     def __init__(self, op: OperatorBase):
         self._op = op
 
     def apply(self, rho: State, t: float) -> State:
+        """
+        Evaluates the commutator  for the given density operator and time.
+
+        Parameters
+        ----------
+        rho: wp.grid.State
+            The density operator to commute with
+        t: float
+            The time at which the operator is evaluated.
+
+        Returns
+        -------
+        wp.grid.State
+            The result of the commutator.
+
+        Raises
+        ------
+        wp.BadGridError
+            If the grids of the density operator and the wrapped operator do not match.
+        wp.BadStateError
+            If the input state is not a valid density operator.
+        """
         if rho.grid != self._op.grid:
             raise wp.BadGridError("Input state is defined on the wrong grid.")
 

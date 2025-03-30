@@ -16,7 +16,6 @@ def product_wave_function(grid: Grid,
 
     Parameters
     ----------
-
     grid: wp.grid.Grid
            The grid on which the product wave function is assembled
     generators: Sequence[wp.typing.Generator]
