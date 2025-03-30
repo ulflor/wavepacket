@@ -11,6 +11,38 @@ from ..grid import Grid, State
 def product_wave_function(grid: Grid,
                           generators: wpt.Generator | Sequence[wpt.Generator],
                           normalize: bool = True) -> State:
+    """
+    Builds a product wave function from a set of one-dimensional wave functions.
+
+    Parameters
+    ----------
+
+    grid: wp.grid.Grid
+           The grid on which the product wave function is assembled
+    generators: Sequence[wp.typing.Generator]
+                A list of callables that specifies the wave function
+                along each degree of freedom. The `generators` return
+                the one-dimensional functions in the DVR, i.e., raw function
+                values at the grid points.
+    normalize: bool, default=true
+               If the norm is non-zero and this value is set, the resulting
+               product wave function is normalized, otherwise the product
+               is returned directly.
+
+    Returns
+    -------
+    wp.grid.State
+        The product wave function in the Wavepacket-default weighted DVR.
+
+    Raises
+    ------
+    wp.InvalidValueError
+        If the number of generators does not match the grid dimensions.
+
+    numpy exceptions
+        These may be thrown if the generators return wave functions
+        with invalid shapes.
+    """
     generator_list = generators
     if not isinstance(generator_list, Iterable):
         generator_list = [generators]
