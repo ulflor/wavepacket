@@ -17,10 +17,13 @@ class DofBase(ABC):
     (Degree of Freedom). They are defined by a grid definition in real space (which we
     call DVR) and some descriptive values for the underlying basis (the FBR).
 
-    You need to instantiate some DOFs and assemble a multidimensional grid from
-    one or more of those. The provided functionality is accessible in a more
-    convenient way by higher-level helper methods, for example
-    :py:func:`wavepacket.grid.dvr_density`.
+    To implement a new DOF, you need to specify the DVr and FBR points, and implement
+    a few transformations from the Wavepacket default representation to the DVR and FBR.
+    For more details on the grid and its points, see :doc:`/representations`.
+
+    Note that the transformation functions are highly flexible, but awkward to use.
+    In general, you should use convenience functions instead that perform the required
+    transformation behind the scenes, such as :py:func:`wavepacket.grid.dvr_density`.
 
     Parameters
     ----------
@@ -33,26 +36,20 @@ class DofBase(ABC):
 
     Attributes
     ----------
-    dvr_points: real-valued NumPy array
-        The grid points in real space given in the constructor.
-    fbr_points: real-valued NumPy array
-        The grid points of the underlying basis as given in the constructor.
-    size: int
-        The size of the grid (number of elements of `dvr_points`/`fbr_points`)
+    dvr_points
+    fbr_points
+    size
+
+    Raises
+    ------
+    wp.InvalidValueError
+        If the input grids are empty, multidimensional, or if the FBR and DVR grid do not match in size.
 
     See Also
     --------
     wavepacket.Grid : The multidimensional grid formed from one or more degrees of freedom.
     wavepacket.PlaneWaveDof: An implementation of a degree of freedom
                              based on a plane wave expansion.
-
-    Notes
-    -----
-    We always define a grid based on the pseudo-spectral representation, also known as
-    Discrete Variable Representation (DVR) in the literature. The idea is to expand a
-    wave function or density operator in a basis, but also allow a lossless representation
-    on certain points in real space. A hopefully comprehensive summary can be found on
-    the `Wavepacket wiki <https://sf.net/p/wavepacket/wiki/Numerics.DVR>`_
     """
 
     def __init__(self, dvr_points: wpt.RealData, fbr_points: wpt.RealData):
@@ -71,29 +68,125 @@ class DofBase(ABC):
     @property
     def dvr_points(self) -> wpt.RealData:
         """
+        Numpy array that gives the grid points in real space as supplied in the constructor.
         """
         return self._dvr_points
 
     @property
     def fbr_points(self) -> wpt.RealData:
+        """
+        Numpy array that gives the grid points of the underlying basis as supplied in the constructor.
+        """
         return self._fbr_points
 
     @property
     def size(self) -> int:
+        """
+        The size of the grid (number of elements of `dvr_points`/`fbr_points`)
+        """
         return self._dvr_points.size
 
     @abstractmethod
     def to_fbr(self, data: wpt.ComplexData, index: int, is_ket: bool = True) -> wpt.ComplexData:
+        """
+        Translates a dimension of the input coefficients from the Wavepacket-default "weighted DVR"
+        into the FBR.
+
+        This function is not meant for public use. It does not handle errors explicitly,
+        and is just awkward to use; you need to reach through the state abstraction and transform
+        each index correctly.
+
+        Parameters
+        ----------
+        data: wp.typing.ComplexData
+            The input coefficients of the state to transform.
+        index: int
+            The index of the coefficient array that should be transformed.
+        is_ket: bool, default=True
+            If the index is the coefficient for a ket state (True) or a bra state.
+
+        Returns
+        -------
+        wpt.ComplexData
+            The appropriately transformed coefficients. You will generally not wrap the results
+            into a :py:class:`wavepacket.grid.State`, because that class implicitly assumes a
+            weighted DVR transformation.
+        """
         pass
 
     @abstractmethod
     def from_fbr(self, data: wpt.ComplexData, index: int, is_ket: bool = True) -> wpt.ComplexData:
+        """
+        Translates a dimension of the input coefficients from the FBR  into the Wavepacket-default
+         "weighted DVR"
+
+        This function is not meant for public use. It does not handle errors explicitly,
+        and is just awkward to use; you need to reach through the state abstraction and transform
+        each index correctly.
+
+        Parameters
+        ----------
+        data: wp.typing.ComplexData
+            The input coefficients of the state to transform.
+        index: int
+            The index of the coefficient array that should be transformed.
+        is_ket: bool, default=True
+            If the index is the coefficient for a ket state (True) or a bra state.
+
+        Returns
+        -------
+        wpt.ComplexData
+            The appropriately transformed coefficients. You generally need to wrap the result in
+            a :py:class:`wavepacket.grid.State` before further use.
+        """
         pass
 
     @abstractmethod
     def to_dvr(self, data: wpt.ComplexData, index: int) -> wpt.ComplexData:
+        """
+        Translates a dimension of the input coefficients from the Wavepacket-default "weighted DVR"
+        into the DVR.
+
+        This function is not meant for public use. It does not handle errors explicitly,
+        and is just awkward to use; you need to reach through the state abstraction and transform
+        each index correctly.
+
+        Parameters
+        ----------
+        data: wp.typing.ComplexData
+            The input coefficients of the state to transform.
+        index: int
+            The index of the coefficient array that should be transformed.
+
+        Returns
+        -------
+        wpt.ComplexData
+            The appropriately transformed coefficients. You will generally not wrap the results
+            into a :py:class:`wavepacket.grid.State`, because that class implicitly assumes a
+            weighted DVR transformation.
+        """
         pass
 
     @abstractmethod
     def from_dvr(self, data: wpt.ComplexData, index: int) -> wpt.ComplexData:
+        """
+        Translates a dimension of the input coefficients from the DVR into the  Wavepacket-default "weighted DVR".
+
+        This function is not meant for public use. It does not handle errors explicitly,
+        and is just awkward to use; you need to reach through the state abstraction and transform
+        each index correctly.
+
+        Parameters
+        ----------
+        data: wp.typing.ComplexData
+            The input coefficients of the state to transform.
+        index: int
+            The index of the coefficient array that should be transformed.
+
+        Returns
+        -------
+        wpt.ComplexData
+            The appropriately transformed coefficients. They need to be wrapped in a
+            :py:class:`wavepacket.grid.State` before further use.
+        """
         pass

@@ -15,6 +15,44 @@ def _broadcast(data: wpt.ComplexData, ndim, index: int) -> wpt.ComplexData:
 
 
 class PlaneWaveDof(DofBase):
+    """
+    Plane wave basis expansion.
+
+    This grid is a good base choice for non-rotational degrees of freedom.
+    The DVR grid consists of equally-spaced grid points from xmin to (xmax - dx),
+    the FBR grid are the wave vectors of the plane waves centered around 0.
+    Because derivatives transform to multiplications with the FBR grid, this
+    grid allows a rather simple implementation of kinetic energy operators.
+
+    The transformation between DVR and FBR can be performed using an FFT, so even
+    though you might need more grid points than with more suitable expansions,
+    the performance is not too bad.
+
+    Be aware that this degree of freedom implicitly uses periodic boundary conditions
+    in real space. That is, if the wave function leaves the grid on one side, it reenters
+    the grid on the other side. This problem can only be mitigated with negative imaginary
+    potentials. Periodic boundary conditions also hold in the FBR (aliasing).
+    Nevertheless, the monitoring of convergence is rather simple, see [1]_
+
+    Parameters
+    ----------
+    xmin: float
+        The start of the grid.
+    xmax: float
+        The end of the grid. Note that the last grid point is at xmax - dx.
+    n: int
+        The number of grid points.
+
+    Raises
+    ------
+    wp.InvalidValueError
+        If the length of the grid is negative or the number of grid points is non-positive.
+
+    References
+    ----------
+    .. [1] <https://sourceforge.net/p/wavepacket/cpp/blog/2020/11/convergence-1-equally-space-grids>
+    """
+
     def __init__(self, xmin: float, xmax: float, n: int):
         if xmin > xmax:
             raise wp.InvalidValueError("Range should be positive")

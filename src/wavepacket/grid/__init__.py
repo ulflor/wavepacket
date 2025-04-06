@@ -1,3 +1,7 @@
+"""
+This module contains the classes to define a grid and represent states on it.
+"""
+
 __all__ = ['DofBase', 'Grid', 'PlaneWaveDof', 'State',
            'dvr_density', 'trace']
 
