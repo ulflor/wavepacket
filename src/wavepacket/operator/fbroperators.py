@@ -7,6 +7,32 @@ from ..grid import Grid
 
 
 class PlaneWaveFbrOperator(OperatorBase):
+    """
+    Base class for operators that are diagonal in a plane wave basis.
+
+    The :py:class:`wavepacket.grid.PlaneWaveDof` describes an expansion of
+    the wave function in plane waves. In the corresponding FBR, derivatives
+    are diagonal and essentially transform into a multiplication with the
+    wave vector / FBR grid.
+
+    A key difference to a generic FBR operator is that this operator
+    does not apply the shift after the FFT, which increases performance.
+
+    Parameters
+    ----------
+    grid: wp.grid.Grid
+        The grid on which the operator is defined.
+    dof_index: int
+        The degree of freedom along which the operator is defined.
+    generator: wpt.Generator
+        A callable that gives the operator value for each FBR point.
+
+    Raises
+    ------
+    wp.InvalidValueError
+        If the supplied degree of freedom is not a plane wave expansion.
+    """
+
     def __init__(self, grid: Grid, dof_index: int, generator: wpt.Generator):
         if not isinstance(grid.dofs[dof_index], wp.grid.PlaneWaveDof):
             raise wp.InvalidValueError(
@@ -39,6 +65,25 @@ class PlaneWaveFbrOperator(OperatorBase):
 
 
 class CartesianKineticEnergy(PlaneWaveFbrOperator):
+    """
+    Convenience class that implements the common kinetic energy operator.
+
+    Parameters
+    ----------
+    grid: wp.grid.Grid
+        The grid on which the operator is defined.
+    dof_index: inst
+        Degree of freedom along which the operator acts
+    mass: float
+        The mass of the particle.
+
+    Raises
+    ------
+    wp.InvalidValueError
+        If the mass is not positive, or if the degree of freedom does not describe a
+        plane wave expansion.
+    """
+
     def __init__(self, grid: Grid, dof_index: int, mass: float):
         if mass <= 0:
             raise wp.InvalidValueError(f"Particle mass must be positive, but is {mass}")

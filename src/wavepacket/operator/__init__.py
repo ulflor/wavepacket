@@ -1,3 +1,7 @@
+"""
+This module contains classes that define operators on a given grid.
+"""
+
 __all__ = ['CartesianKineticEnergy', 'OperatorBase',
            'PlaneWaveFbrOperator', 'Potential1D',
            'expectation_value']
