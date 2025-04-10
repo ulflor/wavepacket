@@ -6,6 +6,22 @@ from .operator import Potential1D, expectation_value
 
 
 def log(t: numbers.Real, state: State, precision: int = 6) -> None:
+    """
+    Prints some data about the state for inspection.
+
+    The idea is that you call this function during every solver step and get
+    a log with the most important values about the propagation, for example
+    the state trace (if it deviates from one, this may be caused by poor convergence).
+
+    Parameters
+    ----------
+    t: float
+        The time at which you log.
+    state: wp.grid.State
+        The state to log.
+    precision: int, default=6
+        How many decimal places should be printed.
+    """
     print(f"\n\nt = {float(t):.{precision}},     trace = {trace(state):.{precision}}\n")
 
     for index, dof in enumerate(state.grid.dofs):

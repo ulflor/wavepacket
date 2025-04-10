@@ -7,6 +7,42 @@ import wavepacket.typing as wpt
 
 
 class Gaussian(wpt.Generator):
+    """
+    Callable that defines a one-dimensional Gaussian function.
+
+    This callable can be supplied wherever a callable is required. An example
+    would be an initial wave function for :py:func:`wavepacket.builder.product_wave_function`,
+    or a potential wrapped in a :py:class:`wavepacket.operator.Potential1D`.
+
+    Parameters
+    ----------
+    x: float, default=0
+        The center of the Gaussian.
+    p: float, default=0
+        The momentum of the Gaussian.
+    rms: float
+        The root-mean-square (width) of the Gaussian.
+        Only one of this value or the FWHM can and must be supplied.
+    fwhm: float
+        The full width at half maximum (width) of the Gaussian.
+        If this value is given, rms must be unset, and either fwhm or rms must be supplied.
+
+    Raises
+    ------
+    wp.InvalidValueError
+        If the width of the Gaussian is not positive.
+    wp.BadFunctionCall
+        If rms and fwhm have either both been set or if none of them have been supplied.
+
+    Notes
+    -----
+
+    Up to scaling, the functional form of the Gaussian is
+    :math:`f(x) = e^{-(x-x_0)^2 / 2 \sigma^2 + \imath p (x-x_0)}`.
+    Here, sigma is the rms width, which is connected to the FWHM by
+    :math:`\sigma = \mathrm{FWHM} / \sqrt{8 \ln 2}`.
+    """
+
     def __init__(self, x: float = 0.0, p: float = 0.0,
                  rms: Optional[float] = None, fwhm: Optional[float] = None):
         if rms is not None and rms <= 0:
@@ -34,6 +70,20 @@ class Gaussian(wpt.Generator):
 
 
 class PlaneWave:
+    """
+    Callable that defines a plane wave.
+
+    You will typically use this callable for initial states. There are often
+    better options, especially if your FBR already defines a plane wave basis,
+    but sometimes you may just want to represent a reasonable plane wave and
+    not count indices to get the correct wave vector.
+
+    Parameters
+    ----------
+    k: float
+        The wave vector of the plane wave.
+    """
+
     def __init__(self, k: float):
         self._k = k
 
