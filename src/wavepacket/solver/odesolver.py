@@ -24,6 +24,30 @@ def _inner_solver(t: float, y: wpt.ComplexData,
 
 
 class OdeSolver(SolverBase):
+    """
+    A solver that uses scipy's ODE integrators as backend.
+
+    This solver merely wraps scipy.integrate.solve_ivp() in a Wavepacket
+    solver. ODESolvers tend to be workhorses that can be applied to most
+    systems without a second thought at the expense of performance.
+    See [1]_ for more details on the convergence of solvers.
+
+    Parameters
+    ----------
+    expr: wp.expression.ExpressionBase
+        The right-hand side of the differential equation that encapsulates the quantum system.
+    dt: float
+        The elementary time step for the time evolution.
+    kwargs:
+        Additional keyword parameters can be supplied that are directly forwarded to scipy.
+        The most important parameters are "method" (defaults to "RK45") and "rtol", "atol"
+        for the relative and absolute error tolerances (booth default to 1e-6).
+
+    References
+    ----------
+    .. [1] <https://sourceforge.net/p/wavepacket/cpp/blog/2021/04/convergence-2>
+    """
+
     def __init__(self, expr: ExpressionBase, dt: float, **kwargs):
         super().__init__(dt)
 
