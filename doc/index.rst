@@ -23,16 +23,16 @@ superseded C++ implementation.
    tutorials/schroedinger_cat
 
 .. toctree::
-    :caption: Useful links
-
-    Project homepage <https://github.com/ulflor/wavepacket>
-    Wavepacket wiki <https://sourceforge.net/p/wavepacket/wiki>
-
-.. toctree::
    :caption: API
    :maxdepth: 4
 
    autoapi/index
+
+.. toctree::
+    :caption: Useful links
+
+    Project homepage <https://github.com/ulflor/wavepacket>
+    Wavepacket wiki <https://sourceforge.net/p/wavepacket/wiki>
 
 
 Features

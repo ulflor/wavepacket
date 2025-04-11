@@ -26,7 +26,7 @@ import wavepacket as wp
 ```
 
 Both descriptions, wave function and density operator, share the grid, and
-the operator structure, so only set it up once.
+the operator structure, so we only need to set it up once.
 
 ```{code-cell}
 degree_of_freedom = wp.grid.PlaneWaveDof(-15, 15, 128)
@@ -40,7 +40,7 @@ For wave functions, we set up an initial wave function,
 and create a Schrödinger equation,
 {math}`\frac{\partial \psi}{\partial t} = -\imath \hat H \psi`,
 that we then solve.
-The dynamics are not terribly surprising:
+The overall dynamics are not spectacular:
 The initial Gaussians only broaden over time.
 
 In the plots, note the small peak in the density around the zero coordinate,
@@ -64,14 +64,12 @@ for t, psi in solver.propagate(psi_0, t0=0.0, num_steps=5):
 ## Density operators
 
 For the equivalent density operator description, we have to set up the initial state
-as an operator instead of a wave function. Here, we choose an incoherent summation
-of the two Gaussians,
+as a density operator. Here, we choose an incoherent summation of the two Gaussians,
 {math}`\hat \rho_0 = \frac{1}{2}(|\psi_L\rangle\langle\psi_L| + |\psi_R\rangle\langle\psi_R|)`.
-Also, the equations are motion are now governed by a Liouville von Neumann equation (LvNE),
+Also, the equation of motion is now a Liouville von Neumann equation (LvNE),
 {math}`\frac{\partial \rho}{\partial t} = \mathcal{L}(\hat \rho) = [\hat H, \hat \rho]_-`.
 Note that both the Schrödinger equation and the LvNE contain the same
-Hamiltonian, which can thus be recycled. This is the reason for separating
-operators from "expressions".
+Hamiltonian, so we can recycle it.
 
 Besides these unavoidable changes, the interface works the same
 as for the wave function case.

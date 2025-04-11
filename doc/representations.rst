@@ -25,56 +25,55 @@ Take a set of orthonormal basis functions, and expand your wave function,
 
    \psi(x) = \sum_k c_k f_k(x),
 
-where in numerical computations, the sum is always truncated.
+where in practice, the sum is always truncated.
 The coefficient vector provides a unique representation of the wave function.
 Each degree of freedom (DOF) class in Wavepacket is modelled around
 specific basis functions, for example
 :py:class:`wavepacket.grid.PlaneWaveDof` uses plane waves as underlying basis.
-Calculations can then use the coefficient vector; for example the trace
-can be calculated as :math:`\|\psi\|^2 = \sum_k |c_k|^2`.
+Physical quantities can be calculated from the the coefficient vector; for example the trace
+is given by :math:`\|\psi\|^2 = \sum_k |c_k|^2`.
 
 We only use the FBR for special applications, such as operators
-that are diagonal in the basis. In general, we much prefer the DVR.
+that are diagonal in the underlying basis. In general, we much prefer the DVR.
 
 DVR representation
 ------------------
 
-The underlying idea of the Discrete Variable Representation is again an
-expansion in an orthonormal basis
+For the Discrete Variable Representation, we again expand in an orthonormal basis
 
 .. math::
    :label: representation_dvr
 
-   \psi(x) = \sum_i \psi_i g_i(x)
+   \psi(x) = \sum_i \psi_i g_i(x),
 
-such that the coefficients are the values of the wave function at some
+but choose the basis functions such that the coefficients are the values of the wave function at some
 fixed grid points, :math:`\psi_i = \psi(x_i)`. It can be shown 
-that a truncated FBR with N coefficients can be converted
-into a DVR with N grid points without loss of information.
+that basis expansions with N FBR coefficients can usually be converted
+into a DVR with some choice of N grid points without loss of information.
 
 The DVR is used for numerics with the DVR approximation: You apply
 a space-local operator like a potential by multiplying the operator
 values with the wave function values at the grid points. But most importantly,
 if your expansion coefficients are the wave function values, you can directly
-plot them.
+plot them!
 
 .. note::
 
-    In theory, the DVR is not simple. For example, the density
+    The DVR is not inherently simple. For example, the density
     is given in the DVR as
     :math:`|\psi(x)|^2 = \sum_{i,j=1}^N \psi_i \psi_j^\ast g_i(x;N) g_j^\ast(x;N)`,
     where the basis functions also depend on the number of grid points.
-    In practice, we completely ignore the functions :math:`g_i(x;N)`, and just plot
-    the density at the grid points, :math:`(x_i, |\psi(x_i)|^2)`.
+    In practice, we side-step these problems by plotting
+    the density only at the grid points, :math:`(x_i, |\psi(x_i)|^2)`.
     
-    This performs poorly if the grid has few grid points. However, in these cases,
-    it is usually more insightful to study the system in a well-chosen FBR.
+    This gives artefacts if the grid has few grid points. However, in these cases,
+    it is usually more insightful to study the system in a well-chosen FBR instead.
 
-However, for actual computations, the DVR requires additional weight functions
-associated with the grid points. For example, the trace of the wave function
+For actual computations, the DVR requires additional weights
+for the grid points. For example, the trace of the wave function
 is calculated as :math:`\|\psi\|^2 = \sum_i w_i |\psi(x_i)|^2`. Carrying around
-the weight functions makes the use somewhat annoying, and the additional
-multiplication makes the use a bit slow.
+the weights is somewhat annoying, and the additional
+multiplication makes the calculations slower than they need to be.
 
 For that reason, we do not quite use the DVR as native representation in Wavepacket.
 
@@ -85,12 +84,12 @@ A more numerically convenient representation can be obtained if we use a
 modified DVR expansion :eq:`representation_dvr` with
 :math:`\tilde g_i = g_i / \sqrt{w_i}` and
 :math:`\tilde \psi_i = \psi_i \sqrt{w_i}`.
+This allows us to ditch the weights.
 
-The immediate effect is that, for example, the trace is given as the square sum
-of the coefficients, :math:`\|\psi\|^2 = \sum_i |\tilde \psi_i|^2`, without any
-extra weights. That is why the weighted DVR is the default representation
-in Wavepacket.
+For example, the trace is now simply given as
+:math:`\|\psi\|^2 = \sum_i |\tilde \psi_i|^2`.
 
+This weighted DVR is the default representation in Wavepacket.
 Unless explicitly noted otherwise, all wave functions are expected and returned
 in this representation. If you need the wave function, for example for plotting
 the DVR density, you should explicitly transform it with available helper
@@ -127,5 +126,5 @@ the result is:
 
 so that the resulting density operator is a four-dimensional tensor
 :math:`\rho_{ijkl} = \psi_{ij}\psi_{kl}^\ast`, also for non-pure states.
-As it is still given in the weighted DVR, you can for example calculate the
-trace as :math:`Tr[\hat \rho] = \sum_{i=1}^N \sum_{k=1}^M \rho_{ikik}`.
+You still benefit from the weighted DVR, for example the
+trace is given by :math:`Tr[\hat \rho] = \sum_{i=1}^N \sum_{k=1}^M \rho_{ikik}`.
