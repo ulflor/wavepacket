@@ -22,17 +22,17 @@ class Gaussian(wpt.Generator):
         The momentum of the Gaussian.
     rms: float
         The root-mean-square (width) of the Gaussian.
-        Only one of this value or the FWHM can and must be supplied.
+        One of either this value or the FWHM must be supplied.
     fwhm: float
         The full width at half maximum (width) of the Gaussian.
-        If this value is given, rms must be unset, and either fwhm or rms must be supplied.
+        One of either this value or the RMS must be supplied.
 
     Raises
     ------
     wp.InvalidValueError
         If the width of the Gaussian is not positive.
     wp.BadFunctionCall
-        If rms and fwhm have either both been set or if none of them have been supplied.
+        If both rms and fwhm have either been set or not supplied.
 
     Notes
     -----
@@ -61,7 +61,7 @@ class Gaussian(wpt.Generator):
         if rms:
             self._rms = rms
         else:
-            self._rms = fwhm / np.sqrt(2 * np.log(2))
+            self._rms = fwhm / np.sqrt(8 * np.log(2))
 
     def __call__(self, x: wpt.RealData) -> wpt.ComplexData:
         shifted = x - self._x
