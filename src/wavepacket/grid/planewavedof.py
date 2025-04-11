@@ -50,7 +50,7 @@ class PlaneWaveDof(DofBase):
 
     References
     ----------
-    .. [1] <https://sourceforge.net/p/wavepacket/cpp/blog/2020/11/convergence-1-equally-space-grids>
+    .. [1] https://sourceforge.net/p/wavepacket/cpp/blog/2020/11/convergence-1-equally-space-grids
     """
 
     def __init__(self, xmin: float, xmax: float, n: int):

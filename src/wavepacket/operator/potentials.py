@@ -20,9 +20,9 @@ class Potential1D(OperatorBase):
     generator: wpt.RealGenerator
         A callable that generates a potential energy value for each grid point of the respective DOF.
 
-    See also
-    --------
-    .. [1]: https://sourceforge.net/p/wavepacket/wiki/Numerics.DVR>
+    References
+    ----------
+    .. [1] https://sourceforge.net/p/wavepacket/wiki/Numerics.DVR>
     """
 
     def __init__(self, grid: Grid, dof_index: int, generator: wpt.RealGenerator):

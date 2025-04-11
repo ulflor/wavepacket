@@ -45,7 +45,7 @@ class OdeSolver(SolverBase):
 
     References
     ----------
-    .. [1] <https://sourceforge.net/p/wavepacket/cpp/blog/2021/04/convergence-2>
+    .. [1] https://sourceforge.net/p/wavepacket/cpp/blog/2021/04/convergence-2
     """
 
     def __init__(self, expr: ExpressionBase, dt: float, **kwargs):

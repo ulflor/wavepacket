@@ -8,7 +8,7 @@ class ExpressionBase(ABC):
     Base class for expressions.
 
     By deriving from this class and implementing the method
-    :py:meth:`apply`, you can add custom expressions.
+    :py:meth:`ExpressionBase.apply`, you can add custom expressions.
 
     Notes
     -----
