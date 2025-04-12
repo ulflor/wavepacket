@@ -16,14 +16,14 @@ def product_wave_function(grid: Grid,
 
     Parameters
     ----------
-    grid: wp.grid.Grid
+    grid : wp.grid.Grid
            The grid on which the product wave function is assembled
-    generators: Sequence[wp.typing.Generator]
+    generators : Sequence[wp.typing.Generator]
                 A list of callables that specifies the wave function
                 along each degree of freedom. The `generators` return
                 the one-dimensional functions in the DVR, i.e., raw function
                 values at the grid points.
-    normalize: bool, default=true
+    normalize : bool, default=true
                If the norm is non-zero and this value is set, the resulting
                product wave function is normalized, otherwise the product
                is returned directly.

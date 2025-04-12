@@ -16,16 +16,13 @@ class Gaussian(wpt.Generator):
 
     Parameters
     ----------
-    x: float, default=0
+    x : float, default=0
         The center of the Gaussian.
-    p: float, default=0
+    p : float, default=0
         The momentum of the Gaussian.
-    rms: float
-        The root-mean-square (width) of the Gaussian.
-        One of either this value or the FWHM must be supplied.
-    fwhm: float
-        The full width at half maximum (width) of the Gaussian.
-        One of either this value or the RMS must be supplied.
+    rms, fwhm : float
+        You must specify the width of the Gaussian using exactly one of these values,
+        either through the root-mean-square width, or the full-width-at-half-maximum.
 
     Raises
     ------
@@ -80,7 +77,7 @@ class PlaneWave:
 
     Parameters
     ----------
-    k: float
+    k : float
         The wave vector of the plane wave.
     """
 

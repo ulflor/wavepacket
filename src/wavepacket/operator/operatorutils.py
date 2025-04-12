@@ -11,11 +11,11 @@ def expectation_value(op: OperatorBase, state: State, t: float = None) -> comple
 
     Parameters
     ----------
-    op: wp.operator.OperatorBase
+    op : wp.operator.OperatorBase
         The operator whose expectation value is calculated.
-    state: wp.grid.State
+    state : wp.grid.State
         The wave function or density operator that is used for the calculation.
-    t: float, default=None
+    t : float, default=None
         The time at which the operator should be evaluated. Ignored for
         time-independent operators, mandatory for time-dependent ones.
     """

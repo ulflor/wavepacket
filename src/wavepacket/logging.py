@@ -15,11 +15,11 @@ def log(t: numbers.Real, state: State, precision: int = 6) -> None:
 
     Parameters
     ----------
-    t: float
+    t : float
         The time at which you log.
-    state: wp.grid.State
+    state : wp.grid.State
         The state to log.
-    precision: int, default=6
+    precision : int, default=6
         How many decimal places should be printed.
     """
     print(f"\n\nt = {float(t):.{precision}},     trace = {trace(state):.{precision}}\n")

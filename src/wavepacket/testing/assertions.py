@@ -9,11 +9,11 @@ def assert_close(actual: wp.grid.State, expected: wp.grid.State, diff: float = 0
 
     Parameters
     ----------
-    actual: wp.grid.State
+    actual : wp.grid.State
         The expected state
-    expected: wp.grid.State
+    expected : wp.grid.State
         The state to be tested.
-    diff: float
+    diff : float
         The maximum absolute difference between any coefficients of the two states.
     """
     assert actual.grid == expected.grid

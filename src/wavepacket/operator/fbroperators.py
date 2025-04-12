@@ -20,11 +20,11 @@ class PlaneWaveFbrOperator(OperatorBase):
 
     Parameters
     ----------
-    grid: wp.grid.Grid
+    grid : wp.grid.Grid
         The grid on which the operator is defined.
-    dof_index: int
+    dof_index : int
         The degree of freedom along which the operator is defined.
-    generator: wpt.Generator
+    generator : wpt.Generator
         A callable that gives the operator value for each FBR point.
 
     Raises
@@ -73,11 +73,11 @@ class CartesianKineticEnergy(PlaneWaveFbrOperator):
 
     Parameters
     ----------
-    grid: wp.grid.Grid
+    grid : wp.grid.Grid
         The grid on which the operator is defined.
-    dof_index: inst
+    dof_index : inst
         Degree of freedom along which the operator acts
-    mass: float
+    mass : float
         The mass of the particle.
 
     Raises

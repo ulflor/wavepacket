@@ -13,7 +13,7 @@ def pure_density(psi: State) -> State:
 
     Parameters
     ----------
-    psi: wp.grid.State
+    psi : wp.grid.State
          The input wave function
 
     Returns
@@ -44,9 +44,9 @@ def direct_product(ket: State, bra: State) -> State:
 
     Parameters
     ----------
-    ket: wp.grid.State
+    ket : wp.grid.State
          The ket state :math:`\psi`
-    bra: wp.grid.State
+    bra : wp.grid.State
          The bra state :math:`\phi`. Note that the function performs a
          complex conjugation of this state prior to multiplication.
 

@@ -21,18 +21,17 @@ class State:
     3. The representation / basis for the expansion.
        This is always weighted DVR, see :doc:`/representations`.
 
-    Once constructed, a State is immutable. It supports elementary arithmetic operations,
-    for more complex operations, you need to extract the coefficients, transform them,
-    and wrap them in another state.
+    Once constructed, a State is meant to be immutable. It supports elementary
+    arithmetic operations, however, to allow easy composition.
 
     The technical reason for a state class is to store grids together with the coefficients,
     which greatly simplifies the Wavepacket API.
 
     Attributes
     ----------
-    grid: wp.grid.Grid
+    grid
         The grid on which the state is defined.
-    data: wpt.ComplexData
+    data
         The coefficients of the state.
     """
     grid: Grid

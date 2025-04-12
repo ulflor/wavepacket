@@ -34,9 +34,9 @@ class OdeSolver(SolverBase):
 
     Parameters
     ----------
-    expr: wp.expression.ExpressionBase
+    expr : wp.expression.ExpressionBase
         The right-hand side of the differential equation that encapsulates the quantum system.
-    dt: float
+    dt : float
         The elementary time step for the time evolution.
     **kwargs
         Additional keyword parameters can be supplied that are directly forwarded to scipy.

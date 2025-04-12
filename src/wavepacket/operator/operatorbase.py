@@ -19,7 +19,7 @@ class OperatorBase(ABC):
 
     Parameters
     ----------
-    grid: wp.grid.Grid
+    grid : wp.grid.Grid
         The grid on which the operator is defined.
         Particular operators may require additional parameters.
 
@@ -47,9 +47,9 @@ class OperatorBase(ABC):
 
         Parameters
         ----------
-        state: wp.grid.State
+        state : wp.grid.State
             The state that the operator is applied on.
-        t: float
+        t : float
             The time at which the operator is applied. Only relevant for time-dependent
             operators.
 
@@ -93,9 +93,9 @@ class OperatorBase(ABC):
 
         Parameters
         ----------
-        psi: wpt.ComplexData
+        psi : wpt.ComplexData
             The coefficients describing the wave function on which the operator acts.
-        t: float
+        t : float
             The time at which the operator should be evaluated.
 
         Returns
@@ -116,9 +116,9 @@ class OperatorBase(ABC):
 
         Parameters
         ----------
-        rho: wpt.ComplexData
+        rho : wpt.ComplexData
             The coefficients describing the density operator on which the operator acts.
-        t: float
+        t : float
             The time at which the operator should be evaluated.
 
         Returns
@@ -139,9 +139,9 @@ class OperatorBase(ABC):
 
         Parameters
         ----------
-        rho: wpt.ComplexData
+        rho : wpt.ComplexData
             The coefficients describing the density operator on which the operator acts.
-        t: float
+        t : float
             The time at which the operator should be evaluated.
 
         Returns
@@ -162,7 +162,7 @@ class OperatorSum(OperatorBase):
 
     Parameters
     ----------
-    ops: Sequence[wp.operator.OperatorBase]
+    ops : Sequence[wp.operator.OperatorBase]
         The operators that should be summed up.
 
     Raises

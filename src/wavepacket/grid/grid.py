@@ -18,7 +18,7 @@ class Grid:
 
     Parameters
     ----------
-    dofs: Sequence[wp.grid.DofBase] | DofBase
+    dofs : Sequence[wp.grid.DofBase] | DofBase
         The degree(s) of freedom that make up the grid. The order determines the order of
         the coefficient array indices.
 

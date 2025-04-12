@@ -13,7 +13,7 @@ class CommutatorLiouvillian(ExpressionBase):
 
     Parameters
     ----------
-    op: wp.operator.OperatorBase
+    op : wp.operator.OperatorBase
         The operator to commute with the density operator.
 
     Notes
@@ -34,9 +34,9 @@ class CommutatorLiouvillian(ExpressionBase):
 
         Parameters
         ----------
-        rho: wp.grid.State
+        rho : wp.grid.State
             The density operator to commute with
-        t: float
+        t : float
             The time at which the operator is evaluated.
 
         Returns

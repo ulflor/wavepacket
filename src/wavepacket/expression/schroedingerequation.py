@@ -14,7 +14,7 @@ class SchroedingerEquation(ExpressionBase):
 
     Parameters
     ----------
-    hamiltonian: wp.operator.OperatorBase
+    hamiltonian : wp.operator.OperatorBase
         The Hamiltonian that is wrapped by this class.
 
     Notes
@@ -36,9 +36,9 @@ class SchroedingerEquation(ExpressionBase):
 
         Parameters
         ----------
-        psi: wp.grid.State
+        psi : wp.grid.State
              The input state that is evaluated.
-        t: float
+        t : float
             The time at which the Schrödinger equation is evaluated.
 
         Returns

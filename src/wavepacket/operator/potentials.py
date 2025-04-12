@@ -13,11 +13,11 @@ class Potential1D(OperatorBase):
 
     Parameters
     ----------
-    grid: wp.grid.Grid
+    grid : wp.grid.Grid
         The grid on which the operator is defined
-    dof_index: int
+    dof_index : int
         the index of the degree of freedom along which the potential is defined.
-    generator: wpt.RealGenerator
+    generator : wpt.RealGenerator
         A callable that generates a potential energy value for each grid point of the respective DOF.
 
     References

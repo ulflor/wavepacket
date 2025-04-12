@@ -26,9 +26,9 @@ class DofBase(ABC):
 
     Parameters
     ----------
-    dvr_points: real-valued array_like
+    dvr_points : real-valued array_like
         The grid points in real space.
-    fbr_points: real-valued array_like
+    fbr_points : real-valued array_like
         This is typically used to assign useful numbers to the underlying basis.
         For example, in a plane-wave expansion, we would use the wave vectors as fbr_grid.
         The size must match that of the `dvr_points`.
@@ -97,11 +97,11 @@ class DofBase(ABC):
 
         Parameters
         ----------
-        data: wp.typing.ComplexData
+        data : wp.typing.ComplexData
             The input coefficients of the state to transform.
-        index: int
+        index : int
             The index of the coefficient array that should be transformed.
-        is_ket: bool, default=True
+        is_ket : bool, default=True
             If the index is the coefficient for a ket state (True) or a bra state.
 
         Returns
@@ -125,11 +125,11 @@ class DofBase(ABC):
 
         Parameters
         ----------
-        data: wp.typing.ComplexData
+        data : wp.typing.ComplexData
             The input coefficients of the state to transform.
-        index: int
+        index : int
             The index of the coefficient array that should be transformed.
-        is_ket: bool, default=True
+        is_ket : bool, default=True
             If the index is the coefficient for a ket state (True) or a bra state.
 
         Returns
@@ -152,9 +152,9 @@ class DofBase(ABC):
 
         Parameters
         ----------
-        data: wp.typing.ComplexData
+        data : wp.typing.ComplexData
             The input coefficients of the state to transform.
-        index: int
+        index : int
             The index of the coefficient array that should be transformed.
 
         Returns
@@ -177,9 +177,9 @@ class DofBase(ABC):
 
         Parameters
         ----------
-        data: wp.typing.ComplexData
+        data : wp.typing.ComplexData
             The input coefficients of the state to transform.
-        index: int
+        index : int
             The index of the coefficient array that should be transformed.
 
         Returns

@@ -24,7 +24,7 @@ class SolverBase(ABC):
 
     Parameters
     ----------
-    dt: float
+    dt : float
         The size of an elementary time step.
 
 
@@ -63,9 +63,9 @@ class SolverBase(ABC):
 
         Parameters
         ----------
-        state: wp.grid.State
+        state : wp.grid.State
             The state to be evolved in time
-        t: float
+        t : float
             The time at which the time evolution starts
 
         Returns
@@ -85,13 +85,13 @@ class SolverBase(ABC):
 
         Parameters
         ----------
-        state0: wp.grid.State
+        state0 : wp.grid.State
             The initial state to be propagated in time.
-        t0: float
+        t0 : float
             The initial time at which the state is given
-        num_steps: int
+        num_steps : int
             For how many elementary time steps the state should be propagated.
-        include_first: bool
+        include_first : bool
             If true, the function will start by yielding the initial state.
 
         Yields

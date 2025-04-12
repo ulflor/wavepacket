@@ -35,11 +35,11 @@ class PlaneWaveDof(DofBase):
 
     Parameters
     ----------
-    xmin: float
+    xmin : float
         The start of the grid.
-    xmax: float
+    xmax : float
         The end of the grid. Note that the last grid point is at xmax - dx.
-    n: int
+    n : int
         The number of grid points.
 
     Raises

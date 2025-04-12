@@ -24,7 +24,7 @@ def dvr_density(state: State) -> wpt.RealData:
 
     Parameters
     ----------
-    state: wp.grid.State
+    state : wp.grid.State
         The state (wave function or density operator) whose density should be computed.
 
     Returns
@@ -67,7 +67,7 @@ def trace(state: State) -> float:
 
     Parameters
     ----------
-    state: wp.grid.State
+    state : wp.grid.State
         The state (wave function or density operator) for which to calculate the trace.
 
     Returns
