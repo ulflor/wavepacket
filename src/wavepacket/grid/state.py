@@ -12,8 +12,9 @@ class State:
     """
     This class holds the definition of a specific quantum state.
 
-    A state can be a wave function or a density operator. Invalid states can be constructed,
-    but are not used. A state is comprised of three parts:
+    A state can be a wave function or a density operator.
+    While invalid states can be constructed, they have no use.
+    A state is comprised of three parts:
 
     1. The grid on which the state is defined.
     2. The expansion coefficients.
@@ -25,12 +26,12 @@ class State:
     and wrap them in another state.
 
     The technical reason for a state class is to store grids together with the coefficients,
-    which makes the Wavepacket API less error-prone.
+    which greatly simplifies the Wavepacket API.
 
     Attributes
     ----------
     grid: wp.grid.Grid
-        The grid for which the state is defined.
+        The grid on which the state is defined.
     data: wpt.ComplexData
         The coefficients of the state.
     """

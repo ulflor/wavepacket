@@ -37,10 +37,6 @@ def product_wave_function(grid: Grid,
     ------
     wp.InvalidValueError
         If the number of generators does not match the grid dimensions.
-
-    numpy exceptions
-        These may be thrown if the generators return wave functions
-        with invalid shapes.
     """
     generator_list = generators
     if not isinstance(generator_list, Iterable):

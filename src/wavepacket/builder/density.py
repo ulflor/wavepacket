@@ -25,18 +25,22 @@ def pure_density(psi: State) -> State:
     ------
     wp.BadStateError
         If the input is not a valid wave function.
+
+    See also
+    --------
+    direct_product : This function is identical to `direct_product(psi, psi)`
     """
     return direct_product(psi, psi)
 
 
 def direct_product(ket: State, bra: State) -> State:
     """
-    Returns a direct product of wave functions as density operators.
+    Returns the direct product of wave functions as a density operator.
 
     Given two wave functions :math:`\psi, \phi`, this function returns the
-    density operator resulting from the direct product
-    :math:`| \psi >< \phi |` This can be useful to build up a
-    density operator piecewise.
+    density operator as :math:`| \psi \\rangle\langle \phi |`.
+    This operation can be useful to build up a
+    density operator piece by piece.
 
     Parameters
     ----------

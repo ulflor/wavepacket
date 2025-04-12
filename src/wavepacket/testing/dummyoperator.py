@@ -5,6 +5,12 @@ from ..operator import OperatorBase
 
 
 class DummyOperator(OperatorBase):
+    """
+    Empty operator that throws when it is applied.
+
+    Used for testing where we need an operator, but do not get
+    as far as actually doing something.
+    """
     def __init__(self, grid: Grid):
         super().__init__(grid)
 

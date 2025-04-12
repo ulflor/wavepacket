@@ -13,10 +13,12 @@ class ExpressionBase(ABC):
     Notes
     -----
     All differential equations have the form
-    :math:`\dot x = E[x]`, where x is a density operator or
-    wave function. Note that this differs from the common
-    Schrödinger equation, we have moved the imaginary factor
-    to the right-hand side of the equation.
+    :math:`\dot \\rho = \mathcal{L}(\\rho)` (or equivalently
+    :math:`\dot \psi = \hat H \psi`), that is, the left-hand side
+    is just the time derivative. This matches the common convention for the
+    Liouville von-Neumann equation, but differs from the usual
+    form of the Schrödinger equation, where the imaginary factor
+    is on the left-hand side of the equation.
     """
 
     @abstractmethod

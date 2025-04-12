@@ -14,8 +14,7 @@ class Grid:
 
     This class collects multiple :py:class:`wavepacket.grid.DofBase`-derived objects,
     each corresponding to a one-dimensional basis expansion, and represents the resulting
-    one- or multidimensional grid. Most Wavepacket functions require this class instead
-    of the individual degrees of freedom.
+    one- or multidimensional grid that you can operate with.
 
     Parameters
     ----------
@@ -134,7 +133,7 @@ class Grid:
         See :py:meth:`broadcast` for a description of the problem. For the (5, 4, 3)
         grid shape, this function would blow up the potential array into a shape
         (1, 4, 1, 1, 1, 1) or (1, 1, 1, 1, 4, 1). The is_ket parameter switches between the
-        two variants, we call the first three indices "bra" and the latter three "ket" indices.
+        two variants, we call the first three indices "ket" and the latter three "bra" indices.
         """
         new_shape = (2 * len(self._dofs)) * [1]
 

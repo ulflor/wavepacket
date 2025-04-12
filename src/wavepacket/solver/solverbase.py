@@ -80,6 +80,9 @@ class SolverBase(ABC):
         """
         Generator function that yields the propagated wave function at multiple time steps.
 
+        This function allows you to propagate in one go with a for loop.
+        It repeatedly calls :py:meth:`step` and returns the wave function and current time.
+
         Parameters
         ----------
         state0: wp.grid.State

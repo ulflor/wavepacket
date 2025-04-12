@@ -10,18 +10,17 @@ import wavepacket.typing as wpt
 
 class DofBase(ABC):
     """
-    Abstract base class of a one-dimensional grid.
+    Abstract base class of a one-dimensional basis expansion.
 
     We assemble a multidimensional grid as direct product of one-dimensional grids.
-    To distinguish these two forms of grids, we call the one-dimensional grids DOF
-    (Degree of Freedom). They are defined by a grid definition in real space (which we
-    call DVR) and some descriptive values for the underlying basis (the FBR).
+    To distinguish these two types of grids, we call the one-dimensional grids DOF
+    (Degree of Freedom). They are defined by a basis expansion (the FBR), its corresponding
+    grid definition in real space (the DVR, see :doc:`/representations`),
+    the transformation between the two representations, and
+    some descriptive quantum numbers for the FBR.
 
-    To implement a new DOF, you need to specify the DVr and FBR points, and implement
-    a few transformations from the Wavepacket default representation to the DVR and FBR.
-    For more details on the grid and its points, see :doc:`/representations`.
-
-    Note that the transformation functions are highly flexible, but awkward to use.
+    Note that the transformation functions are highly flexible, but awkward and error-prone
+    to use, so they should generally be avoided outside of Wavepacket-internal code.
     In general, you should use convenience functions instead that perform the required
     transformation behind the scenes, such as :py:func:`wavepacket.grid.dvr_density`.
 
@@ -32,7 +31,7 @@ class DofBase(ABC):
     fbr_points: real-valued array_like
         This is typically used to assign useful numbers to the underlying basis.
         For example, in a plane-wave expansion, we would use the wave vectors as fbr_grid.
-        The size must match that of the dvr_points.
+        The size must match that of the `dvr_points`.
 
     Attributes
     ----------
@@ -47,8 +46,8 @@ class DofBase(ABC):
 
     See Also
     --------
-    wavepacket.Grid : The multidimensional grid formed from one or more degrees of freedom.
-    wavepacket.PlaneWaveDof: An implementation of a degree of freedom
+    wavepacket.grid.Grid : The multidimensional grid formed from one or more degrees of freedom.
+    wavepacket.grid.PlaneWaveDof: An implementation of a degree of freedom
                              based on a plane wave expansion.
     """
 
@@ -118,7 +117,7 @@ class DofBase(ABC):
     def from_fbr(self, data: wpt.ComplexData, index: int, is_ket: bool = True) -> wpt.ComplexData:
         """
         Translates a dimension of the input coefficients from the FBR  into the Wavepacket-default
-         "weighted DVR"
+        "weighted DVR"
 
         This function is not meant for public use. It does not handle errors explicitly,
         and is just awkward to use; you need to reach through the state abstraction and transform

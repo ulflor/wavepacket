@@ -18,9 +18,9 @@ def dvr_density(state: State) -> wpt.RealData:
     Returns the density of the input state at the DVR grid points.
 
     The density is returned as a real-valued coefficient array
-    with the same shape as the underlying grid. The density should
-    be considered an output of Wavepacket; it is mainly useful for
-    plotting or similar inspection, not for further computations.
+    with the same shape as the underlying grid. The density is mostly a
+    dead end: useful for plotting and inspection, but not for
+    further computations.
 
     Parameters
     ----------
@@ -59,11 +59,11 @@ def dvr_density(state: State) -> wpt.RealData:
 
 def trace(state: State) -> float:
     """
-    Returns the trace value of the supplied input state.
+    Returns the trace of the supplied input state.
 
     For density operators, this is the usual trace norm, i.e., sum over the
-    diagonal elements. For wave functions, you can obtain the common norm
-    by taking the square root of the trace.
+    diagonal elements. For wave functions, it is the square of the usual 
+    L2 norm.
 
     Parameters
     ----------

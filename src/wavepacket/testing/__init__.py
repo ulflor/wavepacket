@@ -1,3 +1,7 @@
+"""
+Utility classes and functions for writing Wavepacket tests.
+"""
+
 __all__ = ['DummyDof', 'DummyOperator',
            'assert_close', 'random_state']
 

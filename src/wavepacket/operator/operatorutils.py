@@ -7,7 +7,7 @@ from ..grid import State
 
 def expectation_value(op: OperatorBase, state: State, t: float = None) -> complex:
     """
-    Calculates the expectation value of an operator given a state.
+    Calculates the expectation value of an operator for a given state.
 
     Parameters
     ----------
@@ -17,7 +17,7 @@ def expectation_value(op: OperatorBase, state: State, t: float = None) -> comple
         The wave function or density operator that is used for the calculation.
     t: float, default=None
         The time at which the operator should be evaluated. Ignored for
-        time-independent operators.
+        time-independent operators, mandatory for time-dependent ones.
     """
     new = op.apply(state, t)
 

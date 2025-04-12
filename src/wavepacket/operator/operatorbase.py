@@ -78,7 +78,7 @@ class OperatorBase(ABC):
 
     def __add__(self, other: typing.Self) -> typing.Self:
         """
-        Adds two operators and returns the result as a :py:class:`wavepacket.grid.OperatorSum`.
+        Adds two operators and returns the result as a :py:class:`wavepacket.operator.OperatorSum`.
         """
         return OperatorSum([self, other])
 
