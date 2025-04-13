@@ -38,7 +38,7 @@ class OperatorBase(ABC):
         """
         return self._grid
 
-    def apply(self, state: State, t: float) -> State:
+    def apply(self, state: State, t: typing.Optional[float] = None) -> State:
         """
         Applies the operator onto a wave function or a density operator from the left.
 
@@ -49,9 +49,9 @@ class OperatorBase(ABC):
         ----------
         state : wp.grid.State
             The state that the operator is applied on.
-        t : float
-            The time at which the operator is applied. Only relevant for time-dependent
-            operators.
+        t : float, optional
+            The time at which the operator is applied.
+             The default value `None` raises an exception for time-dependent operators.
 
         Returns
         -------

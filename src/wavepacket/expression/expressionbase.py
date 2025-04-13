@@ -1,4 +1,5 @@
 from abc import ABC, abstractmethod
+from typing import Optional
 
 from ..grid import State
 
@@ -22,8 +23,22 @@ class ExpressionBase(ABC):
     """
 
     @abstractmethod
-    def apply(self, state: State, t: float) -> State:
+    def apply(self, state: State, t: Optional[float] = None) -> State:
         """
-        Applies the expression at time `t` to the input state and returns the result.
+        Applies the expression to the input state and returns the result.
+
+        Parameters
+        ----------
+        state : wp.grid.State
+            The state on which the expression is applied.
+        t : float, optional
+            The time at which the expression is evaluated. Default is None,
+            which will raise an exception if the contained expression is time-dependent.
+
+        Raises
+        ------
+        wp.BadStateError
+            If the state is invalid or has the wrong time. For example, a Schroedinger equaiton
+            makes little sense for a density operator.
         """
         pass

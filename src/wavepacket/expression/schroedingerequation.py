@@ -1,3 +1,5 @@
+from typing import Optional
+
 import wavepacket as wp
 from .expressionbase import ExpressionBase
 from ..grid import State
@@ -29,7 +31,7 @@ class SchroedingerEquation(ExpressionBase):
     def __init__(self, hamiltonian: OperatorBase):
         self._hamiltonian = hamiltonian
 
-    def apply(self, psi: State, t: float) -> State:
+    def apply(self, psi: State, t: Optional[float] = None) -> State:
         """
         Evaluates the right-hand side of the Schrödinger equation
         for the given input state and time.
@@ -38,8 +40,9 @@ class SchroedingerEquation(ExpressionBase):
         ----------
         psi : wp.grid.State
              The input state that is evaluated.
-        t : float
+        t : float, optional
             The time at which the Schrödinger equation is evaluated.
+            The default `None` throws if the wrapped operator is time-dependent.
 
         Returns
         -------

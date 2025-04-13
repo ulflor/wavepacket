@@ -1,3 +1,5 @@
+from typing import Optional
+
 import wavepacket as wp
 from .expressionbase import ExpressionBase
 from ..grid import State
@@ -28,7 +30,7 @@ class CommutatorLiouvillian(ExpressionBase):
     def __init__(self, op: OperatorBase):
         self._op = op
 
-    def apply(self, rho: State, t: float) -> State:
+    def apply(self, rho: State, t: Optional[float] = None) -> State:
         """
         Evaluates the commutator  for the given density operator and time.
 
@@ -36,8 +38,9 @@ class CommutatorLiouvillian(ExpressionBase):
         ----------
         rho : wp.grid.State
             The density operator to commute with
-        t : float
-            The time at which the operator is evaluated.
+        t : float, optional
+            The time at which the operator is evaluated. By default it is None,
+            which will throw if the contained operator is time-dependent.
 
         Returns
         -------

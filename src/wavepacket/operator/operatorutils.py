@@ -1,3 +1,5 @@
+from typing import Optional
+
 import numpy as np
 
 import wavepacket as wp
@@ -5,7 +7,7 @@ from .operatorbase import OperatorBase
 from ..grid import State
 
 
-def expectation_value(op: OperatorBase, state: State, t: float = None) -> complex:
+def expectation_value(op: OperatorBase, state: State, t: Optional[float] = None) -> complex:
     """
     Calculates the expectation value of an operator for a given state.
 
@@ -15,9 +17,9 @@ def expectation_value(op: OperatorBase, state: State, t: float = None) -> comple
         The operator whose expectation value is calculated.
     state : wp.grid.State
         The wave function or density operator that is used for the calculation.
-    t : float, default=None
-        The time at which the operator should be evaluated. Ignored for
-        time-independent operators, mandatory for time-dependent ones.
+    t : float, optional
+        The time at which the operator should be evaluated.
+         Only required for time-dependent operators, where the default value `None` raises an exception.
     """
     new = op.apply(state, t)
 
