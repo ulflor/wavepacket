@@ -1,5 +1,5 @@
 name: Wavepacket CI
-run-name: Testing {{ github.ref_name }} with ref {{ github.ref }}
+run-name: Testing ${{ github.ref_name }} with ref ${{ github.ref }}
 
 on:
   push
@@ -13,7 +13,7 @@ jobs:
         id: cp313
         with:
           python-version: '3.13'
-      - run: ${{ steps.cp313.outputs.python-path }} -m venv /venv
-      - run: /venv/bin/python -m pip install flit
-      - run: cd $GIBTHUB_WORKSPACE && /venv/bin/flit install --deps test
-      - run: pytest $GITHUB_WORKSPACE/test
+      - run: ${{ steps.cp313.outputs.python-path }} -m venv ~/venv
+      - run: ~/venv/bin/python -m pip install flit
+      - run: cd $GITHUB_WORKSPACE && ~/venv/bin/flit install --deps all
+      - run: ~/venv/bin/pytest $GITHUB_WORKSPACE/test
