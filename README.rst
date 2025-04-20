@@ -6,6 +6,8 @@ quantum systems. Or, more technically, it allows you to numerically
 solve Schrödinger and Liouville-von-Neumann equations for
 distinguishable particles.
 
+The full documentation can be found under https://wavepacket.readthedocs.io.
+
 There are many different quantum systems and consequently approaches
 to solve them. Here we focus on a particular niche:
 
@@ -51,7 +53,7 @@ Contribution
 I currently lack a formal procedure for new contributors, but you are
 very welcome to contribute to the project. If you do not know what to
 do, feel free to email me at `ulf@wppy.org`; there is enough work for
-more than one, just not fleshed out yet.
+more than one developer, it is just not documented yet.
 
 
 History
@@ -61,20 +63,21 @@ The original version of Wavepacket was written in Matlab and is still
 maintained under https://sourceforge.net/p/wavepacket/matlab. It is stable,
 battle-tested and works.
 
-However, Matlab is pretty expensive and not all interested user had
+However, Matlab is pretty expensive, so not all interested users had
 access to it. Also, the project's architecture did not support some
 advanced use cases without digging deep into the code. Finally,
 C++11 had just come out and looked cool, so I started a
 reimplementation in C++ around 2013, adding Python bindings as an
-afterthought. This project is getting out of maintenance, but can be
-found under https://sourceforge.net/p/wavepacket/cpp.
+afterthought. The C++ project will be superseded by this Python package, but
+can be found under https://sourceforge.net/p/wavepacket/cpp.
 
 This worked really well. However, deploying C++ code is difficult.
 In particular, there was no cheap route towards building a "good"
-Python package. Also, the underlying tensor library was slowly
-getting less and less commits over the years, so I am currently
-moving to a Python-only package, which makes most coding tasks
-way simpler and faster. The main drawback is performance;
+Python package, or towards easily building a Windows version.
+Also, the underlying tensor library was slowly
+getting fewer and fewer commits over the years, so I am currently
+moving to a Python-only package. 
 The Python version is slower by a factor of two to three compared
 to C++-backed code. This is, however, often cancelled by a
-parallelization of the tensor operations.
+parallelization of the tensor operations, and the tooling is better by orders
+of magnitude.
