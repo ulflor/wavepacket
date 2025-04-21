@@ -52,8 +52,8 @@ Contribution
 
 I currently lack a formal procedure for new contributors, but you are
 very welcome to contribute to the project. If you do not know what to
-do, feel free to email me at `ulf@wppy.org`; there is enough work for
-more than one developer, it is just not documented yet.
+do, feel free to contact one of the developers; there is enough work for
+multiple developers, it is just not documented yet.
 
 
 History

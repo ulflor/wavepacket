@@ -4,7 +4,7 @@ build-backend = "flit_core.buildapi"
 
 [project]
 name = "wavepacket"
-authors = [{ name = "Ulf Lorenz", email = "ulf@wppy.org" }]
+authors = [{ name = "Ulf Lorenz" }]
 readme = "README.rst"
 license = { file = "LICENSE" }
 requires-python = ">=3.12"
