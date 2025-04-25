@@ -6,6 +6,7 @@ a simulation of a one-dimensional free particle.
 
 .. code-block:: python
 
+    import math
     import wavepacket as wp
 
     dof = wp.grid.PlaneWaveDof(-20, 20, 128)
