@@ -10,7 +10,9 @@ class SphericalHarmonicsDof(DofBase):
         if lmax < abs(m):
             raise wp.InvalidValueError("Maximum angular momentum too small, grid has size 0.")
 
-        super().__init__(np.zeros(lmax - abs(m) + 1), np.zeros(lmax - abs(m) + 1))
+        dvr_points, w = _quadrature(lmax, m)
+        fbr_points = np.linspace(abs(m), lmax, lmax - abs(m) + 1)
+        super().__init__(dvr_points, fbr_points)
 
     def to_fbr(self, data: wpt.ComplexData, index: int, is_ket: bool = True) -> wpt.ComplexData:
         pass
@@ -39,10 +41,11 @@ def _quadrature(lmax: int, m: int) -> tuple[wpt.RealData, wpt.RealData]:
     # Our goal is to get grid points theta_i (/phi_i) and weights w_i such that for two
     # spherical harmonics with k,l <= l_max,
     #
-    # A_kl = \int_0^pi sin(theta) dtheta \int_0^{2pi} dphi Y_k^m^*(theta, phi) Y_l^m(theta, phi) = \sum_i w_i Y_k^m*(theta_i, phi_i) Y_l^m(theta_i, phi_i)
+    # A_kl = \int_0^pi sin(theta) dtheta \int_0^{2pi} dphi Y_k^m^*(theta, phi) Y_l^m(theta, phi)
+    #      = \sum_i w_i Y_k^m*(theta_i, phi_i) Y_l^m(theta_i, phi_i)
     #
     # (While the result is trivial, A_kl = \delta_kl, we can extend such integrations to
-    # sums of spherical harmonics, i.e., rotational wave functions and the DVR method).
+    # sums of spherical harmonics, i.e., rotational wave functions and to the DVR method).
     # Note that we keep the quantum number m constant, because the general problem is much
     # more complex, probably not even solvable.
     # First, we note that for constant m, the Condon-Shortley phase cancels, and the
@@ -83,7 +86,7 @@ def _quadrature(lmax: int, m: int) -> tuple[wpt.RealData, wpt.RealData]:
     #
     # We do use a few tricks here that will take time to wrap your head around:
     # - We do not try to deal with normalized Gegenbauer polynomials; the resulting intermediate
-    #   formulas are just ugly. Instead we note that the original integration of the spherical
+    #   formulas are just ugly. Instead, we note that the original integration of the spherical
     #   harmonics can be recast as the required integral of normalized Gegenbauer polynomials,
     #   and just calculate X_ij by adding cos(theta) to the integrand and using spherical harmonics
     #   recursion relations.
@@ -91,4 +94,17 @@ def _quadrature(lmax: int, m: int) -> tuple[wpt.RealData, wpt.RealData]:
     #   use l-m, not l.
     # - We eventually want to absorb the factor (1-x^2)^m into the definition of our wave function /
     #   spherical harmonic, so we need to divide the weights that we get out by (1-x^2)^m.
-    pass
+
+    m = abs(m)
+    num_points = lmax - m + 1
+
+    # Construct the matrix X
+    n = np.arange(1.0, num_points)
+    off_diagonal = np.sqrt(n * (n + 2 * m) / (2 * n + 2 * m - 1) / (2 * n + 2 * m + 1))
+    matrix = np.diagflat(off_diagonal, 1) + np.diagflat(off_diagonal, -1)
+
+    result = np.linalg.eig(matrix)
+
+    points = np.acos(result.eigenvalues)
+
+    return np.sort(points), result.eigenvalues
