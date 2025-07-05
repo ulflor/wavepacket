@@ -1,6 +1,8 @@
+import math
 from typing import Optional
 
 import numpy as np
+import scipy
 
 import wavepacket as wp
 import wavepacket.typing as wpt
@@ -86,3 +88,45 @@ class PlaneWave:
 
     def __call__(self, x: wpt.RealData) -> wpt.ComplexData:
         return np.exp(1j * self._k * x)
+
+
+class SphericalHarmonic:
+    """
+    Callable that returns a spherical harmonic Y_l^m(theta, phi=0).
+
+    Usually, this callable will be used for initial states. Note that the
+    phi-dependence of a spherical harmonic is trivial exp(i m phi), and
+    usually not needed (we fix m and the phi-integration yields a constant).
+    For this reason, the functor takes only the theta-values as single parameters,
+    and returns the spherical harmonic at phi = 0.
+
+    Parameters
+    ----------
+    l : int
+        The rotational quantum number / angular momentum
+    m : int
+        The minor rotational quantum number -l <= m <= l
+
+    Raises
+    ------
+    wp.InvalidValueError
+        If l is negative or if (-l <= m <= l) does not hold.
+    """
+
+    def __init__(self, l: int, m: int):
+        if l < 0:
+            raise wp.InvalidValueError(f"Angular momentum must not be negative, but is '{l}'.")
+
+        if m > l or m < -l:
+            raise wp.InvalidValueError(
+                f"Quantum number m must fulfill -l <= m <= l, but we have {-l} <= {m} <= {l}.")
+
+        self._l = l
+        self._m = m
+
+    def __call__(self, theta: wpt.RealData) -> wpt.RealData:
+        factor = math.sqrt((2 * self._l + 1) * math.factorial(self._l - self._m) /
+                           (4 * math.pi * math.factorial(self._l + self._m)))
+        legendre = scipy.special.lpmv(self._m, self._l, np.cos(theta))
+
+        return factor * legendre

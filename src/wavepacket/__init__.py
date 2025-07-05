@@ -15,11 +15,11 @@ from . import typing
 
 from .exceptions import (BadFunctionCall, BadGridError, BadStateError, ExecutionError,
                          InvalidValueError)
-from .generators import Gaussian, PlaneWave
+from .generators import Gaussian, PlaneWave, SphericalHarmonic
 from .logging import log
 
 
 __all__ = ['__version__', 'log', 'BadFunctionCall', 'BadGridError', 'BadStateError',
            'ExecutionError', 'InvalidValueError',
-           'Gaussian', 'PlaneWave',
+           'Gaussian', 'PlaneWave', 'SphericalHarmonic',
            'builder', 'expression', 'grid', 'operator', 'solver', 'testing', 'typing']
