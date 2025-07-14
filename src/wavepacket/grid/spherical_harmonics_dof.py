@@ -1,8 +1,10 @@
+import math
 import numpy as np
 
 import wavepacket as wp
 import wavepacket.typing as wpt
 from .dofbase import DofBase
+from ._utils import broadcast
 
 
 class SphericalHarmonicsDof(DofBase):
@@ -10,9 +12,13 @@ class SphericalHarmonicsDof(DofBase):
         if lmax < abs(m):
             raise wp.InvalidValueError("Maximum angular momentum too small, grid has size 0.")
 
-        dvr_points, w = _quadrature(lmax, m)
+        self.m = m
+
+        dvr_points, weights = _quadrature(lmax, m)
         fbr_points = np.linspace(abs(m), lmax, lmax - abs(m) + 1)
+
         super().__init__(dvr_points, fbr_points)
+        self._sqrt_weights = np.sqrt(weights)
 
     def to_fbr(self, data: wpt.ComplexData, index: int, is_ket: bool = True) -> wpt.ComplexData:
         pass
@@ -24,7 +30,8 @@ class SphericalHarmonicsDof(DofBase):
         pass
 
     def from_dvr(self, data: wpt.ComplexData, index: int) -> wpt.ComplexData:
-        pass
+        conversion_factor = broadcast(self._sqrt_weights, data.ndim, index)
+        return data * conversion_factor
 
 
 def _quadrature(lmax: int, m: int) -> tuple[wpt.RealData, wpt.RealData]:
@@ -106,5 +113,19 @@ def _quadrature(lmax: int, m: int) -> tuple[wpt.RealData, wpt.RealData]:
     result = np.linalg.eig(matrix)
 
     points = np.acos(result.eigenvalues)
+    weights = result.eigenvectors[0, :] ** 2
 
-    return np.sort(points), result.eigenvalues
+    # Sorting is wrong, we need to fix that
+    sort_indices = np.argsort(points)
+    points = points[sort_indices]
+    weights = weights[sort_indices]
+
+    # The weights need two fixes.
+    # First, we want to include the weight function (1-x^2)^m in the integrand, so we need to remove those again.
+    # Second, there are some constant factors missing. To ge those, we simply demand that
+    # \int |Y_mm(theta, phi)|^2 sin(theta) dtheta dphi = sum_k w_k * Y_mm(theta_k, 0) == 1
+    y_mm = wp.SphericalHarmonic(m, m)(points)
+    weights /= (1 - np.cos(points) ** 2) ** m
+    weights /= np.sum(weights * y_mm ** 2)
+
+    return points, weights

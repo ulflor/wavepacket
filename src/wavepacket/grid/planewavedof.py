@@ -5,13 +5,7 @@ import numpy as np
 import wavepacket as wp
 import wavepacket.typing as wpt
 from .dofbase import DofBase
-
-
-def _broadcast(data: wpt.ComplexData, ndim, index: int) -> wpt.ComplexData:
-    shape = np.ones(ndim, dtype=int)
-    shape[index] = len(data)
-
-    return np.reshape(data, shape)
+from ._utils import broadcast
 
 
 class PlaneWaveDof(DofBase):
@@ -75,28 +69,28 @@ class PlaneWaveDof(DofBase):
 
     def to_fbr(self, data: wpt.ComplexData, index: int, is_ket: bool = True) -> wpt.ComplexData:
         if is_ket:
-            phase = _broadcast(self._phase, data.ndim, index)
+            phase = broadcast(self._phase, data.ndim, index)
             transformed = np.fft.fftshift(np.fft.fft(data, axis=index), axes=index)
         else:
-            phase = _broadcast(self._conj_phase, data.ndim, index)
+            phase = broadcast(self._conj_phase, data.ndim, index)
             transformed = np.fft.fftshift(np.fft.ifft(data, axis=index), axes=index)
 
         return phase * transformed
 
     def from_fbr(self, data: wpt.ComplexData, index: int, is_ket: bool = True) -> wpt.ComplexData:
         if is_ket:
-            phase = _broadcast(self._conj_phase, data.ndim, index)
+            phase = broadcast(self._conj_phase, data.ndim, index)
             untransformed = phase * data
             return np.fft.ifft(np.fft.ifftshift(untransformed, axes=index), axis=index)
         else:
-            phase = _broadcast(self._phase, data.ndim, index)
+            phase = broadcast(self._phase, data.ndim, index)
             untransformed = phase * data
             return np.fft.fft(np.fft.ifftshift(untransformed, axes=index), axis=index)
 
     def to_dvr(self, data: wpt.ComplexData, index: int) -> wpt.ComplexData:
-        conversion_factor = _broadcast(self._sqrt_weights, data.ndim, index)
+        conversion_factor = broadcast(self._sqrt_weights, data.ndim, index)
         return data / conversion_factor
 
     def from_dvr(self, data: wpt.ComplexData, index: int) -> wpt.ComplexData:
-        conversion_factor = _broadcast(self._sqrt_weights, data.ndim, index)
+        conversion_factor = broadcast(self._sqrt_weights, data.ndim, index)
         return data * conversion_factor

@@ -1,0 +1,55 @@
+import numpy as np
+import pytest
+from numpy.testing import assert_allclose
+
+import wavepacket as wp
+import wavepacket.typing as wpt
+
+
+def spherical_harmonics(dof: wp.grid.SphericalHarmonicsDof) -> wpt.RealData:
+    # harmonics[k,l] = l-th harmonic, point x_k
+    return np.stack([wp.SphericalHarmonic(L + abs(dof.m), dof.m)(dof.dvr_points) for L in range(dof.size)], 1)
+
+
+def test_correct_weights():
+    dof = wp.grid.SphericalHarmonicsDof(5, 0)
+    harmonics = spherical_harmonics(dof)
+    weighted = dof.from_dvr(harmonics, 0)
+
+    scalar_product = np.matmul(np.conjugate(weighted.T), weighted)
+    assert_allclose(scalar_product, np.eye(6), rtol=0, atol=1e-12)
+
+    # same for m > 0
+    dof_m = wp.grid.SphericalHarmonicsDof(5, 2)
+    harmonics_m = spherical_harmonics(dof_m)
+    weighted_m = dof_m.from_dvr(harmonics_m, 0)
+
+    scalar_product = np.matmul(np.conjugate(weighted_m.T), weighted_m)
+    assert_allclose(scalar_product, np.eye(4), rtol=0, atol=1e-12)
+
+    # and m < 0
+    dof_mm = wp.grid.SphericalHarmonicsDof(5, -1)
+    harmonics_mm = spherical_harmonics(dof_mm)
+    weighted_mm = dof_mm.from_dvr(harmonics_mm, 0)
+
+    scalar_product = np.matmul(np.conjugate(weighted_mm.T), weighted_mm)
+    assert_allclose(scalar_product, np.eye(5), rtol=0, atol=1e-12)
+
+
+def test_from_dvr_along_specified_index():
+    dof = wp.grid.SphericalHarmonicsDof(6, 1)
+    harmonics = spherical_harmonics(dof)
+    harmonics_t = np.transpose(harmonics)
+
+    result = dof.from_dvr(harmonics, 0)
+    result_t = dof.from_dvr(harmonics_t, 1)
+
+    assert_allclose(np.transpose(result), result_t, rtol=0, atol=1e-12)
+
+
+def test_reject_invalid_index():
+    dof = wp.grid.SphericalHarmonicsDof(6, 3)
+    input = np.ones([3, 4, 5])
+
+    with pytest.raises(IndexError):
+        dof.from_dvr(input, 3)
