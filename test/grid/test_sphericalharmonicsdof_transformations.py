@@ -49,7 +49,62 @@ def test_from_dvr_along_specified_index():
 
 def test_reject_invalid_index():
     dof = wp.grid.SphericalHarmonicsDof(6, 3)
-    input = np.ones([3, 4, 5])
+    data = np.ones([3, 4, 5])
 
     with pytest.raises(IndexError):
-        dof.from_dvr(input, 3)
+        dof.from_dvr(data, 3)
+
+    with pytest.raises(IndexError):
+        dof.to_dvr(data, 3)
+
+    with pytest.raises(IndexError):
+        dof.from_fbr(data, 3)
+
+    with pytest.raises(IndexError):
+        dof.to_fbr(data, 3)
+
+
+def test_to_dvr_is_inverse_of_from_dvr():
+    dof = wp.grid.SphericalHarmonicsDof(7, 2)
+    data = np.random.default_rng(42).random((dof.size, dof.size, dof.size))
+
+    tmp = dof.to_dvr(data, 0)
+    result = dof.from_dvr(tmp, 0)
+    assert_allclose(result, data, rtol=0, atol=1e-12)
+
+    tmp = dof.to_dvr(data, 1)
+    result = dof.from_dvr(tmp, 1)
+    assert_allclose(result, data, rtol=0, atol=1e-12)
+
+
+def test_transformation_from_fbr():
+    dof = wp.grid.SphericalHarmonicsDof(7, 2)
+    harmonics = spherical_harmonics(dof)
+    fbr_harmonics = np.eye(harmonics.shape[0])
+
+    expected = dof.from_dvr(harmonics, 0)
+    got = dof.from_fbr(fbr_harmonics, 0)
+
+    assert_allclose(got, expected, rtol=0, atol=1e-12)
+
+
+def test_from_fbr_along_specified_index():
+    dof = wp.grid.SphericalHarmonicsDof(7, 3)
+    data = np.random.default_rng(42).random((dof.size, dof.size, dof.size))
+
+    result = dof.from_fbr(data, 0)
+    transposed_result = dof.from_fbr(np.swapaxes(data, 0, 2), 2)
+
+    assert_allclose(result, np.swapaxes(transposed_result, 0, 2), rtol=0, atol=1e-12)
+
+
+def test_to_fbr():
+    dof = wp.grid.SphericalHarmonicsDof(7, -4)
+    harmonics = spherical_harmonics(dof)
+    transposed_harmonics = np.transpose(harmonics)
+
+    result = dof.to_fbr(dof.from_dvr(harmonics, 0), 0)
+    transposed_result = dof.to_fbr(dof.from_dvr(transposed_harmonics, -1), -1)
+
+    assert_allclose(np.eye(4), result, rtol=0, atol=1e-12)
+    assert_allclose(np.eye(4), transposed_result, rtol=0, atol=1e-12)

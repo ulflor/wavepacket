@@ -1,10 +1,9 @@
-import math
 import numpy as np
-
 import wavepacket as wp
 import wavepacket.typing as wpt
-from .dofbase import DofBase
+
 from ._utils import broadcast
+from .dofbase import DofBase
 
 
 class SphericalHarmonicsDof(DofBase):
@@ -20,14 +19,22 @@ class SphericalHarmonicsDof(DofBase):
         super().__init__(dvr_points, fbr_points)
         self._sqrt_weights = np.sqrt(weights)
 
+        harmonics = np.stack([wp.SphericalHarmonic(L, m)(dvr_points) for L in range(abs(m), lmax + 1)], 1)
+        self._fbr2weighted = self.from_dvr(harmonics, 0)
+
     def to_fbr(self, data: wpt.ComplexData, index: int, is_ket: bool = True) -> wpt.ComplexData:
-        pass
+        swapped_data = np.swapaxes(data, 0, index)
+        result = np.tensordot(self._fbr2weighted, swapped_data, axes=([0], [0]))
+        return np.swapaxes(result, 0, index)
 
     def from_fbr(self, data: wpt.ComplexData, index: int, is_ket: bool = True) -> wpt.ComplexData:
-        pass
+        swapped_data = np.swapaxes(data, 0, index)
+        result = np.tensordot(self._fbr2weighted, swapped_data, axes=([1], [0]))
+        return np.swapaxes(result, 0, index)
 
     def to_dvr(self, data: wpt.ComplexData, index: int) -> wpt.ComplexData:
-        pass
+        conversion_factor = broadcast(self._sqrt_weights, data.ndim, index)
+        return data / conversion_factor
 
     def from_dvr(self, data: wpt.ComplexData, index: int) -> wpt.ComplexData:
         conversion_factor = broadcast(self._sqrt_weights, data.ndim, index)
