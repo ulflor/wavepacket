@@ -68,7 +68,7 @@ class Gaussian(wpt.Generator):
         return np.exp(arg)
 
 
-class PlaneWave:
+class PlaneWave(wpt.Generator):
     """
     Callable that defines a plane wave.
 
@@ -90,7 +90,7 @@ class PlaneWave:
         return np.exp(1j * self._k * x)
 
 
-class SphericalHarmonic:
+class SphericalHarmonic(wpt.RealGenerator):
     """
     Callable that returns a spherical harmonic Y_l^m(theta, phi=0).
 
