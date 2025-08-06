@@ -31,21 +31,26 @@ def test_reject_bad_constructor_args(grid):
         wp.operator.PlaneWaveFbrOperator(grid, 1, dummy_func)
 
 
-def test_apply_to_data(grid, op):
+def test_apply_to_wave_function(grid, op):
     k = 3 * 2 * math.pi / 10.0
     psi = wp.builder.product_wave_function(grid, [wp.PlaneWave(k), dummy_func])
-    rho = wp.builder.pure_density(psi)
 
     result = op.apply_to_wave_function(psi.data, 0.0)
     assert_allclose(result, psi.data * k, atol=1e-12, rtol=0)
 
-    result = op.apply_from_left(rho.data, 0.0)
-    expected = wp.builder.direct_product(k * psi, psi).data
-    assert_allclose(result, expected, atol=1e-12, rtol=0)
 
-    result = op.apply_from_right(rho.data, 0.0)
-    expected = wp.builder.direct_product(psi, k * psi).data
-    assert_allclose(result, expected, atol=1e-12, rtol=0)
+def test_apply_to_density(grid, op):
+    psi = wp.testing.random_state(grid, 45)
+    psi_result = wp.grid.State(grid, op.apply_to_wave_function(psi.data, 0.0))
+    rho = wp.builder.pure_density(psi)
+
+    expected_left = wp.builder.direct_product(psi_result, psi).data
+    got_left = op.apply_from_left(rho.data, 0.0)
+    assert_allclose(got_left, expected_left, atol=1e-12, rtol=0)
+
+    expected_right = wp.builder.direct_product(psi, psi_result).data
+    got_right = op.apply_from_right(rho.data, 0.0)
+    assert_allclose(got_right, expected_right, atol=1e-12, rtol=0)
 
 
 def test_negative_indices(grid):
