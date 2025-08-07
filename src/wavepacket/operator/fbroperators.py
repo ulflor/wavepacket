@@ -155,3 +155,38 @@ class FbrOperator1D(OperatorBase):
         swapped_rho = np.swapaxes(rho, 0, self._bra_index)
         result = np.tensordot(self._matrix, swapped_rho, (0, 0))
         return np.swapaxes(result, 0, self._bra_index)
+
+
+class RotationalKineticEnergy(FbrOperator1D):
+    """
+    Convenience class that implements a typical rotational kinetic energy term.
+
+    The form of the operator is :math:`-\\frac{\\hat L^2}{2I}`
+    in terms of the angular momentum operator and a moment of inertia.
+    It requires the degree of freedom to be a :py:class:`wavepacket.grid.SphericalHarmonicsDof`.
+
+    Parameters
+    ----------
+    grid : wp.grid.Grid
+        The grid on which the operator is defined.
+    dof_index : int
+        Degree of freedom along which the operator acts
+    inertia : float
+        The moment of inertia of the rotor. Only fixed values are supported by this operator (no vibrational coupling).
+
+    Raises
+    ------
+    wp.InvalidValueError
+        If the moment of inertia is not positive, or if the degree of freedom does not describe a
+        spherical harmonics expansion.
+    """
+
+    def __init__(self, grid: wp.grid.Grid, dof_index: int, inertia: float):
+        if inertia <= 0:
+            raise wp.InvalidValueError(f"Moment of inertia must be positive, but is {inertia}")
+
+        if not isinstance(grid.dofs[dof_index], wp.grid.SphericalHarmonicsDof):
+            raise wp.InvalidValueError(
+                f"Degree of freedom should be a SphericalHarmonicsDof, but is {grid.dofs[dof_index].__class__}")
+
+        super().__init__(grid, dof_index, lambda fbr_points: fbr_points * (fbr_points + 1) / (2 * inertia))
