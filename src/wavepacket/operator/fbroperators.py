@@ -73,7 +73,7 @@ class CartesianKineticEnergy(PlaneWaveFbrOperator):
     """
     Convenience class that implements the common Cartesian kinetic energy operator.
 
-    The form of the operator is :math:`-\\frac{1}{2m} \ \\frac{\partial^2}{\partial x^2}`.
+    The form of the operator is :math:`-\\frac{1}{2m} \\ \\frac{\\partial^2}{\\partial x^2}`.
     It requires the degree of freedom to be a :py:class:`wavepacket.grid.PlaneWaveDof`.
 
     Parameters
