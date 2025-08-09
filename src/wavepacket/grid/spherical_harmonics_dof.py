@@ -7,6 +7,29 @@ from .dofbase import DofBase
 
 
 class SphericalHarmonicsDof(DofBase):
+    """
+    One-dimensional expansion in rotational eigenstates / spherical harmonics.
+
+    This expansion is obviously useful for systems that involve rotations.
+    It takes a fixed magnetic quantum number m, because no DVR is known for
+    arbitrary rotations. Wave functions are given at points :math:`(\\theta_i, \\phi=0)``,
+    and the weights include the integration over :math:`phi`.
+    The FBR is an expansion in spherical harmonics :math:`Y_{lm}`,
+    and the azimuthal quantum numbers :math:`l` form the FBR grid.
+
+    Parameters
+    ----------
+    lmax: int
+        The maximum azimuthal quantum number that is expressed by the grid.
+    m: int
+        The magnetic quantum number
+
+    Raises
+    ------
+    wavepacket.InvalidError
+        If the magnetic quantum number is too large (i.e., if lmax < |m|)
+    """
+
     def __init__(self, lmax: int, m: int):
         if lmax < abs(m):
             raise wp.InvalidValueError("Maximum angular momentum too small, grid has size 0.")
@@ -24,12 +47,12 @@ class SphericalHarmonicsDof(DofBase):
 
     def to_fbr(self, data: wpt.ComplexData, index: int, is_ket: bool = True) -> wpt.ComplexData:
         swapped_data = np.swapaxes(data, 0, index)
-        result = np.tensordot(self._fbr2weighted, swapped_data, axes=([0], [0]))
+        result = np.tensordot(self._fbr2weighted, swapped_data, axes=(0, 0))
         return np.swapaxes(result, 0, index)
 
     def from_fbr(self, data: wpt.ComplexData, index: int, is_ket: bool = True) -> wpt.ComplexData:
         swapped_data = np.swapaxes(data, 0, index)
-        result = np.tensordot(self._fbr2weighted, swapped_data, axes=([1], [0]))
+        result = np.tensordot(self._fbr2weighted, swapped_data, axes=(1, 0))
         return np.swapaxes(result, 0, index)
 
     def to_dvr(self, data: wpt.ComplexData, index: int) -> wpt.ComplexData:

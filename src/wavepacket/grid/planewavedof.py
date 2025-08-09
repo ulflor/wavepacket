@@ -38,7 +38,7 @@ class PlaneWaveDof(DofBase):
 
     Raises
     ------
-    wp.InvalidValueError
+    wavepacket.InvalidValueError
         If the length of the grid is negative or the number of grid points is non-positive.
 
     References
