@@ -15,8 +15,9 @@ class PlaneWaveFbrOperator(OperatorBase):
     are diagonal and essentially transform into a multiplication with the
     wave vector / FBR grid.
 
-    A key difference to a generic FBR operator is that this operator
-    does not apply the shift after the FFT, which increases performance.
+    Functionally, this operator is identical to
+    :py:class:`wavepacket.operator.FbrOperator1D`, but uses the faster FFT
+    transformation instead of a matrix multiplication.
 
     Parameters
     ----------
@@ -31,11 +32,6 @@ class PlaneWaveFbrOperator(OperatorBase):
     ------
     wp.InvalidValueError
         If the supplied degree of freedom is not a plane wave expansion.
-
-    See Also
-    --------
-    :py:class:`wavepacket.operator.FbrOperator1D`, which is the same operator,
-    but for generic degrees of freedom.
     """
 
     def __init__(self, grid: Grid, dof_index: int, generator: wpt.Generator):
@@ -110,7 +106,8 @@ class FbrOperator1D(OperatorBase):
     degrees of freedom.
 
     The numerics boil down to a matrix multiplication along the respective
-    degree of freedom.
+    degree of freedom. For a faster alternative along plane wave degrees of freedom,
+    see :py:class:`wavepacket.operator.PlaneWaveFbrOperator`
 
     Parameters
     ----------
@@ -120,11 +117,6 @@ class FbrOperator1D(OperatorBase):
         Degree of freedom along which the operator acts
     generator : wpt.Generator
         A callable that gives the operator value for each FBR point.
-
-    See Also
-    --------
-    :py:class:`wavepacket.operator.PlaneWaveFbrOperator`
-    for an alternative that is optimized for plane wave degrees of freedom.
     """
 
     def __init__(self, grid: Grid, dof_index: int, generator: wpt.Generator):
