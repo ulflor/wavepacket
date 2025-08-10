@@ -2,6 +2,12 @@
 ChangeLog
 =========
 
+0.2
+---
+
+- [#18] added spherical harmonics expansion:
+  degree of freedom, operator, generator
+
 
 0.1
 ---
