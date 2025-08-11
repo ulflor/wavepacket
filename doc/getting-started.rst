@@ -27,7 +27,8 @@ This program already highlights the basic structure of a Wavepacket simulation:
 1. You first need to set up a grid / basis expansion for your system.
    For that, you need to define the grid along each degree of freedom,
    and then form the multidimensional grid as the direct product of the
-   one-dimensional grids. Note that Wavepacket uses exclusively the DVR / pseudo-spectral method [#dvr]_.
+   one-dimensional grids. Note that Wavepacket uses exclusively the DVR / pseudo-spectral method,
+   see :doc:`representations` or [#dvr]_.
 2. Given a grid, you can define your equations of motion.
    Again, this step consists of two parts: First, you define all relevant
    operators, for example the Hamiltonian, then you wrap these operators
