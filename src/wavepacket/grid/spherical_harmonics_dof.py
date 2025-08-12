@@ -27,7 +27,7 @@ class SphericalHarmonicsDof(DofBase):
     Raises
     ------
     wavepacket.InvalidError
-        If the magnetic quantum number is too large (i.e., if lmax < |m|)
+        If the magnetic quantum number is too large (i.e., if lmax < abs(m))
     """
 
     def __init__(self, lmax: int, m: int):
