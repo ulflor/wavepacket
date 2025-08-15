@@ -44,7 +44,7 @@ def test_apply_to_wave_function(op, grid):
 
 def test_apply_to_density_operator(op, grid):
     psi = wp.testing.random_state(grid, 43)
-    psi_result = wp.grid.State(grid, op.apply_to_wave_function(psi.data, 0.0))
+    psi_result = op.apply(psi, 0.0)
     rho = wp.builder.pure_density(psi)
 
     expected_left = wp.builder.direct_product(psi_result, psi).data
