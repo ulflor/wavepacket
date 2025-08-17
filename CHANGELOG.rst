@@ -7,6 +7,8 @@ ChangeLog
 
 - [#18] added spherical harmonics expansion:
   degree of freedom, operator, generator
+- [#19] added time-dependent functions and laser fields as operators
+  including helper functions for sin**2 and rectangular pulses with soft turn-on.
 
 
 0.1
