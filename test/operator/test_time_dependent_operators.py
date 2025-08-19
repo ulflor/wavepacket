@@ -3,12 +3,10 @@ from numpy.testing import assert_allclose
 import wavepacket as wp
 
 
-def test_time_dependent_operator():
-    dof = wp.grid.PlaneWaveDof(1, 2, 3)
-    grid = wp.grid.Grid(dof)
-    op = wp.operator.TimeDependentOperator(grid, lambda t: 2j * t)
+def test_time_dependent_operator(grid_2d):
+    op = wp.operator.TimeDependentOperator(grid_2d, lambda t: 2j * t)
 
-    psi = wp.testing.random_state(grid, 47)
+    psi = wp.testing.random_state(grid_2d, 47)
     rho = wp.builder.pure_density(psi)
     psi_result = op.apply(psi, 5)
 
@@ -23,12 +21,10 @@ def test_time_dependent_operator():
     assert_allclose(bra_expected, bra_result, rtol=0, atol=1e-12)
 
 
-def test_real_valued_function():
-    dof = wp.grid.PlaneWaveDof(1, 2, 3)
-    grid = wp.grid.Grid(dof)
-    op = wp.operator.TimeDependentOperator(grid, lambda t: 5*t)
+def test_real_valued_function(grid_2d):
+    op = wp.operator.TimeDependentOperator(grid_2d, lambda t: 5 * t)
 
-    psi = wp.testing.random_state(grid, 48)
+    psi = wp.testing.random_state(grid_2d, 48)
     rho = wp.builder.pure_density(psi)
 
     psi_result = op.apply_to_wave_function(psi.data, 5)
