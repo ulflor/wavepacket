@@ -5,6 +5,7 @@ import numpy as np
 
 import wavepacket as wp
 import wavepacket.typing as wpt
+
 from ..grid import Grid, State
 
 
@@ -61,3 +62,47 @@ def product_wave_function(grid: Grid,
         return result / norm
     else:
         return result
+
+
+def random_wave_function(grid: wp.grid.Grid, generator: np.random.Generator, max_value: float = 1) -> wp.grid.State:
+    """
+    Generates a random wave function.
+
+    The output is a state in the weighted DVR, whose coefficients in (unweighted) DVR
+    are real-valued and uniformly distributed in the range [-max, max).
+
+    Parameters
+    ----------
+    grid: wp.grid.Grid
+        The grid for which the random wave function is created.
+    generator: np.random.Generator
+        The Numpy generator that creates the random values.
+    max_value: float, default = 1
+        The maximum absolute value `max` for the distribution of the random values.
+
+    Raises
+    ------
+    wp.InvalidValueError
+        if the maximum value is non-positive.
+
+    Examples
+    --------
+    You typically need to generate several random wave functions for a simulation.
+    In such a case, it is advantageous to recycle the random number generator after initial seeding.
+    This reduces the uniqueness of the random numbers to a single seed number.
+
+    >>> rng = np.random.default_rng(42)
+    >>> psi = random_wave_function(grid, rng)
+    >>> psi2 = random_wave_function(grid, rng)
+    """
+    if max_value <= 0:
+        raise wp.InvalidValueError(f"Maximum allowed value must be positive, but is '{max_value}'.")
+
+    # uniform distribution from -max_value to max_value
+    data = generator.random(grid.shape)
+    data = 2.0 * max_value * (data - 0.5)
+
+    for index, dof in enumerate(grid.dofs):
+        data = dof.from_dvr(data, index)
+
+    return wp.grid.State(grid, data)
