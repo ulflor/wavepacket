@@ -40,7 +40,7 @@ def test_random_wave_function():
     assert np.any(data < -max_value / 100)
 
 
-def test_reproducibility():
+def test_random_reproducibility():
     grid = wp.grid.Grid(wp.grid.PlaneWaveDof(1, 2, 3))
     generator = np.random.default_rng(1)
     same_generator = np.random.default_rng(1)
@@ -54,3 +54,11 @@ def test_reproducibility():
     assert np.all(psi.data == same_psi.data)
     assert np.all(psi.data != next_psi.data)
     assert np.all(psi.data != other_psi.data)
+
+
+def test_zero_wave_function():
+    grid = wp.grid.Grid(wp.grid.PlaneWaveDof(1, 2, 3))
+
+    psi = wp.builder.zero_wave_function(grid)
+    assert psi.is_wave_function()
+    assert np.all(psi.data == 0.0)

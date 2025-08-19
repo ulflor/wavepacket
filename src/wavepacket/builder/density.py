@@ -71,3 +71,12 @@ def direct_product(ket: State, bra: State) -> State:
     rho_matrix = np.outer(ket.data, np.conj(bra.data))
 
     return State(ket.grid, np.reshape(rho_matrix, ket.grid.operator_shape))
+
+
+def zero_density(grid) -> wp.grid.State:
+    """
+    Returns a density operator whose coefficients are constant zero.
+
+    These states sometimes occur as initial states in perturbation theory approaches.
+    """
+    return wp.grid.State(grid, np.zeros(grid.operator_shape))

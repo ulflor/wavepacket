@@ -106,3 +106,12 @@ def random_wave_function(grid: wp.grid.Grid, generator: np.random.Generator, max
         data = dof.from_dvr(data, index)
 
     return wp.grid.State(grid, data)
+
+
+def zero_wave_function(grid) -> wp.grid.State:
+    """
+    Returns a wave function whose coefficients are constant zero.
+
+    These states sometimes occur as initial states in perturbation theory approaches.
+    """
+    return wp.grid.State(grid, np.zeros(grid.shape))
