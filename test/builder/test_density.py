@@ -1,6 +1,6 @@
 import numpy as np
 import pytest
-from numpy.testing import assert_allclose
+from numpy.testing import assert_allclose, assert_array_equal
 
 import wavepacket as wp
 
@@ -61,6 +61,14 @@ def test_direct_product(psi):
     for i in range(size):
         for j in range(size):
             assert_allclose(rho_data[i, j], ket_data[i] * bra_data[j].conjugate(), atol=1e-12, rtol=0)
+
+
+def test_unit_density(grid_2d):
+    rho = wp.builder.unit_density(grid_2d)
+    assert rho.is_density_operator()
+
+    matrix = np.reshape(rho.data, [grid_2d.size, grid_2d.size])
+    assert_array_equal(np.eye(grid_2d.size), matrix)
 
 
 def test_zero_density(grid_2d):

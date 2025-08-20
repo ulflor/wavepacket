@@ -73,10 +73,28 @@ def direct_product(ket: State, bra: State) -> State:
     return State(ket.grid, np.reshape(rho_matrix, ket.grid.operator_shape))
 
 
+def unit_density(grid) -> wp.grid.State:
+    """
+    Returns a unit operator as density operator.
+
+    Parameters
+    ----------
+    grid: wp.grid.Grid
+        The grid for which the unit density operator should be returned.
+    """
+    matrix = np.eye(grid.size)
+    return wp.grid.State(grid, np.reshape(matrix, grid.operator_shape))
+
+
 def zero_density(grid) -> wp.grid.State:
     """
     Returns a density operator whose coefficients are constant zero.
 
     These states sometimes occur as initial states in perturbation theory approaches.
+
+    Parameters
+    ----------
+    grid: wp.grid.Grid
+        The grid for which the zero density should be generated.
     """
     return wp.grid.State(grid, np.zeros(grid.operator_shape))
