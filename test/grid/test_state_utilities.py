@@ -12,10 +12,13 @@ def test_reject_invalid_states(grid_2d):
         wp.grid.dvr_density(invalid_state)
 
     with pytest.raises(wp.BadStateError):
+        wp.grid.fbr_density(invalid_state)
+
+    with pytest.raises(wp.BadStateError):
         wp.grid.trace(invalid_state)
 
 
-def test_wave_function_density():
+def test_wave_function_dvr_density():
     grid = wp.grid.Grid([wp.grid.PlaneWaveDof(5, 6, 3),
                          wp.grid.PlaneWaveDof(10, 12, 5)])
     psi = wp.testing.random_state(grid, 42)
@@ -27,7 +30,7 @@ def test_wave_function_density():
     assert_allclose(result, expected, atol=1e-14, rtol=0)
 
 
-def test_density_operator_density(grid_2d):
+def test_density_operator_dvr_density(grid_2d):
     psi = wp.testing.random_state(grid_2d, 42)
     rho = wp.builder.pure_density(psi)
 
@@ -35,6 +38,28 @@ def test_density_operator_density(grid_2d):
     density_from_rho = wp.grid.dvr_density(rho)
 
     assert_allclose(density_from_rho, density_from_psi, atol=1e-14, rtol=0)
+
+
+def test_wave_function_fbr_density():
+    grid = wp.grid.Grid([wp.grid.SphericalHarmonicsDof(10, 2),
+                         wp.grid.SphericalHarmonicsDof(12, 5)])
+    psi = 2j * wp.builder.product_wave_function(grid, [wp.SphericalHarmonic(5, 2),
+                                                       wp.SphericalHarmonic(7, 5)])
+
+    density = wp.grid.fbr_density(psi)
+    expected = np.zeros(grid.shape)
+    expected[5 - 2, 7 - 5] = 4
+    assert_allclose(expected, density, rtol=0, atol=1e-12)
+
+
+def test_density_operator_fbr_density(grid_2d):
+    psi = wp.testing.random_state(grid_2d, 42)
+    rho = wp.builder.pure_density(psi)
+
+    density_from_psi = wp.grid.fbr_density(psi)
+    density_from_rho = wp.grid.fbr_density(rho)
+
+    assert_allclose(density_from_psi, density_from_rho, rtol=0, atol=1e-12)
 
 
 def test_trace():
