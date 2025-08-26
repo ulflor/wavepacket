@@ -9,7 +9,7 @@ class SinSquare:
 
     Usually, you use this function to describe a smooth laser pulse
     with a definite start and end point (which a Gaussian does not have).
-    The exact shape is :math:`cos^2(\\pi \\frac{t - t_0){2 \\Delta}`, and
+    The exact shape is :math:`cos^2(\\pi \\frac{t - t_0}{2 \\Delta}`, and
     zero outside the interval :math:`[t_0-\\Delta, t_0+\\Delta]`.
 
     Parameters
