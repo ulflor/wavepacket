@@ -7,7 +7,7 @@ __all__ = ['CartesianKineticEnergy', 'RotationalKineticEnergy', 'OperatorBase',
            'Potential1D', 'expectation_value']
 
 from .operatorbase import OperatorBase
-from .operatorutils import expectation_value
+from .operator_utils import expectation_value
 from .fbroperators import CartesianKineticEnergy, PlaneWaveFbrOperator, FbrOperator1D, RotationalKineticEnergy
 from .time_dependent_operators import TimeDependentOperator, LaserField
 from .potentials import Potential1D
