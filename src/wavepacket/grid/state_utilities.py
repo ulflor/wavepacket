@@ -1,4 +1,7 @@
+import math
+
 import numpy as np
+from typing import Sequence
 
 import wavepacket as wp
 import wavepacket.typing as wpt
@@ -11,6 +14,10 @@ def _take_diagonal(data: wpt.ComplexData, grid: Grid) -> wpt.RealData:
     matrix_form = np.reshape(data, (grid.size, grid.size))
     diagonal = np.abs(np.diag(matrix_form))
     return np.reshape(diagonal, grid.shape)
+
+
+def _normalize(u: wpt.ComplexData) -> wpt.ComplexData:
+    return u / math.sqrt(np.abs(u ** 2).sum())
 
 
 def dvr_density(state: State) -> wpt.RealData:
@@ -135,3 +142,59 @@ def trace(state: State) -> float:
         return diagonal.sum()
     else:
         raise wp.BadStateError("Input is not a valid state.")
+
+
+def orthonormalize(states: Sequence[State]) -> list[State]:
+    """
+    Orthogonalizes and normalizes a set of linearly independent wave functions.
+
+    This function does a simple Gram-Schmidt orthogonalization followed by a normalization
+    of the resulting orthogonal vectors. As such, it is not efficient for a large number
+    of vectors, and produces artefacts for linearly dependent vectors. In short,
+    it should be good for common use cases, but should only be used with sanitized input.
+
+    Parameters
+    ----------
+    states: Sequence[wp.grid.State]
+        The wave functions to orthonormalize. Must be linearly independent.
+        May be empty or contain only one element, in which case the normalized wave function is returned.
+
+    Returns
+    -------
+    list[State]
+        A set of wave functions that span the same subspace as the input, but are normalized
+        and orthogonal.
+
+    Raises
+    ------
+    wp.BadGridError
+        Raised if the input states are defined on different grids.
+
+    wp.BadStateError
+        Raised if any input state is either not a wave function or has zero trace.
+    """
+    if not states:
+        return []
+
+    grid = states[0].grid
+    for state in states:
+        if not state.is_wave_function():
+            raise wp.BadStateError("Orthonormalization available only for wave functions.")
+
+        if state.grid is not grid:
+            raise wp.BadGridError("Cannot orthonormalize states on different grids.")
+
+        if trace(state) == 0:
+            raise wp.BadStateError("Cannot orthonormalize state with norm zero.")
+
+    result: wpt.ComplexData = []
+    for state in states:
+        a = state.data
+        state.data.sum()
+        for b in result:
+            a = _normalize(a)
+            overlap = (np.conj(b) * a).sum()
+            a = a - overlap * b
+        result.append(_normalize(a))
+
+    return [State(grid, v) for v in result]

@@ -1,5 +1,6 @@
 import math
 import numpy as np
+from typing import Sequence
 
 import wavepacket as wp
 import wavepacket.typing as wpt
@@ -27,7 +28,7 @@ class Projection(OperatorBase):
       Thrown if the state is not a wave function or has norm zero.
     """
 
-    def __init__(self, state: State):
+    def __init__(self, state: State | Sequence[State]):
         if not state.is_wave_function():
             raise wp.BadStateError("Can only project onto a wave function.")
 
