@@ -34,6 +34,10 @@ class Projection(OperatorBase):
 
     wp.InvalidValueError
         Thrown if no basis functions are supplied.
+
+    See Also
+    --------
+    wavepacket.grid.population: if you only want to calculate the population of some states.
     """
 
     def __init__(self, basis: State | Sequence[State]):

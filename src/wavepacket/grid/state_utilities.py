@@ -198,3 +198,53 @@ def orthonormalize(states: Sequence[State]) -> list[State]:
         result.append(_normalize(a))
 
     return [State(grid, v) for v in result]
+
+
+def population(state: State, target: State) -> float:
+    """
+    Calculates how much a target state is populated in a given state.
+
+    The return value is simply the absolute square of the scalar product of
+    the two states. The target state is normalized before the calculation.
+    This operation can be thought of as a shortcut for creating a
+    :py:class:`wp.operator.Projection` with the target and calculating
+    the :py:func:`wp.operator.expectation_value` of the input state.
+
+    Parameters
+    ----------
+    state: wp.grid.State
+        The state that is projected onto the target state
+
+    target: wp.grid.State
+        The wave function onto which the input state is projected.
+        This function is normalized before use.
+
+    Raises
+    ------
+    wp.BadGridError
+        Raised if the input and the target state are defined on different grids.
+
+    wp.BadStateError
+        Raised if the target is not a wave function.
+
+    See Also
+    --------
+    wavepacket.operator.Projection: For advanced calculations
+    """
+    if not target.is_wave_function():
+        raise wp.BadStateError("Projection requires a wave function as target.")
+
+    if target.grid != state.grid:
+        raise wp.BadGridError("Target wave function must be the same grid as the state to project.")
+
+    target_trace = wp.grid.trace(target)
+    if state.is_wave_function():
+        coefficient = (np.conj(target.data) * state.data).sum()
+        return coefficient ** 2 / target_trace
+    elif state.is_density_operator():
+        matrix_form = np.reshape(state.data, [state.grid.size, state.grid.size])
+        flat_target = np.ravel(target.data)
+        left_summation = np.tensordot(np.conj(flat_target), matrix_form, axes=(0, 0))
+        return np.tensordot(left_summation, flat_target, axes=(0, 0)).sum() / target_trace
+    else:
+        raise wp.BadStateError("Input is not a valid state.")

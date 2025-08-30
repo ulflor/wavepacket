@@ -1,3 +1,5 @@
+import math
+
 import numpy as np
 
 import wavepacket as wp
@@ -22,6 +24,9 @@ def test_reject_invalid_states(grid_2d):
 
     with pytest.raises(wp.BadStateError):
         wp.grid.orthonormalize([good_state, invalid_state])
+
+    with pytest.raises(wp.BadStateError):
+        wp.grid.population(invalid_state, good_state)
 
 
 def test_wave_function_dvr_density():
@@ -106,25 +111,67 @@ def test_trivial_orthonormalization(grid_1d):
 
 
 def test_result_is_orthonormal_and_spans_same_subspace(grid_2d):
-    input = [wp.testing.random_state(grid_2d, seed) for seed in range(42, 47)]
+    input_states = [wp.testing.random_state(grid_2d, seed) for seed in range(42, 47)]
 
-    result = wp.grid.orthonormalize(input)
+    result = wp.grid.orthonormalize(input_states)
 
-    assert len(result) == len(input)
+    assert len(result) == len(input_states)
     for state in result:
         assert 1 - 1e-12 <= wp.grid.trace(state) <= 1 + 1e-12
 
     for i in range(len(result)):
-        for j in range(i+1, len(result)):
+        for j in range(i + 1, len(result)):
             scalar_product = (np.conj(result[i].data) * result[j].data).sum()
             assert abs(scalar_product) < 1e-12
 
     # Checking for the same subspace is a bit involved, we need ot explicitly
     # calculate all scalar products.
-    for original in input:
+    for original in input_states:
         reconstructed = wp.builder.zero_wave_function(grid_2d).data
         for v in result:
             scalar_product = (np.conj(v.data) * original.data).sum()
             reconstructed = reconstructed + scalar_product * v.data
 
         assert_allclose(reconstructed, original.data, rtol=0, atol=1e-12)
+
+
+def test_invalid_population_targets(grid_1d, grid_2d):
+    good_state = wp.testing.random_state(grid_1d, 1)
+    wrong_grid = wp.testing.random_state(grid_2d, 2)
+    density_operator = wp.builder.pure_density(good_state)
+
+    with pytest.raises(wp.BadStateError):
+        wp.grid.population(good_state, density_operator)
+
+    with pytest.raises(wp.BadGridError):
+        wp.grid.population(good_state, wrong_grid)
+
+
+def test_population(grid_2d):
+    states = wp.grid.orthonormalize([wp.testing.random_state(grid_2d, seed) for seed in [1, 2]])
+    a, target = (states[0], states[1])
+
+    psi = 2 * a + 0.7 * target
+    rho = wp.builder.pure_density(psi)
+    expected = 0.7 ** 2
+
+    psi_projection = wp.grid.population(psi, target)
+    assert_allclose(psi_projection, expected, rtol=0, atol=1e-12)
+
+    rho_projection = wp.grid.population(rho, target)
+    assert_allclose(rho_projection, expected, rtol=0, atol=1e-12)
+
+
+def test_normalize_population_target(grid_2d):
+    target = wp.testing.random_state(grid_2d, 1)
+    target /= math.sqrt(wp.grid.trace(target))
+
+    psi = 0.7 * target
+    rho = wp.builder.pure_density(psi)
+    expected = 0.7 ** 2
+
+    psi_projection = wp.grid.population(psi, 2 * target)
+    assert_allclose(psi_projection, expected, rtol=0, atol=1e-12)
+
+    rho_projection = wp.grid.population(rho, 2 * target)
+    assert_allclose(rho_projection, expected, rtol=0, atol=1e-12)
