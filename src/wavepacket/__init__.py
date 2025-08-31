@@ -14,6 +14,7 @@ from . import builder
 from . import expression
 from . import grid
 from . import operator
+from . import plot
 from . import solver
 from . import testing
 from . import typing
