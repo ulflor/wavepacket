@@ -56,9 +56,9 @@ psi_0 = math.sqrt(0.5) * (psi_left + psi_right)
 schroedinger_eq = wp.expression.SchroedingerEquation(hamiltonian)
 solver = wp.solver.OdeSolver(schroedinger_eq, dt=math.pi/5)
 
+plotter = wp.plot.StackedPlot1D(6, psi_0)
 for t, psi in solver.propagate(psi_0, t0=0.0, num_steps=5):
-    # TODO: Better and more convenient plotting
-    plt.plot(grid.dofs[0].dvr_points, wp.grid.dvr_density(psi))
+    plotter.plot(psi, t)
 ```
 
 ## Density operators
@@ -89,7 +89,7 @@ rho_0 = 0.5 * (wp.builder.pure_density(psi_left) + wp.builder.pure_density(psi_r
 liouvillian = wp.expression.CommutatorLiouvillian(hamiltonian)
 solver = wp.solver.OdeSolver(liouvillian, dt=math.pi/5)
 
+plotter = wp.plot.StackedPlot1D(6, rho_0)
 for t, rho in solver.propagate(rho_0, t0=0.0, num_steps=5):
-    # TODO: Better and more convenient plotting
-    plt.plot(grid.dofs[0].dvr_points, wp.grid.dvr_density(rho))
+    plotter.plot(rho, t)
 ```
