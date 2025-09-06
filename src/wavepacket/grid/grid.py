@@ -25,9 +25,13 @@ class Grid:
     Attributes
     ----------
     shape
+        The shape of a NumPy array that describes a wave function
     operator_shape
+        The shape of a NumPy array that describes an operator
     dofs
+        A list of degrees of freedom that describe the degrees of freedom of the grid
     size
+        The total number of grid points
 
     Raises
     ------
