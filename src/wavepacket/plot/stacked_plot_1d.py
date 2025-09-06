@@ -8,7 +8,38 @@ from ..operator import OperatorBase, expectation_value
 
 class StackedPlot1D:
     """
-    Properties
+    Helper class to stack multiple plots on top of each other.
+
+    This class does two things: It creates a Matplotlib figure
+    with multiple axes stacked on top of each other, and it
+    provides a plot function that conveniently plots the density
+    of a state on in subsequent of these axes.
+
+    Customization of the plots is possible but limited for ease of use.
+    The underlying grid must be one-dimensional.
+
+    This plot helper is probably most useful for Jupyter notebooks,
+    where all created figures are implicitly plotted after execution
+    of a code block, and where plot "animations" are difficult.
+
+    Parameters
+    ----------
+    num_plots: int
+        The number of plots to stack. Should equal the number of calls to
+        th plot function. If the class runs out of axes to plot onto, it
+        continues plotting on the last axes.
+    state: wp.grid.State
+        An example state for plotting; usually the initial state.
+        This is only used to derive some reasonable defaults for the plots.
+    potential: wp.operator.OperatorBase, optional
+        The potential that is also plotted together with the state's density.
+        If no potential is given, only the density is plotted.
+    hamiltonian: wp.operator.OperatorBase, optional
+        The Hamiltonian of the system, usually the time-independent part.
+        The plotted density is shifted in y (energy) direction by the expectation value of this Hamiltonian.
+        If the Hamiltonian is not given, the potential operator is used instead.
+
+    Attributes
     ----------
     xlim: list[float]
         The range of the x-axis [min, max]
@@ -65,13 +96,36 @@ class StackedPlot1D:
             self.conversion_factor = (self.ylim[1] - energy) / max_density
 
     def plot(self, state: State, t: float) -> plt.Axes:
+        """
+        Plots a state, possibly together with the potential.
+
+        If a potential was supplied, it is also plotted, and the density shifted by the
+        energy given as expectation value of the Hamiltonian.
+
+        Each call to plot populates a new plot (axes); if no more axes are left,
+        the last one is overwritten.
+
+        Parameters
+        ----------
+        state: wp.grid.State
+            The state whose density is plotted.
+        t: float
+            The time at which the state applies.
+            The time is plotted in the upper right corner.
+
+        Return
+        ------
+        plt.Axes
+            The Matplotlib axes object on which we plotted the state for possible
+            further manipulation.
+        """
         axes: plt.Axes = self._axes[self._index]
 
         axes.clear()
         axes.set_xlim(self.xlim[0], self.xlim[1])
         axes.set_ylim(self.ylim[0], self.ylim[1])
         axes.text(0.05 * self.xlim[0] + 0.95 * self.xlim[1], 0.05 * self.ylim[0] + 0.95 * self.ylim[1],
-                  f"t = {t} a.u.", weight="heavy",
+                  f"t = {t:.4} a.u.", weight="heavy",
                   horizontalalignment="right", verticalalignment="top")
 
         dvr_grid = state.grid.dofs[0].dvr_points
@@ -81,7 +135,7 @@ class StackedPlot1D:
             axes.plot(dvr_grid, dvr_density(state), 'b-')
         else:
             potential_values = self._potential.apply(zero_wave_function(state.grid) + 1).data
-            energy = abs(expectation_value(self._hamiltonian, state) * np.ones(dvr_grid.shape))
+            energy = abs(expectation_value(self._hamiltonian, state, t) * np.ones(dvr_grid.shape))
             density = dvr_density(state)
 
             axes.plot(dvr_grid, potential_values, 'b-')
