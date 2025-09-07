@@ -45,7 +45,7 @@ For example, Matlab Wavepacket only requires you to set the various parameters, 
 shorter and simpler.
 However, the Python version allows more flexibility when you use more complex setups.
 For example, you can almost seamlessly switch between density operator and wavepacket descriptions,
-see the :ref:`demo-schroedinger-cat` demo, or you can propagate an ensemble of random thermal
+see the :ref:`tutorial-schroedinger-cat` demo, or you can propagate an ensemble of random thermal
 wave functions to replicate a thermal system (TODO: translate demo).
 
 

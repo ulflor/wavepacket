@@ -26,12 +26,12 @@ extensions = [
 templates_path = ['_templates']
 exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store']
 
-
 # ------ AutoApi configuration
 autoapi_dirs = ["../src/wavepacket"]
 
 autoapi_options = ['members', 'undoc-members', 'imported-members',
                    'show-inheritance', 'show-module-summary']
+
 
 # Unless we prefix _every_ module by "_", we get every symbol twice: Once in the
 # exposing package, once in the defining module. This here skips all module docs.
@@ -40,6 +40,7 @@ def skip_modules(app, what, name, obj, skip, options):
         skip = True
 
     return skip
+
 
 def setup(sphinx):
     sphinx.connect("autoapi-skip-member", skip_modules)

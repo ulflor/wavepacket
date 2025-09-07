@@ -41,9 +41,10 @@ free to use the `issue tracker <https://github.com/ulflor/wavepacket/features>`_
     representations
 
 .. toctree::
-   :caption: Demos for typical usages
+   :caption: Tutorials for typical usages
 
    tutorials/schroedinger_cat
+   tutorials/plotting
 
 .. toctree::
     :caption: Other links

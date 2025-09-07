@@ -4,10 +4,11 @@ kernelspec:
     name: python3
 ---
 
-(demo-schroedinger-cat)=
+(tutorial-schroedinger-cat)=
+
 # Schrödinger cat states
 
-This demo demonstrates one of the core features of Wavepacket:
+This tutorial demonstrates one of the core features of Wavepacket:
 Switching between wave functions and density operators with minimal overhead
 
 We consider a simple free particle as a coherent or incoherent sum of two Gaussians.
