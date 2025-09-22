@@ -1,3 +1,3 @@
-__all__ = ['StackedPlot1D']
+__all__ = ['BasePlot1D', 'SimplePlot1D', 'StackedPlot1D']
 
-from .stacked_plot_1d import StackedPlot1D
+from .plot_1d import BasePlot1D, SimplePlot1D, StackedPlot1D
