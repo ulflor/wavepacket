@@ -5,19 +5,24 @@ ChangeLog
 0.2
 ---
 
-- [#18] added spherical harmonics expansion:
+- (#18) added spherical harmonics expansion:
   degree of freedom, operator, generator
 
-- [#19] added time-dependent functions and laser fields as operators,
+- (#19) added time-dependent functions and laser fields as operators,
   including helper functions for sin**2 and rectangular pulses with soft turn-on
 
-- [#20] Added a projection operator for projecting onto a state or subspace
-- [#20] Added a population() function to easily calculate populations of target states
-- [#20] Added a function for Gram-Schmidt orthogonalization and normalization
+- (#20) added functionality related to projections
+  - projection operator for projecting onto a state or subspace
+  - population() function to easily calculate populations of target states
+  - Gram-Schmidt orthogonalization and normalization
 
-- [#21] added more initial states
+- (#21) added more initial states
   random wave functions, zero densities and wave functions, unit density
-- [#21] added function grid.fbr_density() to calculate density in FBR
+- (#21) added function grid.fbr_density() to calculate density in FBR
+
+- (#22) 1D plotting helpers
+  - added plotting classes StackedPlot1D and SimplePlot1D
+  - added a tutorial on plotting
 
 
 0.1
