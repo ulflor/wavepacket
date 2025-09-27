@@ -80,11 +80,14 @@ Their purpose is a useful visualisation of the dynamics with minimal setup.
 These classes are opinionated and may not be as flexible and configurable as you need them.
 If they do not fulfill your needs, you might want to write your own plotting code, as discussed in the next section.
 
-As of version 0.2, the only available helper is a class that stacks plots on top of each other,
-and which plots the potential and the state's density (offset by the energy of the state) together.
-It is mainly intended for Jupyter notebooks, where plotting is slightly restricted.
+As of version 0.2, there are two available helper classes: {py:class}`wp.plot.SimplePlot1D` just draws one plot,
+while {py:class}`wp.plot.StackedPlot1D` stacks density plots on top of each other.
+Otherwise, both classes behave similar, and plot plot the potential and the state's density
+(offset by the energy of the state) together.
+the simple plot generally provides a simple way to plot animations, while stacked plots are suitable for
+Jupyter notebooks, where you can have only one plot per cell.
 
-The constructor gets the number of plots, some wave function for guessing defaults, and the
+The `StackedPlot1D` constructor gets the number of plots, some wave function for guessing defaults, and the
 potential and hamiltonian, then you just call plot repeatedly to fill the individual plots.
 If you plot more often than there are axes available, the last plot is overwritten.
 
@@ -101,6 +104,9 @@ for t, psi in solver.propagate(psi_0, t0=0.0, num_steps=5):
 In the example here, we have reduced the density scale (density to energy units), to fit the large spikes on the plot.
 Further customization includes `stacked_plot.ylim`, which gives the lower and upper range of the y (energy) axis,
 or the same for the x-axis.
+
+For `SimplePlot1D`, you do not supply the number of plots, otherwise the behavior is similar.
+We will use them further below to demonstrate animations from plots.
 
 ## Manual plotting
 
@@ -146,11 +152,44 @@ Outside of notebooks, you could recycle the figure and use, e.g., `plt.pause(1)`
 
 ## Exporting images and animations
 
-You can save individual plots and animations.
-For the former, just call `figure.savefig()`, for example with the StackedPlot from above
+To save an image, you can call `figure.savefig()`.
+As an example, we can save our stacked plot with
 
 ```{code-cell}
 stacked_plot.figure.savefig(f"harmonic_oscillator_stacked.png")
 ```
 
-Showing the figure is not required prior to saving.
+The figure is saved directly from the plotting data;
+it works without showing the plot, and even without an interactive backend.
+
+As mentioned before, you can create crude animations outside of Jupyter notebooks by calling `plt.pause(1)`.
+This shows the plot and blocks the execution of the Python script for one second.
+The `matplot.animation` package offers better approaches, but at some point you want to export animations.
+That is, you want to create something sharable that shows, for example, the time evolution of a wave function.
+
+For animation export, you create a writer, start saving, and then plot and grab the individual frames.
+Again, you do not need to show the plot.
+Because stacked plots are not terribly useful for animations, you should use a simple plot here
+
+```{code-cell}
+from matplotlib.animation import HTMLWriter
+
+simple_plot = wp.plot.SimplePlot1D(psi_0, potential=potential, hamiltonian=kinetic+potential)
+simple_plot.conversion_factor /= 2
+writer = HTMLWriter(fps=3, embed_frames=True)
+
+with writer.saving(simple_plot.figure, "harmonic_oscillator.html", dpi=200): 
+    for t, psi in solver.propagate(psi_0, t0=0.0, num_steps=5):
+        simple_plot.plot(psi, t)
+        writer.grab_frame()
+```
+
+The animation is written to disk as soon as the block enclosed with "with" is left.
+The `HTMLWriter` by default creates [a HTML page](harmonic_oscillator.html) consisting of the individual
+frames as png files and some Javascript to play the animation.
+In the example, we reduced the playback rate to 3 frames per second, and embedded the images
+into the HTML due to document generator constraints.
+This robust approach should generally work, and the result is suitable for embedding in a web page.
+
+Matplotlib also offers other writers, for example, `FFMpegWriter`.
+These are more flexible, but require additional prerequisites such as FFMpeg installed.
