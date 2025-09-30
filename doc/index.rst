@@ -47,6 +47,11 @@ free to use the `issue tracker <https://github.com/ulflor/wavepacket/features>`_
    tutorials/plotting
 
 .. toctree::
+    :caption: Demos
+
+    demos/pendular_states
+
+.. toctree::
     :caption: Other links
 
     Project homepage <https://github.com/ulflor/wavepacket>
