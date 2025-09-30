@@ -1,5 +1,6 @@
 from abc import ABC, abstractmethod
 from collections.abc import Sequence
+import numbers
 import typing
 
 import numpy as np
@@ -77,14 +78,30 @@ class OperatorBase(ABC):
         else:
             raise wp.BadStateError("Cannot apply the operator to an invalid state.")
 
+    def __neg__(self):
+        return self * wp.operator.Constant(self._grid, -1)
+
     def __add__(self, other):
-        """
-        Adds two operators and returns the result as a :py:class:`wavepacket.operator.OperatorSum`.
-        """
+        if not isinstance(other, OperatorBase):
+            other = wp.operator.Constant(self._grid, other)
         return OperatorSum([self, other])
 
+    def __radd__(self, other: numbers.Number):
+        return self + other
+
+    def __sub__(self, other):
+        return self + (-1) * other
+
+    def __rsub__(self, other: numbers.Number):
+        return other + (-1) * self
+
     def __mul__(self, other):
+        if not isinstance(other, OperatorBase):
+            other = wp.operator.Constant(self._grid, other)
         return OperatorProduct([self, other])
+
+    def __rmul__(self, other: numbers.Number):
+        return self * other
 
     @abstractmethod
     def apply_to_wave_function(self, psi: wpt.ComplexData, t: float) -> wpt.ComplexData:

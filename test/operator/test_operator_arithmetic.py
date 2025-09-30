@@ -2,6 +2,7 @@ import pytest
 from numpy.testing import assert_allclose
 
 import wavepacket as wp
+from wavepacket.testing import assert_close
 
 
 def test_reject_invalid_arguments(grid_1d, grid_2d):
@@ -63,3 +64,50 @@ def test_apply_product(grid_1d):
     rho_result_right = product.apply_from_right(rho.data, 0.0)
     rho_expected_right = op2.apply_from_right(op1.apply_from_right(rho.data, 0.0), 0.0)
     assert_allclose(rho_expected_right, rho_result_right, atol=1e-12, rtol=0)
+
+
+def test_other_arithmetics(grid_1d):
+    op1 = wp.operator.Potential1D(grid_1d, 0, lambda x: x ** 2)
+    op2 = wp.operator.FbrOperator1D(grid_1d, 0, lambda x: x)
+
+    psi = wp.testing.random_state(grid_1d, 43)
+
+    negated = -op1
+    got = negated.apply(psi, 0.0)
+    expected = (-1.0) * op1.apply(psi, 0.0)
+    assert_close(got, expected, 1e-12)
+
+    sum_with_constant = op1 + 2.0
+    got = sum_with_constant.apply(psi, 0.0)
+    expected = op1.apply(psi, 0.0) + 2.0 * psi
+    assert_close(got, expected, 1e-12)
+
+    other_sum_with_constant = 2.0 + op1
+    result1 = sum_with_constant.apply(psi, 0.0)
+    result2 = other_sum_with_constant.apply(psi, 0.0)
+    assert_close(result1, result2, 1e-12)
+
+    difference = op1 - op2
+    got = difference.apply(psi, 0.0)
+    expected = op1.apply(psi, 0.0) - op2.apply(psi, 0.0)
+    assert_close(got, expected, 1e-12)
+
+    diff_with_constant = op1 - 2.0
+    got = diff_with_constant.apply(psi, 0.0)
+    expected = op1.apply(psi, 0.0) - 2.0 * psi
+    assert_close(got, expected, 1e-12)
+
+    other_diff_with_constant = 2.0 - op1
+    got = other_diff_with_constant.apply(psi, 0.0)
+    expected = diff_with_constant.apply(psi, 0.0)
+    assert_close(got, -expected, 1e-12)
+
+    product_with_constant = op1 * 2.0
+    got = product_with_constant.apply(psi, 0.0)
+    expected = 2.0 * op1.apply(psi, 0.0)
+    assert_close(got, expected, 1e-12)
+
+    other_product_with_constant = 2.0 * op1
+    got = other_product_with_constant.apply(psi, 0.0)
+    expected = product_with_constant.apply(psi, 0.0)
+    assert_close(got, expected, 1e-12)

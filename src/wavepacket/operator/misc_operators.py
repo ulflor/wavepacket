@@ -78,3 +78,32 @@ class Projection(OperatorBase):
         coefficients = np.tensordot(matrix_form, self._ket_ravelled, (1, 1))
         bra_projection = np.tensordot(coefficients, self._bra_nd, (1, 0))
         return np.reshape(bra_projection, self._grid.operator_shape)
+
+
+class Constant(OperatorBase):
+    """
+    Operator that encapsulates a simple constant.
+
+    Normally, you will not use this operator directly. It is only a wrapper to enable numbers
+    where an operator is expected, in particular when doing operator arithmetic.
+
+    Parameters
+    ----------
+    grid: wp.grid.Grid
+        The grid on which this operator is defined.
+    value: complex
+        The value that this operator wraps.
+    """
+
+    def __init__(self, grid: wp.grid.Grid, value: complex):
+        self._value = value
+        super().__init__(grid)
+
+    def apply_to_wave_function(self, psi: wpt.ComplexData, t: float) -> wpt.ComplexData:
+        return self._value * psi
+
+    def apply_from_left(self, rho: wpt.ComplexData, t: float) -> wpt.ComplexData:
+        return self._value * rho
+
+    def apply_from_right(self, rho: wpt.ComplexData, t: float) -> wpt.ComplexData:
+        return self._value * rho
