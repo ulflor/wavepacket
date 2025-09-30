@@ -11,8 +11,11 @@ def test_reject_invalid_arguments(grid_1d, grid_2d):
     with pytest.raises(wp.BadGridError):
         op1 + op2
 
+    with pytest.raises(wp.BadGridError):
+        op1 * op2
 
-def test_apply(grid_1d, monkeypatch):
+
+def test_apply_sum(grid_1d, monkeypatch):
     op = wp.testing.DummyOperator(grid_1d)
 
     sum_op = op + op
@@ -37,3 +40,26 @@ def test_apply(grid_1d, monkeypatch):
     result = sum_op.apply_from_right(rho.data, t)
     expected = 2 * op.apply_from_right(rho.data, t)
     assert_allclose(result, expected, atol=1e-12, rtol=0)
+
+
+def test_apply_product(grid_1d):
+    # We expect these operators to not commute
+    op1 = wp.operator.Potential1D(grid_1d, 0, lambda x: x ** 2)
+    op2 = wp.operator.FbrOperator1D(grid_1d, 0, lambda x: x)
+
+    product = op1 * op2
+
+    psi = wp.testing.random_state(grid_1d, 42)
+    rho = wp.builder.pure_density(psi)
+
+    psi_result = product.apply_to_wave_function(psi.data, 0.0)
+    psi_expected = op1.apply_to_wave_function(op2.apply_to_wave_function(psi.data, 0.0), 0.0)
+    assert_allclose(psi_expected, psi_result, atol=1e-12, rtol=0)
+
+    rho_result_left = product.apply_from_left(rho.data, 0.0)
+    rho_expected_left = op1.apply_from_left(op2.apply_from_left(rho.data, 0.0), 0.0)
+    assert_allclose(rho_expected_left, rho_result_left, atol=1e-12, rtol=0)
+
+    rho_result_right = product.apply_from_right(rho.data, 0.0)
+    rho_expected_right = op2.apply_from_right(op1.apply_from_right(rho.data, 0.0), 0.0)
+    assert_allclose(rho_expected_right, rho_result_right, atol=1e-12, rtol=0)

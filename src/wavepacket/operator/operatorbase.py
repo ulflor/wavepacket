@@ -25,7 +25,8 @@ class OperatorBase(ABC):
 
     Attributes
     ----------
-    grid
+    grid: wp.grid.Grid
+        The grid on which the operator is defined.
     """
 
     def __init__(self, grid: Grid):
@@ -76,11 +77,14 @@ class OperatorBase(ABC):
         else:
             raise wp.BadStateError("Cannot apply the operator to an invalid state.")
 
-    def __add__(self, other: typing.Self) -> typing.Self:
+    def __add__(self, other):
         """
         Adds two operators and returns the result as a :py:class:`wavepacket.operator.OperatorSum`.
         """
         return OperatorSum([self, other])
+
+    def __mul__(self, other):
+        return OperatorProduct([self, other])
 
     @abstractmethod
     def apply_to_wave_function(self, psi: wpt.ComplexData, t: float) -> wpt.ComplexData:
@@ -154,7 +158,7 @@ class OperatorBase(ABC):
 
 class OperatorSum(OperatorBase):
     """
-    An operator that represents the sum of multiple other operators.
+    An operator that represents the sum of multiple operators.
 
     You do not normally construct this operator directly. It is the result of
     adding two or more operators together. All functionality is simply forwarded
@@ -201,4 +205,52 @@ class OperatorSum(OperatorBase):
         for op in self._ops:
             result += op.apply_from_right(rho, t)
 
+        return result
+
+
+class OperatorProduct(OperatorBase):
+    """
+    An operator that represents the product of multiple operators.
+
+    You do not normally construct this operator directly. It is the result of
+    multiplying (concatenating) two or more operators. All functionality is simply forwarded
+    to the individual operators in the correct order.
+
+    Parameters
+    ----------
+    ops : Sequence[wp.operator.OperatorBase]
+        The operators that should be concatenated.
+
+    Raises
+    ------
+    wp.BadGridError
+        If the operators are defined on different grids.
+    """
+
+    def __init__(self, ops: Sequence[OperatorBase]):
+        if not ops:
+            raise wp.InvalidValueError("OperatorSum needs at least one operator to sum.")
+        for op in ops:
+            if op.grid != ops[0].grid:
+                raise wp.BadGridError("All grids in a sum operator must be equal.")
+
+        self._ops = ops
+        super().__init__(ops[0].grid)
+
+    def apply_to_wave_function(self, psi: wpt.ComplexData, t: float) -> wpt.ComplexData:
+        result = psi
+        for op in reversed(self._ops):
+            result = op.apply_to_wave_function(result, t)
+        return result
+
+    def apply_from_left(self, rho: wpt.ComplexData, t: float) -> wpt.ComplexData:
+        result = rho
+        for op in reversed(self._ops):
+            result = op.apply_from_left(result, t)
+        return result
+
+    def apply_from_right(self, rho: wpt.ComplexData, t: float) -> wpt.ComplexData:
+        result = rho
+        for op in self._ops:
+            result = op.apply_from_right(result, t)
         return result
