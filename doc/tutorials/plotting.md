@@ -8,13 +8,13 @@ kernelspec:
 
 # Plotting wave functions and density operators
 
-This tutorial teaches some basics about plotting Wavepacket states.
+This tutorial teaches some basics about plotting quantum states in Wavepacket.
 
 ## Basics of plotting with Matplotlib
 
 The standard for plotting under Python is Matplotlib, see `https://matplotlib.org` for the full documentation.
 However, while Matplotlib is powerful and flexible, it does not behave uniformly in all environments.
-Hence, before we plot any wave function, we should manage to plot a simple line first.
+Before we plot any wave function, we should therefore get a simple line plotted first.
 
 Consider the following code
 
@@ -22,7 +22,7 @@ Consider the following code
 import matplotlib.pyplot as plt
 
 figure, axes = plt.subplots()
-axes.plot([1, 2, 3], [1, 2, 3])
+axes.plot([1, 2, 3], [1, 2, 3]);
 ```
 
 A figure is a widget on which things can be drawn and can contain one or more axes, which are the actual plotting
@@ -36,20 +36,20 @@ What happens if you execute this code?
 * Under a Windows e.g., command line, you do not see a plot.
   You need to add an explicit `figure.show()` to open a new window containing the plot display.
 * Under Linux when, say, running Python in an xterm, you do not see a plot.
-  You should only get an empty window when typing `figure.show()`.
+  And you only get an empty window when typing `figure.show()`.
   Now it becomes interesting:
-    * You need to show the plot and add an event loop to have it displayed.
+    * You need to show the figure and add an event loop to get the plot displayed.
       Either type `plt.show(block=True)` to block Python execution until the plot window is closed,
       or type `plt.pause(<pause_in_seconds>)` to show the plot for some time before resuming execution.
       After the pause is over, the plot window stops being updated.
     * Depending on your Python installation, you may get no plot, but a warning about a non-interactive backend.
       So you need to install an interactive backend.
     * What should work most of the time is a GTK-based backend.
-      Install PyGObject with, e.g., `pip install PyGObject`. Probably Matplotlib will now use it as default.
-      If not, set the environment variable `export MPLBACKEND=GTK3Agg`. Now you should finally get a plot display.
-* Other environments, such as PyCharm of VSCode plugins may have their own particular behavior.
+      Install PyGObject with `pip install PyGObject`. Matplotlib may already use it as default then.
+      If not, set the environment variable, `export MPLBACKEND=GTK3Agg`. Now you should finally get a plot display.
+* Other environments, such as PyCharm of VSCode plugins, or MacOS may have their own particular behavior.
 
-If you managed to show a simple plot, we can go on plotting the real stuff.
+If you managed to show a simple plot, we can go on plotting real data.
 Wavepacket does not handle these behavior differences, so you typically have to `show()` the plot
 after plotting some wave function.
 
@@ -58,7 +58,6 @@ after plotting some wave function.
 For this plotting demo, we use a one-dimensional harmonic oscillator as example system.
 
 ```{code-cell}
-import math
 import wavepacket as wp
 
 grid = wp.grid.Grid(wp.grid.PlaneWaveDof(-10, 10, 128))
@@ -70,21 +69,21 @@ psi_0 = (wp.builder.product_wave_function(grid, wp.Gaussian(-3, 0, rms=1))
         - wp.builder.product_wave_function(grid, wp.Gaussian(3, 0, rms=1)))
 
 equation = wp.expression.SchroedingerEquation(kinetic + potential)
-solver = wp.solver.OdeSolver(equation, dt=math.pi/5) 
+solver = wp.solver.OdeSolver(equation, dt=0.5) 
 ```
 
 ## Wavepacket plotting helpers
 
 Wavepacket offers utility classes to make plotting of states easier.
-Their purpose is a useful visualisation of the dynamics with minimal setup.
 These classes are opinionated and may not be as flexible and configurable as you need them.
+Their sole purpose is a useful visualisation of the dynamics with minimal setup.
 If they do not fulfill your needs, you might want to write your own plotting code, as discussed in the next section.
 
 As of version 0.2, there are two available helper classes: {py:class}`wp.plot.SimplePlot1D` just draws one plot,
-while {py:class}`wp.plot.StackedPlot1D` stacks density plots on top of each other.
-Otherwise, both classes behave similar, and plot plot the potential and the state's density
-(offset by the energy of the state) together.
-the simple plot generally provides a simple way to plot animations, while stacked plots are suitable for
+while {py:class}`wp.plot.StackedPlot1D` stacks multiple plots on top of each other.
+Otherwise, both classes behave similar; they plot the potential and the state's density
+offset by the energy of the state.
+The simple plot provides a simple way to plot animations, while stacked plots are suitable for
 Jupyter notebooks, where you can have only one plot per cell.
 
 The `StackedPlot1D` constructor gets the number of plots, some wave function for guessing defaults, and the
@@ -102,17 +101,17 @@ for t, psi in solver.propagate(psi_0, t0=0.0, num_steps=5):
 ```
 
 In the example here, we have reduced the density scale (density to energy units), to fit the large spikes on the plot.
-Further customization includes `stacked_plot.ylim`, which gives the lower and upper range of the y (energy) axis,
-or the same for the x-axis.
+Further customization options are `stacked_plot.ylim`, which gives the lower and upper range of the y (energy) axis,
+and the same for the x-axis.
 
 For `SimplePlot1D`, you do not supply the number of plots, otherwise the behavior is similar.
 We will use them further below to demonstrate animations from plots.
 
 ## Manual plotting
 
-You need to write your own plotting functions if, for example, the default functionality does not cover your use case,
-or you need a specific styling for your publication. This requires deeper access and familiarity with
-Wavepacket data structures, but is well-supported.
+You need to write your own plotting functions if the default functionality does not cover your use case,
+or if you need a specific styling, for example for a publication. Doing so is well supported, but
+requires deeper access and familiarity with Wavepacket data structures.
 
 As an example, let us assume you want to plot the density in the plane-wave expansion (the FBR).
 Ideally, you write a plot function first.
@@ -150,7 +149,7 @@ plot_in_fbr(psi_0)
 Of course, you can go ahead and plot further states, we only skip this here because this code is executed in a Notebook.
 Outside of notebooks, you could recycle the figure and use, e.g., `plt.pause(1)`, to make a crude animation.
 
-## Exporting images and animations
+## Saving images and animations to files
 
 To save an image, you can call `figure.savefig()`.
 As an example, we can save our stacked plot with
@@ -159,16 +158,17 @@ As an example, we can save our stacked plot with
 stacked_plot.figure.savefig(f"harmonic_oscillator_stacked.png")
 ```
 
-The figure is saved directly from the plotting data;
-it works without showing the plot, and even without an interactive backend.
+The figure is saved directly from the plotting data without showing the plot,
+therefore you do not even need an interactive backend.
 
 As mentioned before, you can create crude animations outside of Jupyter notebooks by calling `plt.pause(1)`.
 This shows the plot and blocks the execution of the Python script for one second.
-The `matplot.animation` package offers better approaches, but at some point you want to export animations.
-That is, you want to create something sharable that shows, for example, the time evolution of a wave function.
+The `matplot.animation` package offers orhter approaches that we will skip here.
+At some point, however, showing the animation is not enough,
+you want to save it for further processing or demonstration.
 
 For animation export, you create a writer, start saving, and then plot and grab the individual frames.
-Again, you do not need to show the plot.
+Again, you do not need to show the plot, or even an interactive backend.
 Because stacked plots are not terribly useful for animations, you should use a simple plot here
 
 ```{code-cell}
@@ -179,7 +179,7 @@ simple_plot.conversion_factor /= 2
 writer = HTMLWriter(fps=3, embed_frames=True)
 
 with writer.saving(simple_plot.figure, "harmonic_oscillator.html", dpi=200): 
-    for t, psi in solver.propagate(psi_0, t0=0.0, num_steps=5):
+    for t, psi in solver.propagate(psi_0, t0=0.0, num_steps=10):
         simple_plot.plot(psi, t)
         writer.grab_frame()
 ```
@@ -192,4 +192,4 @@ into the HTML due to document generator constraints.
 This robust approach should generally work, and the result is suitable for embedding in a web page.
 
 Matplotlib also offers other writers, for example, `FFMpegWriter`.
-These are more flexible, but require additional prerequisites such as FFMpeg installed.
+These are more flexible, but require additional prerequisites such as an installed FFmpeg.
