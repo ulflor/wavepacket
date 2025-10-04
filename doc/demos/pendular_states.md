@@ -8,8 +8,7 @@ kernelspec:
 
 # Pendular states
 
-The goal of this demo is the reproduction of some of the plots of a
-paper by Oritgoso et al.[^ref-paper]
+The goal of this demo is the partial reproduction of some results of a paper by Oritgoso et al.[^ref-paper]
 Besides discussing pretty cool physics, it aims to demonstrate
 how to extract non-trivial data with minimal fuss and plot it.
 
@@ -20,21 +19,24 @@ We can calculate the shift with standard perturbation theory and cavity-dressed 
 
 ```{math}
 \Delta E \propto - \sum_n \frac{|\langle \Phi_0 | \hat{\vec{\mu}} \vec E |\Phi_n \rangle|^2}{E_n - E_i - \omega}
+    = - \frac{1}{2} \alpha(\omega) E^2 \cos^2 \theta
 ```
 
-in terms of the dipole operator {math}`\mu`, the electric field with strength {math}`E` and frequency {math}`omega`,
+in terms of the dipole operator {math}`\mu`, the electric field with strength {math}`E` and frequency {math}`\omega`,
 and where the summation includes all excited states {math}`\Phi_n` with energies {math}`E_n`.
+Calculating the energy shift is difficult, but that is not our goal here.
+Instead, we absorb all these calculations in a material-specific dynamic polarizability {math}`\alpha(\omega)`.
+Then only a dependency on the angle {math}`\theta` between the effective dipole moment and the laser
+polarization axis remains.
 
-If we plug this energy shift into the formula of a rigid linear rotor, and absorb all complex expressions
-into a dynamic polarizability {math}`\alpha(\omega)`, we arrive at the Hamiltonian
+If we plug this energy shift into the formula of a rigid linear rotor, we arrive at the Hamiltonian
 
 ```{math}
-\hat H = \frac{\hat{L}^2}{2I} - \frac{1}{2} \ \alpha E^2 \cos^2\theta
+\hat H = \frac{\hat{L}^2}{2I} - \frac{1}{2} \ \alpha E^2 \cos^2\theta.
 ```
 
-with the angle {math}`\theta` between electric field vector and effective dipole moment.
 This Hamiltonian describes a linear rotor (first term) trapped in a cosine-shaped potential that draws the
-rotor towards the laser polarization axis ({math}`alpha > 0`) or away from it ({math}`alpha < 0`).
+rotor towards the laser polarization axis ({math}`\alpha > 0`) or away from it ({math}`\alpha < 0`).
 In the following, we only consider the former case of a positive polarizability.
 As the final step, we introduce three further manipulations:
 
@@ -42,7 +44,7 @@ As the final step, we introduce three further manipulations:
    to the second term in the Hamiltonian. We will follow the reference and assume a Gaussian shape.
 2. Because only the product of electric field strength and polarizability matters, we replace it by a
    single parameter.
-3. To get rid of the moment of inertia, we rescale the time such that it becomes one.
+3. To get rid of the moment of inertia, we rescale the time such that we can set {math}`I=1`.
 
 With these manipulations, we arrive at the final formulation of a scaled model Hamiltonian
 
@@ -63,6 +65,10 @@ after which it starts to tumble.
 As alignment measure, we usually employ the expectation value of the squared cosine.
 In the dynamics shown below, we can clearly see the out of equilibrium dynamics after the laser pulse at t = 0.15.
 This plot corresponds to the first graph of figure 1 of ref.[^ref-paper].
+The stronger the laser field the faster the subsequent dynamics of the rotor.
+
+Note that at certain points in time, the rotor exhibits alignment recurrence even after the laser field has passed.
+This field-free alignment is useful because the molecule is aligned, yet undisturbed by external fields.
 
 ```{code-cell}
 import math
@@ -89,7 +95,8 @@ def calculate_alignment(Delta, sigma, l0=0, m=0):
     equation = wp.expression.SchroedingerEquation(hamiltonian)
     solver = wp.solver.OdeSolver(equation, dt=sigma / 50)
 
-    results = [(t, wp.operator.expectation_value(cos2, psi)) for (t, psi) in solver.propagate(psi0, 0, 500)]
+    results = [(t, wp.operator.expectation_value(cos2, psi))
+               for (t, psi) in solver.propagate(psi0, 0, 500)]
     times = np.array([t for (t, _) in results])
     expectation_values = np.array([abs(val) for (_, val) in results])
     
@@ -98,9 +105,9 @@ def calculate_alignment(Delta, sigma, l0=0, m=0):
 times, expectation_values_100 = calculate_alignment(Delta=100, sigma=0.05)
 _, expectation_values_400 = calculate_alignment(Delta=400, sigma=0.05)
 _, expectation_values_900 = calculate_alignment(Delta=900, sigma=0.05)
-plt.plot(times, expectation_values_100, 'k-',
-         times, expectation_values_400, 'k--',
-         times, expectation_values_900, 'k:')
+plt.plot(times, expectation_values_100, '-k',
+         times, expectation_values_400, '--k',
+         times, expectation_values_900, ':k');
 ```
 
 Note that the actual work is encapsulated in a function with only a few parameters.
@@ -122,14 +129,14 @@ This plot corresponds to the third graph of figure 1 of ref[^ref-paper].
 times, expectation_values_100 = calculate_alignment(Delta=100, sigma=5)
 _, expectation_values_400 = calculate_alignment(Delta=400, sigma=5)
 _, expectation_values_900 = calculate_alignment(Delta=900, sigma=5)
-plt.plot(times, expectation_values_100, 'k-',
-         times, expectation_values_400, 'k--',
-         times, expectation_values_900, 'k:')
+plt.plot(times, expectation_values_100, '-k',
+         times, expectation_values_400, '--k',
+         times, expectation_values_900, ':k');
 ```
 
-As the laser pulse is turned on, the rotor stays in the lowest rotational eigenstate,
-and temporarily aligns with the laser field due to the squared cosine potential.
-As soon as the laser is turned off, the alignment is lost again.
+Stronger laser fields correspond to a higher degree of alignment, although this converges for large field strengths.
+The alignment is much stronger than in the non-adiabatic case, but at the cost of an external alignment field
+that may perturb molecular dynamics.
 
 ## Alignment of an excited rotational state
 
@@ -144,20 +151,20 @@ times = data[0][0]
 results = [vals for (t, vals) in data]
 
 average = results[0]
-for m in range(6):
-    average += 2 * results[m]
+for m in range(1,6):
+    average = average + 2 * results[m]
 average /= 11
 
-plt.plot(times, average, 'k-',
-         times, results[0], 'k-.',
-         times, results[2], 'k--',
-         times, results[4], 'k:')
+plt.plot(times, average, '-k',
+         times, results[0], '-.k',
+         times, results[2], '--k',
+         times, results[4], ':k');
 ```
 
 The plot shows the average over all magnetic quantum numbers (solid line), and the individual results for
 m = 0, 2, 4 (dot-dashed, dashed, dotted line).
 While an increasing magnetic quantum number results in less field-free alignment, the total alignment is
 similar for all even values of m.
-The averaged alignment, however, is significantly damped, due to the lower alignment of odd values of m.
+The averaged alignment, however, is significantly damped, and smaller due to the lower alignment of odd values of m.
 
 [^ref-paper]: Oritgoso et al. https://dx.doi.org/10.1063/1.478241
