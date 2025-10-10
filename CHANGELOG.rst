@@ -24,6 +24,8 @@ ChangeLog
   - added plotting classes StackedPlot1D and SimplePlot1D
   - added a tutorial on plotting
 
+- (#23) Added a notebook with the PendularStates demos converted from the older versions
+
 
 0.1
 ---
