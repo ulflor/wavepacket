@@ -9,11 +9,22 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
+      - uses: actions/setup-python@v6
+        id: cp311
+        with:
+          python-version: '3.11'
+      - uses: actions/setup-python@v6
+        id: cp312
+        with:
+          python-version: '3.12'
+      - uses: actions/setup-python@v6
         id: cp313
         with:
           python-version: '3.13'
+      - uses: actions/setup-python@v6
+        id: cp314
+        with:
+          python-version: '3.14'
       - run: ${{ steps.cp313.outputs.python-path }} -m venv ~/venv
-      - run: ~/venv/bin/python -m pip install flit
-      - run: cd $GITHUB_WORKSPACE && ~/venv/bin/flit install --deps all
-      - run: ~/venv/bin/pytest $GITHUB_WORKSPACE/test
+      - run: ~/venv/bin/python -m pip install tox
+      - run: cd $GITHUB_WORKSPACE && ~/venv/bin/tox
