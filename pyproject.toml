@@ -26,14 +26,6 @@ dependencies = [
 [project.urls]
 Home = "https://github.com/ulflor/wavepacket"
 
-[project.optional-dependencies]
-doc = [
-    "sphinx >= 8.1.3",
-    "sphinx-autoapi >= 3.4.0",
-    "numpydoc >= 1.8.0",
-    "myst-nb >= 1.2",
-    "sphinx-rtd-theme >= 3.0.2"
-]
 
 [dependency-groups]
 test = ["pytest >= 8.3"]
@@ -41,6 +33,13 @@ minimum_dependencies = [
     "numpy == 2.1.3",
     "scipy == 1.14.1",
     "matplotlib == 3.10"
+]
+doc = [
+    "sphinx >= 8.1.3",
+    "sphinx-autoapi >= 3.4.0",
+    "numpydoc >= 1.8.0",
+    "myst-nb >= 1.2",
+    "sphinx-rtd-theme >= 3.0.2"
 ]
 
 [tool.tox]
