@@ -26,6 +26,9 @@ ChangeLog
 
 - (#23) Added a notebook with the PendularStates demos converted from the older versions
 
+- (#15) added CI build using tox for different Python versions
+        Wavepacket now supports every Python >= 3.11
+
 
 0.1
 ---
