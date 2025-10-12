@@ -23,7 +23,7 @@ class ExpressionBase(ABC):
     """
 
     @abstractmethod
-    def apply(self, state: State, t: Optional[float] = None) -> State:
+    def apply(self, state: State, t: float) -> State:
         """
         Applies the expression to the input state and returns the result.
 
@@ -31,12 +31,13 @@ class ExpressionBase(ABC):
         ----------
         state : wp.grid.State
             The state on which the expression is applied.
-        t : float, optional
-            The time at which the expression is evaluated. Default is None,
-            which will raise an exception if the contained expression is time-dependent.
+        t : float
+            The time at which the expression is evaluated.
 
         Raises
         ------
+        wp.BadGridError
+            If the grids of the state and the wrapped operator do not match.
         wp.BadStateError
             If the state is invalid or has the wrong time. For example, a Schroedinger equaiton
             makes little sense for a density operator.

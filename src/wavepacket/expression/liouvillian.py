@@ -30,30 +30,7 @@ class CommutatorLiouvillian(ExpressionBase):
     def __init__(self, op: OperatorBase):
         self._op = op
 
-    def apply(self, rho: State, t: Optional[float] = None) -> State:
-        """
-        Evaluates the commutator  for the given density operator and time.
-
-        Parameters
-        ----------
-        rho : wp.grid.State
-            The density operator to commute with
-        t : float, optional
-            The time at which the operator is evaluated. By default it is None,
-            which will throw if the contained operator is time-dependent.
-
-        Returns
-        -------
-        wp.grid.State
-            The result of the commutator.
-
-        Raises
-        ------
-        wp.BadGridError
-            If the grids of the density operator and the wrapped operator do not match.
-        wp.BadStateError
-            If the input state is not a valid density operator.
-        """
+    def apply(self, rho: State, t: float) -> State:
         if rho.grid != self._op.grid:
             raise wp.BadGridError("Input state is defined on the wrong grid.")
 

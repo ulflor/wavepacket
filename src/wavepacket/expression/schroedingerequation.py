@@ -31,31 +31,7 @@ class SchroedingerEquation(ExpressionBase):
     def __init__(self, hamiltonian: OperatorBase):
         self._hamiltonian = hamiltonian
 
-    def apply(self, psi: State, t: Optional[float] = None) -> State:
-        """
-        Evaluates the right-hand side of the Schrödinger equation
-        for the given input state and time.
-
-        Parameters
-        ----------
-        psi : wp.grid.State
-             The input state that is evaluated.
-        t : float, optional
-            The time at which the Schrödinger equation is evaluated.
-            The default `None` throws if the wrapped operator is time-dependent.
-
-        Returns
-        -------
-        wp.grid.State
-            The result of the evaluation.
-
-        Raises
-        ------
-        wp.grid.BadGridError
-            If the state's grid differs from that of the Hamiltonian.
-        wp.grid.BadStateError
-            If the input state is not a wave function.
-        """
+    def apply(self, psi: State, t: float) -> State:
         if psi.grid != self._hamiltonian.grid:
             raise wp.BadGridError("Input state has wrong grid.")
 
