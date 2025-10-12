@@ -13,7 +13,7 @@ class SphericalHarmonicsDof(DofBase):
     This expansion is obviously useful for systems that involve rotations.
     It takes a fixed magnetic quantum number m, because no DVR is known for
     arbitrary rotations. Wave functions are given at points :math:`(\\theta_i, \\phi=0)``,
-    and the weights include the integration over :math:`phi`.
+    and the weights include the integration over :math:`\phi`.
     The FBR is an expansion in spherical harmonics :math:`Y_{lm}`,
     and the azimuthal quantum numbers :math:`l` form the FBR grid.
 

@@ -1,6 +1,5 @@
-from typing import Optional
-
 import wavepacket as wp
+
 from .expressionbase import ExpressionBase
 from ..grid import State
 from ..operator import OperatorBase
@@ -11,7 +10,7 @@ class CommutatorLiouvillian(ExpressionBase):
     Represents a commutator expression in a Liouville von-Neumann equation.
 
     Given an operator `H`, this commutator expression is given by
-    :math:`\mathcal{L}(\hat \\rho) = -\imath (\hat H \hat \\rho - \hat \\rho \hat H)`.
+    :math:`\\mathcal{L}(\\hat \\rho) = -\\imath (\\hat H \\hat \\rho - \\hat \\rho \\hat H)`.
 
     Parameters
     ----------
@@ -22,7 +21,7 @@ class CommutatorLiouvillian(ExpressionBase):
     -----
     The extra factor of -i is added to ensure that the commutator can be directly
     plugged into a Liouville von-Neumann equation. defined as
-    :math:`\\frac{\partial \hat \\rho}{\partial t} = \mathcal{L}(\hat \\rho)`.
+    :math:`\\frac{\\partial \\hat \\rho}{\\partial t} = \\mathcal{L}(\\hat \\rho)`.
     If you need the raw commutator, you have to multiply the result with
     the imaginary number.
     """
