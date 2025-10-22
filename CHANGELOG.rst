@@ -2,6 +2,13 @@
 ChangeLog
 =========
 
+0.3
+---
+
+- (#24) added ExpressionSum and OneSidedLiouvillian
+  for more complex expressions
+
+
 0.2
 ---
 
