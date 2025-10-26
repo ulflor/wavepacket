@@ -9,6 +9,8 @@ def diagonalize(op: OperatorBase, t: float = 0.0):
     """
     Calculates the eigenstates and -values of an operator.
 
+    See :doc:`tutorials/eigenstates` for a discussion of this topic.
+
     This function is a wrapper around `numpy.linalg.eigh` that calculates
     a matrix representation of the operator transforms the calculated eigenstates
     into a :py:class:`wp.grid.State` for easier consumption, and provides a generator
