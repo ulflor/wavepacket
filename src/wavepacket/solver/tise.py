@@ -9,7 +9,7 @@ def diagonalize(op: OperatorBase, t: float = 0.0):
     """
     Calculates the eigenstates and -values of an operator.
 
-    See :doc:`tutorials/eigenstates` for a discussion of this topic.
+    See :doc:`/tutorials/eigenstates` for a discussion of this topic.
 
     This function is a wrapper around `numpy.linalg.eigh` that calculates
     a matrix representation of the operator transforms the calculated eigenstates
@@ -29,7 +29,7 @@ def diagonalize(op: OperatorBase, t: float = 0.0):
         The time at which the operator is evaluated. Can be ignored for time-independent operators.
 
     Yields
-    -------
+    ------
     Tuples consisting of the eigenenergy and the eigenstate of the operator.
     The output is sorted by the eigenvalues.
     """

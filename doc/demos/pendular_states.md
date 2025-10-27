@@ -4,8 +4,6 @@ kernelspec:
     name: python3
 ---
 
-(demo-pendular-states)=
-
 # Pendular states
 
 The goal of this demo is the partial reproduction of some results of a paper by Oritgoso et al.[^ref-paper]

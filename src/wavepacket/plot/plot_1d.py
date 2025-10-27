@@ -78,8 +78,8 @@ class BasePlot1D(ABC):
             The time at which the state applies.
             The time is plotted in the upper right corner.
 
-        Return
-        ------
+        Returns
+        -------
         plt.Axes
             The Matplotlib axes object on which we plotted the state for possible
             further manipulation.

@@ -4,8 +4,6 @@ kernelspec:
     name: python3
 ---
 
-(tutorial-plotting)=
-
 # Plotting wave functions and density operators
 
 This tutorial teaches some basics about plotting quantum states in Wavepacket.
