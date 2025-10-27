@@ -41,14 +41,14 @@ free to use the `issue tracker <https://github.com/ulflor/wavepacket/features>`_
     representations
 
 .. toctree::
-   :caption: Tutorials for typical usages
+   :caption: Introductory tutorials
 
    tutorials/schroedinger_cat
    tutorials/eigenstates
    tutorials/plotting
 
 .. toctree::
-    :caption: Demos
+    :caption: Advanced showcases
 
     demos/pendular_states
 
