@@ -8,6 +8,8 @@ ChangeLog
 - (#24) added ExpressionSum and OneSidedLiouvillian
   for more complex expressions
 
+- (#31) added diagonalize() function for operator eigenstates and -energies
+
 
 0.2
 ---
