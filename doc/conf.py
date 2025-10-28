@@ -7,7 +7,7 @@
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#project-information
 
 project = 'Wavepacket'
-copyright = '2025, Ulf Lorenz'
+copyright = '2024-%Y, Ulf Lorenz'
 author = 'Ulf Lorenz'
 release = '0.2'
 

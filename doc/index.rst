@@ -34,11 +34,12 @@ free to use the `issue tracker <https://github.com/ulflor/wavepacket/features>`_
 
 
 .. toctree::
-    :caption: Introduction
+    :caption: General
 
     getting-started
     architecture
     representations
+    license
 
 .. toctree::
    :caption: Introductory tutorials
