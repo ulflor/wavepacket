@@ -33,6 +33,10 @@ class Potential1D(OperatorBase):
 
         super().__init__(grid)
 
+    @property
+    def time_dependent(self) -> bool:
+        return False
+
     def apply_to_wave_function(self, psi: wpt.ComplexData, t: float) -> wpt.ComplexData:
         return self._wf_data * psi
 

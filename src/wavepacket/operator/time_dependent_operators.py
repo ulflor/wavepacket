@@ -28,6 +28,10 @@ class TimeDependentOperator(OperatorBase):
 
         self._func = func
 
+    @property
+    def time_dependent(self) -> bool:
+        return True
+
     def apply_to_wave_function(self, psi: wpt.ComplexData, t: float) -> wpt.ComplexData:
         return self._func(t) * psi
 

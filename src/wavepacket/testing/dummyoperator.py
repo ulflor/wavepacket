@@ -11,8 +11,13 @@ class DummyOperator(OperatorBase):
     Used for testing where we need an operator, but do not get
     as far as actually doing something.
     """
+
     def __init__(self, grid: Grid):
         super().__init__(grid)
+
+    @property
+    def time_dependent(self) -> bool:
+        return False
 
     def apply_to_wave_function(self, psi: wpt.ComplexData, t: float) -> wpt.ComplexData:
         raise wp.BadFunctionCall("Should be patched.")

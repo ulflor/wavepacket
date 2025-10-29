@@ -28,6 +28,8 @@ class OperatorBase(ABC):
     ----------
     grid: wp.grid.Grid
         The grid on which the operator is defined.
+    time_dependent: bool
+        If the operator is time-dependent or not. Some functionality may not work for time-dependent operators.
     """
 
     def __init__(self, grid: Grid):
@@ -39,6 +41,7 @@ class OperatorBase(ABC):
         Returns the grid on which the operator is defined.
         """
         return self._grid
+
 
     def apply(self, state: State, t: typing.Optional[float] = None) -> State:
         """
@@ -102,6 +105,14 @@ class OperatorBase(ABC):
 
     def __rmul__(self, other: numbers.Number):
         return self * other
+
+    @property
+    @abstractmethod
+    def time_dependent(self) -> bool:
+        """
+        Returns if the operator is time-dependent or not
+        """
+        pass
 
     @abstractmethod
     def apply_to_wave_function(self, psi: wpt.ComplexData, t: float) -> wpt.ComplexData:
@@ -203,6 +214,11 @@ class OperatorSum(OperatorBase):
         grid = ops[0].grid
         super().__init__(grid)
 
+    @property
+    def time_dependent(self) -> bool:
+        td_vals = [op.time_dependent for op in self._ops]
+        return any(td_vals)
+
     def apply_to_wave_function(self, psi: wpt.ComplexData, t: float) -> wpt.ComplexData:
         result = np.zeros(self.grid.shape, dtype=np.complex128)
         for op in self._ops:
@@ -253,6 +269,11 @@ class OperatorProduct(OperatorBase):
 
         self._ops = ops
         super().__init__(ops[0].grid)
+
+    @property
+    def time_dependent(self) -> bool:
+        td_vals = [op.time_dependent for op in self._ops]
+        return any(td_vals)
 
     def apply_to_wave_function(self, psi: wpt.ComplexData, t: float) -> wpt.ComplexData:
         result = psi

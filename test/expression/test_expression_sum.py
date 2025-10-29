@@ -9,6 +9,14 @@ def test_sum_requires_an_expression():
         wp.expression.ExpressionSum([])
 
 
+def test_forward_time_dependence(grid_1d):
+    td = wp.expression.SchroedingerEquation(wp.operator.TimeDependentOperator(grid_1d, lambda t: t))
+    ti = wp.expression.SchroedingerEquation(wp.operator.Constant(grid_1d, 1))
+
+    assert not (ti + ti).time_dependent
+    assert (ti + td).time_dependent
+
+
 def test_forward_to_individual_liouvillians(grid_1d):
     op = wp.operator.CartesianKineticEnergy(grid_1d, 0, 1)
     td_op = wp.operator.TimeDependentOperator(grid_1d, lambda t: t)

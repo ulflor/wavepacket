@@ -14,6 +14,11 @@ class ExpressionBase(ABC):
     By deriving from this class and implementing the method
     :py:meth:`ExpressionBase.apply`, you can add custom expressions.
 
+    Attributes
+    ----------
+    time_dependent: bool
+        If the expression is time-dependent or not. Some functionality may not work for time-dependent operators.
+
     Notes
     -----
     All differential equations have the form
@@ -27,6 +32,17 @@ class ExpressionBase(ABC):
 
     def __add__(self, other: Self):
         return ExpressionSum([self, other])
+
+    @property
+    @abstractmethod
+    def time_dependent(self) -> bool:
+        """
+        Returns if the expression is time-dependent or not.
+
+        Some functionality, for example special solvers, may require time-independent expressions.
+        This property typically evaluates the time-dependence of the underlying operator(s).
+        """
+        pass
 
     @abstractmethod
     def apply(self, state: State, t: float) -> State:
@@ -76,6 +92,11 @@ class ExpressionSum(ExpressionBase):
             raise wp.InvalidValueError("ExpressionSum requires an expression.")
 
         self._expressions = expressions
+
+    @property
+    def time_dependent(self) -> bool:
+        td_vals = [expr.time_dependent for expr in self._expressions]
+        return any(td_vals)
 
     def apply(self, state: State, t: float) -> State:
         result = wp.grid.State(state.grid, np.zeros(state.data.shape))

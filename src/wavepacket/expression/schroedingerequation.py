@@ -31,6 +31,10 @@ class SchroedingerEquation(ExpressionBase):
     def __init__(self, hamiltonian: OperatorBase):
         self._hamiltonian = hamiltonian
 
+    @property
+    def time_dependent(self) -> bool:
+        return self._hamiltonian.time_dependent
+
     def apply(self, psi: State, t: float) -> State:
         if psi.grid != self._hamiltonian.grid:
             raise wp.BadGridError("Input state has wrong grid.")

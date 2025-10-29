@@ -52,6 +52,10 @@ class PlaneWaveFbrOperator(OperatorBase):
 
         super().__init__(grid)
 
+    @property
+    def time_dependent(self) -> bool:
+        return False
+
     def apply_to_wave_function(self, psi: wpt.ComplexData, t: float) -> wpt.ComplexData:
         psi_fft = np.fft.fft(psi, axis=self._wf_index)
         return np.fft.ifft(psi_fft * self._wf_data, axis=self._wf_index)
@@ -132,6 +136,10 @@ class FbrOperator1D(OperatorBase):
         self._matrix = matrix
 
         super().__init__(grid)
+
+    @property
+    def time_dependent(self) -> bool:
+        return False
 
     def apply_to_wave_function(self, psi: wpt.ComplexData, t: float) -> wpt.ComplexData:
         swapped_psi = np.swapaxes(psi, 0, self._ket_index)

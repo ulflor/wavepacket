@@ -31,6 +31,10 @@ class CommutatorLiouvillian(ExpressionBase):
     def __init__(self, op: OperatorBase):
         self._op = op
 
+    @property
+    def time_dependent(self) -> bool:
+        return self._op.time_dependent
+
     def apply(self, rho: State, t: float) -> State:
         if rho.grid != self._op.grid:
             raise wp.BadGridError("Input state is defined on the wrong grid.")
@@ -67,6 +71,10 @@ class OneSidedLiouvillian(ExpressionBase):
     def __init__(self, op: OperatorBase, side: Side = Side.LEFT):
         self._op = op
         self._side = side
+
+    @property
+    def time_dependent(self) -> bool:
+        return self._op.time_dependent
 
     def apply(self, rho: State, t: float) -> State:
         if rho.grid != self._op.grid:

@@ -16,6 +16,16 @@ def test_reject_invalid_arguments(grid_1d, grid_2d):
         op1 * op2
 
 
+def test_inherit_time_dependence(grid_1d):
+    op_ti = wp.operator.CartesianKineticEnergy(grid_1d, 0, 1.0)
+    op_td = wp.operator.TimeDependentOperator(grid_1d, lambda t: t)
+
+    assert not (op_ti + op_ti).time_dependent
+    assert (op_ti + op_td).time_dependent
+
+    assert not (op_ti * op_ti).time_dependent
+    assert (op_ti * op_td).time_dependent
+
 def test_apply_sum(grid_1d, monkeypatch):
     op = wp.testing.DummyOperator(grid_1d)
 

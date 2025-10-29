@@ -62,6 +62,10 @@ class Projection(OperatorBase):
         self._bra_ravelled = np.conj(self._ket_ravelled)
         super().__init__(basis[0].grid)
 
+    @property
+    def time_dependent(self) -> bool:
+        return False
+
     def apply_to_wave_function(self, psi: wpt.ComplexData, t: float) -> wpt.ComplexData:
         tmp = np.reshape(psi, self._grid.size)
         coefficients = np.tensordot(self._bra_ravelled, tmp, axes=(1, 0))
@@ -98,6 +102,10 @@ class Constant(OperatorBase):
     def __init__(self, grid: wp.grid.Grid, value: complex):
         self._value = value
         super().__init__(grid)
+
+    @property
+    def time_dependent(self) -> bool:
+        return False
 
     def apply_to_wave_function(self, psi: wpt.ComplexData, t: float) -> wpt.ComplexData:
         return self._value * psi
