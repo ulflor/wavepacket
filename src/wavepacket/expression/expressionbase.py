@@ -55,6 +55,8 @@ class ExpressionBase(ABC):
             The state on which the expression is applied.
         t : float
             The time at which the expression is evaluated.
+            Only really needed for time-dependent expressions, but to keep the interface uniform,
+            this parameter is required.
 
         Raises
         ------

@@ -19,8 +19,16 @@ def expectation_value(op: OperatorBase, state: State, t: Optional[float] = None)
         The wave function or density operator that is used for the calculation.
     t : float, optional
         The time at which the operator should be evaluated.
-         Only required for time-dependent operators, where the default value `None` raises an exception.
+         Only required for time-dependent operators.
+
+    Raises
+    ------
+    InvalidValueError
+        If a time-dependent operator was supplied, but no time value was given.
     """
+    if op.time_dependent and t is None:
+        raise wp.InvalidValueError("You must supply a time value for time-dependent operators.")
+
     new = op.apply(state, t)
 
     if state.is_wave_function():

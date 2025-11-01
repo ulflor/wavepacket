@@ -1,11 +1,12 @@
 import numpy as np
+from typing import Optional
 
 import wavepacket as wp
 
 from ..operator.operatorbase import OperatorBase
 
 
-def diagonalize(op: OperatorBase, t: float = 0.0):
+def diagonalize(op: OperatorBase, t: Optional[float] = None):
     """
     Calculates the eigenstates and -values of an operator.
 
@@ -25,14 +26,22 @@ def diagonalize(op: OperatorBase, t: float = 0.0):
     op: wp.operator.OperatorBase
         The operator whose eigenstates and -values are calculated.
 
-    t: float = 0.0
-        The time at which the operator is evaluated. Can be ignored for time-independent operators.
+    t: Optional[float] = None
+        The time at which the operator is evaluated.
+        Not required for time-independent operators.
 
     Yields
     ------
     Tuples consisting of the eigenenergy and the eigenstate of the operator.
     The output is sorted by the eigenvalues.
+
+    Raises
+    ------
+    wp.InvalidValueError
+        If no time was supplied for a time-dependent operator
     """
+    if op.time_dependent and t is None:
+        raise wp.InvalidValueError("Time-dependent operators require a time whn to diagonalize.")
 
     grid = op.grid
 

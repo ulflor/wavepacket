@@ -1,7 +1,6 @@
 from abc import ABC, abstractmethod
 from collections.abc import Sequence
 import numbers
-import typing
 
 import numpy as np
 
@@ -42,8 +41,7 @@ class OperatorBase(ABC):
         """
         return self._grid
 
-
-    def apply(self, state: State, t: typing.Optional[float] = None) -> State:
+    def apply(self, state: State, t: float) -> State:
         """
         Applies the operator onto a wave function or a density operator from the left.
 
@@ -54,9 +52,10 @@ class OperatorBase(ABC):
         ----------
         state : wp.grid.State
             The state that the operator is applied on.
-        t : float, optional
+        t : float
             The time at which the operator is applied.
-             The default value `None` raises an exception for time-dependent operators.
+            Only really needed for time-dependent operators, but to keep the interface uniform,
+            this parameter is required.
 
         Returns
         -------
@@ -129,6 +128,8 @@ class OperatorBase(ABC):
             The coefficients describing the wave function on which the operator acts.
         t : float
             The time at which the operator should be evaluated.
+            Only really needed for time-dependent operators, but to keep the interface uniform,
+            this parameter is required.
 
         Returns
         -------
@@ -152,6 +153,8 @@ class OperatorBase(ABC):
             The coefficients describing the density operator on which the operator acts.
         t : float
             The time at which the operator should be evaluated.
+            Only really needed for time-dependent operators, but to keep the interface uniform,
+            this parameter is required.
 
         Returns
         -------
@@ -175,6 +178,8 @@ class OperatorBase(ABC):
             The coefficients describing the density operator on which the operator acts.
         t : float
             The time at which the operator should be evaluated.
+            Only really needed for time-dependent operators, but to keep the interface uniform,
+            this parameter is required.
 
         Returns
         -------

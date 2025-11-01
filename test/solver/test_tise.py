@@ -11,6 +11,16 @@ def _standard_setup() -> wp.operator.OperatorBase:
             + wp.operator.RotationalKineticEnergy(grid, 1, 10))
 
 
+def test_require_time_for_time_dependent_operators():
+    grid = wp.grid.Grid(wp.grid.PlaneWaveDof(1, 2, 3))
+    td_op = wp.operator.TimeDependentOperator(grid, lambda t: t)
+
+    wp.solver.diagonalize(td_op)
+
+    with pytest.raises(wp.InvalidValueError):
+        _ = [x for x in wp.solver.diagonalize(td_op)]
+
+
 def test_return_eigenstates_and_values():
     op = _standard_setup()
 

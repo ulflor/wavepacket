@@ -4,6 +4,19 @@ from numpy.testing import assert_allclose
 import wavepacket as wp
 
 
+def test_require_time_for_time_dependent_operator(grid_1d):
+    ti_op = wp.operator.Constant(grid_1d, 1)
+    td_op = wp.operator.TimeDependentOperator(grid_1d, lambda t: t)
+    state = wp.testing.random_state(grid_1d, 1)
+
+    wp.operator.expectation_value(ti_op, state)
+    wp.operator.expectation_value(ti_op, state, 0.0)
+
+    wp.operator.expectation_value(td_op, state, 0.0)
+    with pytest.raises(wp.InvalidValueError):
+        wp.operator.expectation_value(td_op, state)
+
+
 def test_expectation_value():
     grid = wp.grid.Grid([wp.grid.PlaneWaveDof(-10, 10, 256), wp.grid.PlaneWaveDof(1, 2, 3)])
     op = wp.operator.Potential1D(grid, 0, lambda x: x)

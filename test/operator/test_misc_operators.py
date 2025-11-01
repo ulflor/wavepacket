@@ -89,7 +89,7 @@ def test_project_states_onto_subspace(grid_2d):
     psi = 5.0 * states[0] + projected
     rho = wp.builder.pure_density(psi)
 
-    got_psi = projection.apply(psi)
+    got_psi = projection.apply(psi, 0)
     assert_close(got_psi, projected, 1e-12)
 
     expected_from_left = wp.builder.direct_product(projected, psi).data
@@ -109,4 +109,4 @@ def test_non_orthogonal_states(grid_1d):
     projection2 = wp.operator.Projection(orthogonal_basis)
     input = wp.testing.random_state(grid_1d, 10)
 
-    assert_close(projection1.apply(input), projection2.apply(input), 1e-12)
+    assert_close(projection1.apply(input, 0), projection2.apply(input, 0), 1e-12)
