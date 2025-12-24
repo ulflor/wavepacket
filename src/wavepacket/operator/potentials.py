@@ -19,14 +19,21 @@ class Potential1D(OperatorBase):
         the index of the degree of freedom along which the potential is defined.
     generator : wpt.RealGenerator
         A callable that generates a potential energy value for each grid point of the respective DOF.
+    cutoff: float, default=None
+        If set, defines the maximum potential value. Values larger than the cutoff are set to the cutoff.
 
     References
     ----------
     .. [1] https://sourceforge.net/p/wavepacket/wiki/Numerics.DVR>
     """
 
-    def __init__(self, grid: Grid, dof_index: int, generator: wpt.RealGenerator):
-        data = generator(grid.dofs[dof_index].dvr_points)
+    def __init__(self, grid: Grid, dof_index: int, generator: wpt.RealGenerator,
+                 cutoff: float = None):
+        data = generator(grid.dofs[dof_index].dvr_points).copy()
+
+        if cutoff is not None:
+            data[data > cutoff] = cutoff
+
         self._wf_data = grid.broadcast(data, dof_index)
         self._ket_data = grid.operator_broadcast(data, dof_index)
         self._bra_data = grid.operator_broadcast(data, dof_index, False)

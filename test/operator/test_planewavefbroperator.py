@@ -70,3 +70,25 @@ def test_negative_indices(grid):
     result_positive = op_positive.apply_from_right(rho.data, 00)
     result_negative = op_negative.apply_from_right(rho.data, 0.0)
     assert_allclose(result_positive, result_negative, atol=1e-12, rtol=0)
+
+
+def test_cutoff(grid_1d):
+    cutoff = 0.5
+    raw_op = wp.operator.PlaneWaveFbrOperator(grid_1d, 0, dummy_func)
+    cut_op = wp.operator.PlaneWaveFbrOperator(grid_1d, 0, dummy_func, cutoff)
+
+    dof = grid_1d.dofs[0]
+    unit_psi = np.ones(grid_1d.shape)
+    unit_psi = dof.from_fbr(unit_psi, 0)
+
+    # assert the precondition that our original data is beyond the cutoff
+    raw_values = raw_op.apply_to_wave_function(unit_psi, 0.0)
+    raw_values = np.real(dof.to_fbr(raw_values, 0))
+    assert np.any(raw_values > 2 * cutoff)
+    assert np.any(raw_values < -2 * cutoff)
+
+    cut_values = cut_op.apply_to_wave_function(unit_psi, 0.0)
+    cut_values = np.real(dof.to_fbr(cut_values, 0))
+    print(f"cut: {cut_values}")
+    assert np.all(cut_values <= cutoff * 1.0001)
+    assert np.all(cut_values >= -cutoff * 1.0001)

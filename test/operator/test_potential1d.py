@@ -55,3 +55,16 @@ def test_negative_indices(grid_2d):
     result_positive = op_positive.apply_from_right(rho.data, 0.0)
     result_negative = op_negative.apply_from_right(rho.data, 0.0)
     assert_allclose(result_positive, result_negative, atol=1e-12, rtol=0)
+
+
+def test_cutoff(grid_1d):
+    cutoff = 5
+    raw_potential = wp.operator.Potential1D(grid_1d, 0, dummy_func)
+    cut_potential = wp.operator.Potential1D(grid_1d, 0, dummy_func, cutoff)
+    psi = wp.builder.zero_wave_function(grid_1d) + 1
+
+    raw_potential_values = raw_potential.apply(psi, 0.0).data
+    cut_potential_values = cut_potential.apply(psi, 0.0).data
+
+    assert np.any(raw_potential_values > cutoff)
+    assert np.all(cut_potential_values <= cutoff)
