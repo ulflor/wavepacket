@@ -51,3 +51,9 @@ def setup(sphinx):
 
 html_theme = 'sphinx_rtd_theme'
 
+
+# -- Options for MyST-NB
+
+# Individual calculations take relatively long to finish. The good solution is to keep the demos
+# simple, but this is not always simple to do.
+nb_execution_timeout = 90
