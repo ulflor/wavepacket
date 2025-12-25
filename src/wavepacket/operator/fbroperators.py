@@ -5,6 +5,7 @@ import numpy as np
 import wavepacket as wp
 import wavepacket.typing as wpt
 from .operatorbase import OperatorBase
+from ._clipping import clip_real
 from ..grid import Grid
 
 
@@ -30,7 +31,7 @@ class PlaneWaveFbrOperator(OperatorBase):
     generator : wpt.Generator
         A callable that gives the operator value for each FBR point.
     cutoff: Optional[float], default None
-        If set, truncate all operator values whose absolute value is above the cutoff.
+        If set, truncate all operator values whose real value is above the cutoff.
         Default is not to truncate.
 
     Raises
@@ -53,7 +54,7 @@ class PlaneWaveFbrOperator(OperatorBase):
         data = generator(grid.dofs[dof_index].fbr_points)
 
         if cutoff is not None:
-            data = np.clip(data, -cutoff, cutoff)
+            data = clip_real(data, -cutoff, cutoff)
 
         shifted_data = np.fft.ifftshift(data)
         self._wf_data = grid.broadcast(shifted_data, dof_index)
@@ -95,7 +96,7 @@ class CartesianKineticEnergy(PlaneWaveFbrOperator):
     mass : float
         The mass of the particle.
     cutoff: Optional[float], default=None
-        If set, truncate all operator values whose absolute value is above the cutoff.
+        If set, truncate all operator values whose real value is above the cutoff.
         Default is not to truncate.
 
     Raises
@@ -137,7 +138,7 @@ class FbrOperator1D(OperatorBase):
     generator : wpt.Generator
         A callable that gives the operator value for each FBR point.
     cutoff: Optional[float], default None
-        If set, truncate all operator values whose absolute value is above the cutoff.
+        If set, truncate all operator values whose real value is above the cutoff.
         Default is not to truncate.
     """
 
@@ -146,7 +147,7 @@ class FbrOperator1D(OperatorBase):
         fbr_values = generator(dof.fbr_points)
 
         if cutoff is not None:
-            fbr_values = np.clip(fbr_values, -cutoff, cutoff)
+            fbr_values = clip_real(fbr_values, -cutoff, cutoff)
 
         matrix = np.diagflat(fbr_values)
         matrix = dof.from_fbr(matrix, 0)
@@ -195,7 +196,7 @@ class RotationalKineticEnergy(FbrOperator1D):
     inertia : float
         The moment of inertia of the rotor. Only fixed values are supported by this operator (no vibrational coupling).
     cutoff: Optional[float], default None
-        If set, truncate all operator values whose absolute value is above the cutoff.
+        If set, truncate all operator values whose real value is above the cutoff.
         Default is not to truncate.
 
     Raises

@@ -1,5 +1,7 @@
 import wavepacket.typing as wpt
+
 from .operatorbase import OperatorBase
+from ._clipping import clip_real
 from ..grid import Grid
 
 
@@ -21,6 +23,7 @@ class Potential1D(OperatorBase):
         A callable that generates a potential energy value for each grid point of the respective DOF.
     cutoff: float, default=None
         If set, defines the maximum potential value. Values larger than the cutoff are set to the cutoff.
+        For complex potentials, only the real part is truncated.
 
     References
     ----------
@@ -32,7 +35,7 @@ class Potential1D(OperatorBase):
         data = generator(grid.dofs[dof_index].dvr_points).copy()
 
         if cutoff is not None:
-            data[data > cutoff] = cutoff
+            data = clip_real(data, upper=cutoff)
 
         self._wf_data = grid.broadcast(data, dof_index)
         self._ket_data = grid.operator_broadcast(data, dof_index)
