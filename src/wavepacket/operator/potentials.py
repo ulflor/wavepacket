@@ -35,6 +35,7 @@ class Potential1D(OperatorBase):
     Examples
     --------
     Creation of a square potential along the grid's second degree of freedom
+
     >>> grid = ...
     >>> cosPotential = wp.operator.Potential1D(grid, 1, lambda x: x**2)
     """
