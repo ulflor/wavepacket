@@ -20,8 +20,10 @@ class Potential1D(OperatorBase):
         The grid on which the operator is defined
     dof_index : int
         the index of the degree of freedom along which the potential is defined.
-    generator : wpt.RealGenerator
+    generator : wpt.Generator
         A callable that generates a potential energy value for each grid point of the respective DOF.
+        Potential energy values may be complex, then the imaginary part describes absorption or emission
+        of the wave function.
     cutoff: float, default=None
         If set, defines the maximum potential value. Values larger than the cutoff are set to the cutoff.
         For complex potentials, only the real part is truncated.
@@ -37,7 +39,7 @@ class Potential1D(OperatorBase):
     >>> cosPotential = wp.operator.Potential1D(grid, 1, lambda x: x**2)
     """
 
-    def __init__(self, grid: Grid, dof_index: int, generator: wpt.RealGenerator,
+    def __init__(self, grid: Grid, dof_index: int, generator: wpt.Generator,
                  cutoff: float = None):
         data = generator(grid.dofs[dof_index].dvr_points).copy()
 
