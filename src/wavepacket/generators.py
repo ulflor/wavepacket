@@ -35,7 +35,6 @@ class Gaussian(wpt.Generator):
 
     Notes
     -----
-
     Up to scaling, the functional form of the Gaussian is
     :math:`f(x) = e^{-(x-x_0)^2 / 2 \sigma^2 + \imath p (x-x_0)}`.
     Here, sigma is the rms width, which is connected to the FWHM by

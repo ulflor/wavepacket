@@ -1,3 +1,4 @@
+import wavepacket as wp
 import wavepacket.typing as wpt
 
 from .operatorbase import OperatorBase
@@ -28,6 +29,12 @@ class Potential1D(OperatorBase):
     References
     ----------
     .. [1] https://sourceforge.net/p/wavepacket/wiki/Numerics.DVR>
+
+    Examples
+    --------
+    Creation of a square potential along the grid's second degree of freedom
+    >>> grid = ...
+    >>> cosPotential = wp.operator.Potential1D(grid, 1, lambda x: x**2)
     """
 
     def __init__(self, grid: Grid, dof_index: int, generator: wpt.RealGenerator,

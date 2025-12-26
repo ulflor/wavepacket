@@ -1,9 +1,15 @@
+from typing import overload
+
 import numpy as np
 
 import wavepacket.typing as wpt
 
 
-def broadcast(data: wpt.ComplexData, ndim, index: int) -> wpt.ComplexData:
+@overload
+def broadcast(data: wpt.ComplexData, ndim: int, index: int) -> wpt.ComplexData: ...
+@overload
+def broadcast(data: wpt.RealData, ndim: int, index: int) -> wpt.RealData: ...
+def broadcast(data, ndim, index):
     """
     Reshape an array by appending dummy indices.
 

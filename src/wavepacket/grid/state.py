@@ -33,6 +33,26 @@ class State:
         The grid on which the state is defined.
     data
         The coefficients of the state.
+
+    Examples
+    --------
+    States are usually generated using functions in the wavepacket.builder package.
+    Those functions require a grid.
+    >>> psi = wp.builder.product_wave_function(grid, wp.Gaussian(rms=0.5))
+    >>> zero = wp.builder.zero_wave_function(grid)
+    >>> rho = wp.builder.pure_density(psi)
+
+    Ordinary arithmetic is possible.
+    >>> psi2 = psi + zero + 1.0
+
+    You can access the low-level details of the state.
+    >>> import numpy
+    >>> assert psi2.grid = grid
+    >>> assert numpy.all(zero.data == 0.0)
+
+    States are input to and output from most operations
+    >>> wp.grid.trace(psi)
+    1.0
     """
     grid: Grid
     data: wpt.ComplexData

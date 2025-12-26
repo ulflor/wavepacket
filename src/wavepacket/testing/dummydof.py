@@ -6,6 +6,7 @@ class DummyDof(DofBase):
     """
     Empty DOF without transformations.
     """
+
     def __init__(self, dvr_array: wpt.RealData, fbr_array: wpt.RealData):
         super().__init__(dvr_array, fbr_array)
 

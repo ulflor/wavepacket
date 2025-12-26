@@ -1,12 +1,14 @@
 import numpy as np
-from typing import Optional
+from typing import Iterable, Optional, Tuple
 
 import wavepacket as wp
+import wavepacket.typing as wpt
 
 from ..operator.operatorbase import OperatorBase
 
 
-def diagonalize(op: OperatorBase, t: Optional[float] = None):
+def diagonalize(op: OperatorBase,
+                t: Optional[float] = None) -> Iterable[Tuple[float, wpt.ComplexData]]:
     """
     Calculates the eigenstates and -values of an operator.
 
@@ -39,6 +41,18 @@ def diagonalize(op: OperatorBase, t: Optional[float] = None):
     ------
     wp.InvalidValueError
         If no time was supplied for a time-dependent operator
+
+    See Also
+    --------
+    A more comprehensive documentation can be found under :doc:`/tutorials/eigenstates`.
+
+    Examples
+    --------
+    Iterate over the eigenvalues and -vectors
+
+    >>> hamiltonian = ...
+    >>> for energy, state in wp.solver.diagonalize(hamiltonian):
+    >>>     print(f'E = {energy}, trace norm = {wp.grid.trace(state)}')
     """
     if op.time_dependent and t is None:
         raise wp.InvalidValueError("Time-dependent operators require a time whn to diagonalize.")

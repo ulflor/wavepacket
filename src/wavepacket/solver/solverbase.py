@@ -27,11 +27,6 @@ class SolverBase(ABC):
     dt : float
         The size of an elementary time step.
 
-
-    Attributes
-    ----------
-    dt
-
     Raises
     ------
     wp.InvalidValueError
@@ -105,6 +100,13 @@ class SolverBase(ABC):
         ------
         wp.InvalidValueError
             If num_steps is negative.
+
+        Examples
+        --------
+        >>> solver = ...
+        >>> psi0 = ...
+        >>> for t, psi in solver.propagate(psi0, t0, 5):
+        >>>    print(f't = {t}, trace = {wp.grid.trace(psi)}')
         """
         if num_steps < 0:
             raise wp.InvalidValueError("Cannot propagate for negative number of steps.")

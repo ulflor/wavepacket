@@ -40,6 +40,9 @@ This program already highlights the basic structure of a Wavepacket simulation:
 4. Finally, you set up the solver for your equations of motion, and propagate
    your initial state in time [#solvers]_.
 
+As a side remark, note that references are always the first parameter in the constructors.
+That is, the grid is the first argument for the operator etc.
+
 This programmatic approach is rather complex and verbose when compared to more rigid programs.
 For example, Matlab Wavepacket only requires you to set the various parameters, which makes the scripts
 shorter and simpler.

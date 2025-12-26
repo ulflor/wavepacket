@@ -1,12 +1,17 @@
-from typing import Optional
+from typing import Optional, overload
 
 import numpy as np
 
 import wavepacket.typing as wpt
 
 
+@overload
 def clip_real(data: wpt.ComplexData,
-              lower: Optional[float] = None, upper: Optional[float] = None) -> wpt.ComplexData:
+              lower: Optional[float] = ..., upper: Optional[float] = ...) -> wpt.ComplexData: ...
+@overload
+def clip_real(data: wpt.RealData,
+              lower: Optional[float] = ..., upper: Optional[float] = ...) -> wpt.RealData: ...
+def clip_real(data, lower = None, upper = None):
     """
     Clips only the real part of a potentially complex-valued array.
 

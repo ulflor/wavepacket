@@ -1,5 +1,6 @@
 from collections.abc import Sequence
 import math
+from typing import overload
 
 import numpy as np
 
@@ -103,7 +104,13 @@ class Grid:
         else:
             return index
 
-    def broadcast(self, data: wpt.ComplexData, index: int) -> wpt.ComplexData:
+    @overload
+    def broadcast(self, data: wpt.RealData, index: int) -> wpt.RealData: ...
+
+    @overload
+    def broadcast(self, data: wpt.ComplexData, index) -> wpt.ComplexData: ...
+
+    def broadcast(self, data, index):
         """
         Transforms a 1D array into a more suitable form for scaling.
 
@@ -127,7 +134,13 @@ class Grid:
         new_shape[index] = self._dofs[index].size
         return np.reshape(data, new_shape)
 
-    def operator_broadcast(self, data: wpt.ComplexData, dof_index: int, is_ket: bool = True) -> wpt.ComplexData:
+    @overload
+    def operator_broadcast(self, data: wpt.ComplexData, dof_index: int, is_ket: bool = ...) -> wpt.ComplexData: ...
+
+    @overload
+    def operator_broadcast(self, data: wpt.RealData, dof_index: int, is_ket: bool = ...) -> wpt.RealData: ...
+
+    def operator_broadcast(self, data, dof_index, is_ket=True):
         """
         Similar to broadcast, but blows up the array into a form suitable for multiplication with operators.
 

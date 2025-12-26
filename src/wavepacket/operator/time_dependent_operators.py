@@ -20,7 +20,7 @@ class TimeDependentOperator(OperatorBase):
     grid: wp.grid.Grid
         The grid on which this operator acts.
     func: Callable[[float], float]
-        Functions that gives a real value for a given input time.
+        Functions that returns a potentially complex value for a given input time.
     """
 
     def __init__(self, grid: wp.grid.Grid, func: Callable[[float], complex]):
