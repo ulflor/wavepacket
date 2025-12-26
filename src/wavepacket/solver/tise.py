@@ -42,10 +42,6 @@ def diagonalize(op: OperatorBase,
     wp.InvalidValueError
         If no time was supplied for a time-dependent operator
 
-    See Also
-    --------
-    A more comprehensive documentation can be found under :doc:`/tutorials/eigenstates`.
-
     Examples
     --------
     Iterate over the eigenvalues and -vectors
