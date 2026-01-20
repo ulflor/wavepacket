@@ -47,6 +47,7 @@ free to use the `issue tracker <https://github.com/ulflor/wavepacket/features>`_
    tutorials/schroedinger_cat
    tutorials/eigenstates
    tutorials/plotting
+   tutorials/polynomial_solvers
 
 .. toctree::
     :caption: Advanced showcases
