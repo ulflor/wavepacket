@@ -144,6 +144,35 @@ def trace(state: State) -> float:
         raise wp.BadStateError("Input is not a valid state.")
 
 
+def normalize(state: State) -> State:
+    """
+    Normalizes the input state.
+
+    Parameters
+    ----------
+    state : wp.grid.State
+        The state (wave function or density operator) that should be normalized.
+
+    Returns
+    -------
+    wp.grid.State
+        The normalized input state.
+
+    Raises
+    ------
+    wp.BadStateError
+        If the supplied state is neither a wave function nor a density operator.
+
+    """
+    if state.is_wave_function():
+        norm = np.sqrt(trace(state))
+        return state / norm
+    elif state.is_density_operator():
+        return state / trace(state)
+    else:
+        raise wp.BadStateError("Input is not a valid state.")
+
+
 def orthonormalize(states: Sequence[State]) -> list[State]:
     """
     Orthogonalizes and normalizes a set of linearly independent wave functions.

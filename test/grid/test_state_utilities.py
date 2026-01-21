@@ -23,6 +23,9 @@ def test_reject_invalid_states(grid_2d):
         wp.grid.trace(invalid_state)
 
     with pytest.raises(wp.BadStateError):
+        wp.grid.normalize(invalid_state)
+
+    with pytest.raises(wp.BadStateError):
         wp.grid.orthonormalize([good_state, invalid_state])
 
     with pytest.raises(wp.BadStateError):
@@ -83,6 +86,18 @@ def test_trace():
     rho = wp.builder.pure_density(psi)
     result_rho = wp.grid.trace(rho)
     assert_allclose(result_rho, result, atol=1e-12, rtol=0)
+
+
+def test_normalize(grid_1d):
+    psi = 75 * wp.testing.random_state(grid_1d, 42)
+    assert wp.grid.trace(psi) > 10
+
+    norm_psi = wp.grid.normalize(psi)
+    assert (abs(norm_psi.data) ** 2).sum() == pytest.approx(1.0, abs=1e-12)
+
+    rho = wp.builder.pure_density(psi)
+    norm_rho = wp.grid.normalize(rho)
+    assert_close(norm_rho, wp.builder.pure_density(norm_psi), 1e-12)
 
 
 def test_orthonormalization_invalid_input(grid_1d, grid_2d):
