@@ -36,8 +36,6 @@ class ChebychevSolver(SolverBase):
         Lower and upper bound of the spectrum of the Hamiltonian or Liouvillian.
         If the bound is generous, the solver is less efficient. If the spectrum extends beyond the bounds,
         the solution may diverge.
-    cutoff: float, default=1e-12
-        The smallest coefficient that is summed up. Basically an upper bound of the numerical error.
 
     Attributes
     ----------
@@ -53,13 +51,11 @@ class ChebychevSolver(SolverBase):
     """
 
     def __init__(self, expression: ExpressionBase, dt: float,
-                 spectrum: Tuple[float, float], cutoff: float = 1e-12):
+                 spectrum: Tuple[float, float]):
         super().__init__(dt)
 
         if spectrum[1] <= spectrum[0]:
             raise wp.InvalidValueError("Spectrum is not monotonous")
-        if cutoff <= 0.0:
-            raise wp.InvalidValueError("Cutoff must be positive")
         if expression.time_dependent:
             raise wp.InvalidValueError("Polynomial solvers do not work for time-dependent operators.")
 
@@ -75,7 +71,8 @@ class ChebychevSolver(SolverBase):
             c = 2 * scipy.special.jv(n, self.alpha)
             self._coeffs.append(c)
 
-            if abs(c) < cutoff and n > 2:
+            # We fix the cutoff to 1e-12, because there is little point in varying it.
+            if abs(c) < 1e-12 and n > 2:
                 break
 
     @property
@@ -135,8 +132,6 @@ class RelaxationSolver(SolverBase):
         Lower and upper bound of the spectrum of the Hamiltonian or Liouvillian.
         If the bound is generous, the solver is less efficient. If the spectrum extends beyond the bounds,
         the solution may diverge.
-    cutoff: float, default=1e-12
-        The smallest coefficient that is summed up. Basically an upper bound of the numerical error.
 
     Attributes
     ----------
@@ -152,13 +147,11 @@ class RelaxationSolver(SolverBase):
     """
 
     def __init__(self, hamiltonian: OperatorBase, dt: float,
-                 spectrum: Tuple[float, float], cutoff: float = 1e-12):
+                 spectrum: Tuple[float, float]):
         super().__init__(dt)
 
         if spectrum[1] <= spectrum[0]:
             raise wp.InvalidValueError("Spectrum is not monotonous")
-        if cutoff <= 0.0:
-            raise wp.InvalidValueError("Cutoff must be positive")
         if hamiltonian.time_dependent:
             raise wp.InvalidValueError("Polynomial solvers do not work for time-dependent operators.")
 
@@ -174,7 +167,8 @@ class RelaxationSolver(SolverBase):
             c = 2 * scipy.special.iv(n, self.alpha)
             self._coeffs.append(c)
 
-            if abs(c) < cutoff and n > 2:
+            # There is almost no use in playing with the cutoff, so we fix it at 1e-12
+            if abs(c) < 1e-12 and n > 2:
                 break
 
     @property

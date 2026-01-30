@@ -21,16 +21,6 @@ def test_reject_improper_constructor_parameters(grid_1d):
     with pytest.raises(wp.InvalidValueError):
         wp.solver.RelaxationSolver(op, 1, (1, 0))
 
-    with pytest.raises(wp.InvalidValueError):
-        wp.solver.ChebychevSolver(eq, 1, (0, 1), 0)
-    with pytest.raises(wp.InvalidValueError):
-        wp.solver.RelaxationSolver(op, 1, (0, 1), 0)
-
-    with pytest.raises(wp.InvalidValueError):
-        wp.solver.ChebychevSolver(eq, 1, (0, 1), -1e-12)
-    with pytest.raises(wp.InvalidValueError):
-        wp.solver.RelaxationSolver(op, 1, (0, 1), -1e-12)
-
     td_op = wp.operator.TimeDependentOperator(grid_1d, lambda t: t)
     with pytest.raises(wp.InvalidValueError):
         td_eq = wp.expression.SchroedingerEquation(td_op)
@@ -42,15 +32,15 @@ def test_reject_improper_constructor_parameters(grid_1d):
 def test_order_of_expansion(grid_1d):
     op = wp.operator.Constant(grid_1d, 1)
     eq = wp.expression.SchroedingerEquation(op)
-    precision = 1e-6
+    internal_precision = 1e-12
 
-    solver = wp.solver.ChebychevSolver(eq, 0.5, (-1.0, 1.0), 1e-6)
-    assert scipy.special.jv(solver.order - 1, solver.alpha) >= precision
-    assert scipy.special.jv(solver.order, solver.alpha) < precision
+    solver = wp.solver.ChebychevSolver(eq, 0.5, (-1.0, 1.0))
+    assert scipy.special.jv(solver.order - 1, solver.alpha) >= internal_precision
+    assert scipy.special.jv(solver.order, solver.alpha) < internal_precision
 
-    relaxation = wp.solver.RelaxationSolver(op, 0.5, (-1.0, 1.0), 1e-6)
-    assert scipy.special.iv(relaxation.order - 1, solver.alpha) >= precision
-    assert scipy.special.iv(relaxation.order, solver.alpha) < precision
+    relaxation = wp.solver.RelaxationSolver(op, 0.5, (-1.0, 1.0))
+    assert scipy.special.iv(relaxation.order - 1, solver.alpha) >= internal_precision
+    assert scipy.special.iv(relaxation.order, solver.alpha) < internal_precision
 
 
 def _expected_solution(psi_init: wp.grid.State, t: float) -> wp.grid.State:
