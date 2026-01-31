@@ -48,12 +48,14 @@ free to use the `issue tracker <https://github.com/ulflor/wavepacket/features>`_
    tutorials/eigenstates
    tutorials/plotting
    tutorials/chebychev_solvers
+   tutorials/relaxation
    tutorials/polynomial_solvers
 
 .. toctree::
     :caption: Advanced showcases
 
     demos/pendular_states
+    demos/thermal_states
 
 .. toctree::
     :caption: Other links
