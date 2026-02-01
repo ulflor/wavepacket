@@ -147,7 +147,7 @@ plot_in_fbr(psi_0)
 Of course, you can go ahead and plot further states, we only skip this here because this code is executed in a Notebook.
 Outside of notebooks, you could recycle the figure and use, e.g., `plt.pause(1)`, to make a crude animation.
 
-For more complex examples of data plotting, see for example {doc}`/demos/pendular_states`.
+For more complex examples of data plotting, see for example {doc}`/advanced/pendular_states`.
 
 ## Saving images and animations to files
 

@@ -6,7 +6,7 @@ As long as you receive or distribute Wavepacket as a Python wheel,
 all license conditions should be automatically fulfilled.
 
 To further simplify the use and adaption,
-all Wavepacket documentation and demos is licensed under the even more permissive `CC0 license`_,
+all Wavepacket documentation in this directory is licensed under the even more permissive `CC0 license`_,
 essentially an attempt to formalise public domain as a legal document.
 We appreciate a citation, however, although you are not obliged to do so.
 

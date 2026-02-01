@@ -26,7 +26,7 @@ There are two main applications for such a time evolution:
 2. Up to normalization, the time evolution operator has the shape of a density operator of a system
    at finite temperature.
    Hence, you can use imaginary-time propagation to prepare a system at a finite temperature.
-   There are different techniques to do so, this is detailed in {doc}`/demos/thermal_states`.
+   There are different techniques to do so, this is detailed in {doc}`/advanced/thermal_states`.
 
 ## Relaxing wave functions
 

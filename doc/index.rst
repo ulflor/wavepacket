@@ -52,10 +52,10 @@ free to use the `issue tracker <https://github.com/ulflor/wavepacket/features>`_
    tutorials/polynomial_solvers
 
 .. toctree::
-    :caption: Advanced showcases
+    :caption: Advanced usage and theory
 
-    demos/pendular_states
-    demos/thermal_states
+    advanced/pendular_states
+    advanced/thermal_states
 
 .. toctree::
     :caption: Other links
