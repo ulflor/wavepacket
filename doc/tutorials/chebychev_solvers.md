@@ -8,7 +8,7 @@ kernelspec:
 
 ```{note}
 This tutorial focuses on the *usage* of the {py:class}`wavepacket.solver.ChebychevSolver`.
-If you want to know more about the theory, see {doc}`polynomial_solvers` or the original paper
+If you want to know more about the theory, see {doc}`/advanced/polynomial_solvers` or the original paper
 by Ronnie Kosloff [^ref-chebychev-real]
 ```
 
@@ -205,58 +205,4 @@ for t, psi in solver.propagate(psi0, t0=0.0, num_steps=10):
     print(f"t = {t:.4}, trace = {trace:.4}, <x> = {x:.4}")
 ```
 
-## Appendix: Comparison between Chebychev and ODE solvers
-
-So far we have only asserted that the Chebychev solver is much faster than ODE solvers.
-Here we want to see *how* much faster.
-You can safely ignore this section unless you are deeply interested or want to study some advanced techniques.
-
-First, we need to measure the speed.
-A good proxy is the number of times that our Hamiltonian is applied, because this is often the most expensive
-single operation.
-As a first component, we therefore write an own "counting expression" that just measures how often the solver calls it.
-
-```{code-cell}
-class CountingExpression(wp.expression.ExpressionBase):
-    def __init__(self, wrapped_expression):
-        self._wrapped_expression = wrapped_expression
-        self.count = 0
-
-    @property
-    def time_dependent(self):
-        return False
-
-    def apply(self, state, t):
-        self.count += 1
-        return self._wrapped_expression.apply(state, t)
-```
-
-Then we only wrap our (truncated) expression and propagate for a common time.
-
-```{code-cell}
-counting_equation = CountingExpression(truncated_equation)
-
-solver_chebychev = wp.solver.ChebychevSolver(counting_equation, math.pi/2, (0, 70))
-solver_rk45 = wp.solver.OdeSolver(counting_equation, math.pi/2)
-solver_rk45_precise = wp.solver.OdeSolver(counting_equation, math.pi/2, rtol=1e-9, atol=1e-9)
-
-solver_chebychev.step(psi0, t=0)
-print(f"Chebychev solver: count={counting_equation.count}, alpha={solver_chebychev.alpha}")
-
-counting_equation.count = 0
-solver_rk45.step(psi0, t=0)
-print(f"Runge-Kutta 4/5 solver: count={counting_equation.count}")
-
-counting_equation.count = 0
-solver_rk45_precise.step(psi0, t=0)
-print(f"High-precision Runge-Kutta 4/5 solver: count={counting_equation.count}")
-```
-
-So even when comparing against a low-precision ODE solver
-(default 1e-6 for relative and absolute error of a single elementary time step),
-the Chebychev solver yields a factor of 4.5 in performance.
-If you require higher precisions, simple ODE solvers fall apart quickly; this is, however, why you would not use
-them in such a way usually.
-
-[^ref-chebychev-real]: R. Kosloff, J. Phys. Chem. 92(8), 2087 (1988)
-https://doi.org/10.1021/j100319a003
+[^ref-chebychev-real]: H. Tal-Ezer and R. Kosloff, J. Chem. Phys. 81:3967 (1986)

@@ -42,20 +42,20 @@ free to use the `issue tracker <https://github.com/ulflor/wavepacket/features>`_
     license
 
 .. toctree::
-   :caption: Introductory tutorials
+    :caption: Introductory tutorials
 
-   tutorials/schroedinger_cat
-   tutorials/eigenstates
-   tutorials/plotting
-   tutorials/chebychev_solvers
-   tutorials/relaxation
-   tutorials/polynomial_solvers
+    tutorials/schroedinger_cat
+    tutorials/eigenstates
+    tutorials/plotting
+    tutorials/chebychev_solvers
+    tutorials/relaxation
 
 .. toctree::
     :caption: Advanced usage and theory
 
     advanced/pendular_states
     advanced/thermal_states
+    advanced/polynomial_solvers
 
 .. toctree::
     :caption: Other links
