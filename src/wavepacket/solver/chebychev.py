@@ -141,6 +141,13 @@ class RelaxationSolver(SolverBase):
     order
         The order of the expansion.
 
+    Notes
+    -----
+
+    The name of this class deviates from the nowadays official transcription, which is "Chebyshev".
+    The original references by Tal-Ezer and Kosloff, however, use the outdated spelling, so we tried
+    to be consistent with these references.
+
     References
     ----------
     .. [1] https://sourceforge.net/p/wavepacket/cpp/blog/2021/04/convergence-2

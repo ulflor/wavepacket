@@ -4,29 +4,32 @@ kernelspec:
     name: python3
 ---
 
-# Ground state relaxation and finite temperatures: Imaginary-time propagation
+# Ground-state relaxation and finite temperatures
 
 ## Introduction
 
-If we do normal quantum mechanics, but make the time imaginary, {math}`t \to \imath \tau`,
-the Schrödinger equation becomes
+If we  make the time imaginary, {math}`t \to \imath \tau`, the Schrödinger equation becomes
 
 ```{math}
-\frac{\partial \psi}{\partial \tau} = - \hat H \psi(\tau)\\
-\mathrm{with the formal solution of the time evolution operator}\\
-\hat U(\tau) = \mathrm{e}^{-\hat H \tau}.
+    \frac{\partial \psi}{\partial \tau} = - \hat H \psi(\tau)
+```
+
+with the formal solution of the time evolution operator
+
+```{math}
+    \hat U(\tau) = \mathrm{e}^{-\hat H \tau}.
 ```
 
 There are two main applications for such a time evolution:
 
-1. If you apply this time evolution to an almost arbitrary state, the norm decays.
-   The decay is faster for high-energy states, so that after sufficient propagation time,
-   the ground state exponentially dominates the wave function.
-   Hence, imaginary-time propagation is a quick and easy way to get the ground state of a system.
-2. Up to normalization, the time evolution operator has the shape of a density operator of a system
-   at finite temperature.
+1. If you apply this time evolution operator to some wave function, the norm decays.
+   The decay is faster for high-energy contributions, so that after sufficient propagation time,
+   the wave function is dominated by the ground state.
+   Hence, imaginary-time propagation is a quick and easy way to get the ground state of a system
+   (and also some excited states).
+2. The time evolution operator has the shape of a density operator for the system at finite temperature.
    Hence, you can use imaginary-time propagation to prepare a system at a finite temperature.
-   There are different techniques to do so, this is detailed in {doc}`/advanced/thermal_states`.
+   There are actually different techniques to do so, this is detailed in {doc}`/advanced/thermal_states`.
 
 ## Relaxing wave functions
 
@@ -79,15 +82,15 @@ psi0 = wp.builder.product_wave_function(grid, wp.Gaussian(rms=2))
 relax(solver, psi0);
 ```
 
-Note how the energy and fluctuations decay exponentially by two to three orders of magnitude at each time step.
+Note how the energy and fluctuations decay exponentially by about a factor of five for each time step.
 In the example here, we are basically converged after about three steps,
-but the relaxation is not the expensive part of the calculation, and you can afford to spend a few more CPU cycles on
-a converged solution.
+but the relaxation is usually the least expensive part of the calculation,
+so you can afford to spend a few more CPU cycles on a converged solution.
 
 Note, however, that the initial state must have overlap with the ground state.
 This most often fails because the symmetry is incorrect.
-In our harmonic oscillator example, the ground state is even, {math}`\psi(x) = \psi(-x)`.
-Let us check what happens if we choose an odd state, for example a sign function:
+In our harmonic oscillator example, the ground state has even parity, {math}`\psi(x) = \psi(-x)`.
+Let us check what happens if we choose an initial state with odd parity, for example a sign function:
 
 ```{code-cell}
 psi0 = wp.builder.product_wave_function(grid, lambda x: np.sign(x))
@@ -96,17 +99,17 @@ relax(solver, psi0);
 
 Neat, isn't it?
 We converged, but to the first excited state, because the ground state has exactly zero overlap with an odd function.
-I would, however, recommend not to rely on this behavior.
-If the wave function has or acquires even the smallest impurity due to finite-precision arithmetics,
-you will eventually converge to the ground state, just very sluggishly.
+In general, you should, however, not rely on this behavior.
+If the wave function has or acquires even the smallest asymmetry, for example through finite-precision arithmetics,
+you will eventually converge to the ground state, albeit slowly.
 
 However, you can exploit this behavior in a different scenario.
-The time required for convergence is given by the energy of the lowest excited state,
-because that is the coefficient that decays second-slowest after the ground-state coefficient.
-In some systems, this gap between ground and first excited state is small, leading to rather slow convergence.
+The convergence time is given by the smallest excitation energy,
+because that state's contribution decays second-slowest after the ground-state contribution.
+In some systems, this excitation energy is small, leading to rather slow convergence.
 A prototypical example is the double-well potential, where low-energy states always come in pairs with small energy
 gaps within the pair.
-In most such cases, however, the two energy eigenstates differ by their symmetry.
+In most such cases, however, the two close-lying energy eigenstates differ by their symmetry.
 By selecting an initial state with the same symmetry as the ground state, you can already suppress the
 unwanted state from the start, leading to faster convergence.
 
@@ -155,21 +158,22 @@ A few notes about the code:
 * I have reduced the number of steps to 5 to compress the output, and because the results are
   already sufficiently converged.
 * Note that the initial state is now a *shifted* Gaussian. This is a deliberate choice. Because the eigenstates
-  of the harmonic oscillator toggle between even and odd functions, we need an asymmetric initial state to capture
-  all of them. If I had chosen an even / odd function as initial state, I would only get half of the excited states.
+  of the harmonic oscillator toggle between even and odd parity, we need an asymmetric initial state that contains
+  contributions with both parities.
+  If I had chosen an even or odd function as initial state, I would only get excited states of that parity.
 * The code uses a semi-internal detail of the orthonormalization procedure; it normalizes the first entry, then
   orthonormalizes the second etc., so that the last entry is our wave function with the other components removed.
 * We manipulate the state while we evolve it in time. Therefore we can no longer propagate() in one go, but must
   explicitly step through the solution.
 
 In theory, you can now go on to get arbitrary excited states with this technique.
-In practice, there are two limitations.
-Because you need a full propagation for each subsequent excited state, this approach quickly becomes very expensive.
-A second factor is that errors may add up in larger systems.
-Any error in the ground state, because you did not propagate long enough for computational concerns, will lead to
+In practice, you need a full propagation for each subsequent excited state, 
+so this approach becomes very expensive very quickly.
+Also, errors may add up in larger systems.
+Any error in the ground state, because you did not propagate long enough, will lead to
 an incorrect orthogonalization of the first excited state and so on.
 The recovered states hence become more and more incorrect.
-Unfortunately, it is difficult to quantify this error even with a lot of hand waving, and at least this harmonic
+Unfortunately, it is difficult to quantify this latter error even with a lot of hand waving, and at least this harmonic
 oscillator example seems pretty robust against this issue.
 
 In conclusion, you may only want to recover a few excited states of the Hamiltonian and monitor the
@@ -182,7 +186,7 @@ The Liouville-von-Neumann (LvNe) equation
 
 ```{math}
     \frac{\partial \hat \varrho}{\partial \beta} = - \mathcal{L}(\hat \varrho) = - \hat H \hat \varrho
-        \qquad\mathrm{with}\qquad \hat \varrho(\beta = 0) = \mathbb{1}
+        \qquad\mathrm{with}\qquad \hat \varrho(\beta = 0) = \hat 1
 ```
 
 can be shown, in analogy to ordinary differential equations and Schrödinger equations, to have the solution
@@ -192,8 +196,8 @@ can be shown, in analogy to ordinary differential equations and Schrödinger equ
         = \mathrm{e}^{-\beta \hat H}.
 ```
 
-So we set up the LvNe, evolve the unit density in time until the requested inverse temperature, and we are done.
-The step should be chosen to conveniently access the requested inverse temperature(s) and keep the alpha value
+So we just set up the LvNe, and evolve the unit density in time until the requested inverse temperature.
+The step should be chosen to fit the requested inverse temperature(s) and keep the alpha value
 in a reasonable range.
 as an example, let us calculate the partition sum of our harmonic oscillator.
 
@@ -209,9 +213,9 @@ for step in range(5):
     print(f"beta = {delta_beta * (step+1)},  Z = {wp.grid.trace(rho):.4}")
 ```
 
-Because imaginary-time propagation only makes sense for this particular Liouvillian, you supply again
-the Hamiltonian directly, no Liouvillian.
-Side note: because this particular Liouvillian has the same spectrum as the Hamiltonian, we can use the
+Because imaginary-time propagation only makes sense for a particular Liouvillian, you supply again
+the Hamiltonian directly, not some Liouvillian.
+Side note: because this Liouvillian has the same spectrum as the Hamiltonian, we can use the
 same RelaxationSolver for density operators and wave functions, in contrast to the real-time ChebychevSolver.
 
 [^ref-chebychev-imag]: R. Kosloff and H. Tal-Ezer, Chem. Phys. Lett. 127(3) 223 (1986)

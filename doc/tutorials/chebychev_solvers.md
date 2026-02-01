@@ -9,15 +9,15 @@ kernelspec:
 ```{note}
 This tutorial focuses on the *usage* of the {py:class}`wavepacket.solver.ChebychevSolver`.
 If you want to know more about the theory, see {doc}`/advanced/polynomial_solvers` or the original paper
-by Ronnie Kosloff [^ref-chebychev-real]
+by Tal-Ezer and Kosloff [^ref-chebychev-real]
 ```
 
-Before deciding on the solver to use, be aware of the differences between ODE solvers and the Chebychev solver:
+Before deciding on the solver to use, be aware of the different tradeoffs between ODE solvers and the Chebychev solver:
 
 Advantages of the Chebychev solver:
 
 * much faster, something like a factor of 4-5.
-* highly accurate with errors something like 1e-10 at little additional cost.
+* highly accurate with errors on the order of the numerical precision.
 
 Drawbacks of the Chebychev solver:
 
@@ -27,7 +27,7 @@ Drawbacks of the Chebychev solver:
 
 ## Setting up a Chebychev solver
 
-To setup the solver, you need three data items:
+To set up the solver, you need three data items:
 
 1. The expression that describes the equation of motion.
 2. The spectrum of the Hamiltonian / Liouvillian, or rather upper and lower bounds for the maximum and minimum
@@ -37,8 +37,9 @@ To setup the solver, you need three data items:
 The expression is trivial, you always need to define the differential equation to solve.
 
 The tricky part is the determination of the spectral bounds.
-If these are too generous, we lose some efficiency; this loss roughly scales with the estimate, so if, for example, the
-Hamiltonian's spectrum fits twice into our guessed interval, we lose a factor of 2 in efficiency.
+If these are too generous, we lose efficiency proportional to the quality of the guess;
+for example, if the Hamiltonian's spectrum fits twice into our guessed interval, computation takes twice as long as
+for a perfect guess.
 If, however, we choose them to tight, that is if the Liouvillian or Hamiltonian has an eigenvalue outside the
 supplied bounds, the solution usually diverges.
 We will discuss this in the next section.
@@ -49,22 +50,22 @@ The length of the time step is finally given through the alpha value:
    \alpha = \frac{\Delta t \ \delta E}{2},
 ```
 
-where {math}`\delta E` is the difference between the upper and lower bound of the spectrum
+where {math}`\delta E` is the difference between our guessed upper and lower bound of the spectrum
 (the "spectral range" of the Hamiltonian/Liouvillian).
-This value should not be less than about 40, otherwise the efficiency goes down.
-If it is much larger than about 100, you might run into numerical problems.
+This value should be larger than 40, otherwise the efficiency goes down.
+If it is much larger than say 100, you might run into numerical problems.
 
 ```{note}
 The Chebychev solver is only efficient for rather large time steps.
 If you need the wave function at small timesteps, it is possible to implement (exact) interpolation, but that has
 not been done yet.
-Open an issue or drop a mail if this is an issue.
+Open a ticket or drop me a mail if this is an issue for your application.
 ```
 
 ### Determining the spectrum
 
-Now the tricky part: How do we figure out bounds for the spectrum of the Hamiltonian?
-As an example, let us setup the simple harmonic oscillator example from {doc}`plotting`.
+Let us come to the tricky part: How do we obtain good bounds for the spectrum of the Hamiltonian?
+As an example, let us set up the simple harmonic oscillator example from {doc}`plotting`.
 
 ```{code-cell}
 import wavepacket as wp
@@ -93,19 +94,19 @@ If the spectrum of the Hamiltonian is inside the interval
 because the coherence terms with the fastest oscillations {math}`\sim \mathrm{e}^{\pm \imath \delta E t}`
 occur between the eigenstates with the largest and smallest eigenvalues, respectively.
 
-An important corollary is that a {py:class}`wp.solver.ChebychevSolver` and
-{py:class}`wp.solver.RelaxationSolver` can normally only be used for wave functions *or* density operators.
+An important corollary is that a {py:class}`wp.solver.ChebychevSolver`
+can normally only be used for wave functions *or* density operators.
 
 #### How can I estimate the bounds of a Hamiltonian's spectrum?
 
-First, we advice not to spend too much effort on the exact spectrum, but only on a good guess.
+First, we suggest not to spend too much effort on the exact spectrum, but take reasonable bounds instead.
 Your time is usually more valuable than the small inefficiency from guessing generous bounds to the spectrum.
-With that in mind, a simple lower bound of the Hamiltonian is given by the smallest value of the potential,
+
+A simple lower bound of the Hamiltonian is given by the smallest value of the potential,
 that is, zero in our harmonic oscillator example.
 
 For an estimate of the largest eigenvalue, we can use the power iteration: Repeatedly applying the Hamiltonian
-to an almost arbitrary state converges exponentially towards the eigenvector with the largest absolute eigenvalue,
-which in practice is usually the largest eigenvalue.
+to an almost arbitrary state converges exponentially towards the eigenvector with the largest (absolute) eigenvalue.
 The implementation is straight forward:
 
 ```{code-cell}
@@ -118,13 +119,12 @@ for iteration in range(10):
 
 energy_guess = wp.operator.expectation_value(hamiltonian, psi).real
 energy_guess = 1.2 * energy_guess
-print(energy_guess)
+print(f"Energy guess = {energy_guess:.4}")
 ```
 
 The initial state must contain the highest-energy eigenstate as a non-negligible component,
 but has no relevance otherwise.
-The factor of 1.2 is an arbitrary safety margin to compensate that we approach the highest-energy
-eigenstate from below and may not have been converged yet.
+The factor of 1.2 is an arbitrary safety margin to compensate that the result may not have been converged yet.
 Thus, we arrive at an estimate of the spectrum of about [0, 280].
 For an alpha value of 40 or more, our time step must be at least {math}`2 \cdot 40 / 280 = 2/7`.
 Let us evolve a Gaussian wave packet with such values:
@@ -141,8 +141,7 @@ for t, psi in solver.propagate(psi0, t0=0.0, num_steps=10):
     print(f"t = {t:.4}, trace = {trace:.4}, <x> = {x:.4}")
 ```
 
-We can also check what happens if we get the spectrum wrong. Let us say we cut at 200 a.u.
-The footprint of our wrong spectrum is readily apparent if we monitor the trace.
+We can also check what happens if we get the spectrum wrong. Let us say we cut at 200 a.u.:
 
 ```{code-cell}
 bad_solver = wp.solver.ChebychevSolver(equation, math.pi/10, (0, 200))
@@ -152,11 +151,13 @@ for t, psi in bad_solver.propagate(psi0, t0=0.0, num_steps=10):
     print(f"t = {t:.4}, trace = {trace:.4}")
 ```
 
+The footprint of our wrong spectrum is readily apparent if we monitor the trace.
+So that is something you should always do in practice.
+
 #### Are there better ways to increase the efficiency of the solver?
 
-So far, we have taken the Hamiltonian for granted and tried to estimate bounds to the spectrum.
-A much simpler approach is to *specify* the spectral bounds, by truncating the operator.
-This has the added benefit that larger time steps are possible and our calculation will be faster.
+So far, we have taken the Hamiltonian for granted and tried to estimate bounds of the spectrum.
+However, we may just as well *define* the spectral bounds by truncating the operator.
 To motivate this approach, let us print the average and standard deviation of the initial state's energy:
 
 ```{code-cell}
@@ -167,20 +168,22 @@ energy2 = wp.operator.expectation_value(hamiltonian*hamiltonian, psi0).real
 print(f"E = {energy},   dE^2 = {energy2 - energy**2}")
 ```
 
-It is safe to assume that this Gaussian can be faithfully represented by energy eigenstates with energy <= 30 a.u.
-This is *way* less than the spectral range of 280 a.u. that we have guessed in the preceding section.
+From this data, it seems safe to assume that the state is well represented
+using only energy eigenstates with energies <= 30 a.u.
+This is *much* less than the estimate of 280 a.u. that we have guessed in the preceding section.
 In other words, 90% of our computing time is wasted on the correct propagation of high-energy eigenstates
-that are irrelevant for our dynamics.
-Such an imbalance between the spectrum that the grid/Hamiltonian can support and the spectrum that we actually need
+that are irrelevant for our dynamics, but which blow up the calculation if we choose the bounds too small.
+Such an imbalance between the spectrum that the Hamiltonian can support and the spectrum that we actually need
 is unfortunately common.
 
-To improve, we truncate the Hamiltonian.
+To get rid of this waste, we truncate the Hamiltonian.
 Because this is difficult, we actually truncate the kinetic and potential energy operators instead.
 The question is: At what values?
+Here we need some intuition again (or guesswork or plain trial-and-error).
 
 Our Gaussian (x0 = -5, rms = 1) extends maybe three rms up to x=8, where the potential value is
-{math}`8**2/2 = 32 \mathrm{a.u.}`.
-Hence we might truncate at 35 a.u., which is just a little less than the maximum potential of 50 a.u.
+{math}`8^2/2 = 32 \mathrm{a.u.}`.
+Hence, we might truncate at 35 a.u., which is just a little less than the maximum potential of 50 a.u.
 For the kinetic energy, we do the same, which has a much larger effect.
 The system setup changes to
 
