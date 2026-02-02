@@ -5,6 +5,10 @@ ChangeLog
 0.3
 ---
 
+- (#32) added ChebychevSolver including additional documentation
+- (#32) added RelaxationSolver for imaginary-time propagation
+- (#32) added function to normalize a state
+
 - (#24) added ExpressionSum and OneSidedLiouvillian
         for more complex expressions
 
