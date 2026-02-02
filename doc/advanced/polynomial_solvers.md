@@ -13,11 +13,11 @@ In particular, we shall derive the formulas in a little more depth, discuss the 
 number, and compare the performance of Chebychev solver to that of ODE solvers.
 
 We will restrict the discussion to closed systems with real eigenvalues.
-The use of Chebychev polynomials was pioneered by Tal-Ezer and Kosloff, see [^ref-chebychev-real].
+The use of Chebychev polynomials was pioneered by Tal-Ezer and Kosloff, see [^ChebychevReal].
 It is possible to extend the treatment to purely imaginary eigenvalues, this is discussed in
-{doc}`/tutorials/relaxation`, and the original work [^ref-chebychev-imag].
+{doc}`/tutorials/relaxation`, and the original work [^ChebychevImag].
 An extension of the Chebychev method to arbitrary complex-valued systems (open systems, absorbing boundary conditions)
-was introduced by Huisinga et al. [^ref-faber], but we omit this discussion for simplicity.
+was introduced by Huisinga et al. [^faber], but we omit this discussion for simplicity.
 
 ## Basic theory
 
@@ -69,7 +69,7 @@ complex Chebychev polynomials.
 ## Convergence
 
 The huge advantage of Chebychev polynomials is the availability of an exact upper bound for the propagation error.
-We start with two inequalities, see [^ref-abramowitz], equations 22.14.4 and 9.1.62 that readily generalize to
+We start with two inequalities, see [^abramowitz], equations 22.14.4 and 9.1.62, which readily generalize to
 functions of operators:
 
 ```{math}
@@ -219,9 +219,13 @@ the Chebychev solver yields a factor of 4.5 in performance.
 If you require the higher precisions that you get for free with the Chebychev solver,
 simple ODE solvers are easily an order of magnitude slower.
 
-[^ref-abramowitz]: M. Abramowitz and I. Stegun "Handbook of Mathematical Functions"
-[^ref-chebychev-real]: H. Tal-Ezer and R. Kosloff, J. Chem. Phys. 81:3967 (1986)
-[^ref-chebychev-imag]: R. Kosloff and H. Tal-Ezer, Chem. Phys. Lett. 127(3) 223 (1986)
-https://doi.org/10.1016/0009-2614(86)80262-7
-[^ref-faber]:  W. Huisinga et al., J. Chem. Phys. 110, 5538 (1999)
-https://doi.org/10.1063/1.478451
+[^abramowitz]: M. Abramowitz and I. Stegun "Handbook of Mathematical Functions"
+
+[^ChebychevReal]: H. Tal Ezer and R. Kosloff, J. Chem. Phys. 81:3967 (1986)
+                       <https://openscholar.huji.ac.il/sites/default/files/ronniekosloff/files/jcp1.448136.pdf>
+
+[^ChebychevImag]: R. Kosloff and H. Tal-Ezer, Chem. Phys. Lett. 127(3) 223 (1986)
+                       <https://openscholar.huji.ac.il/sites/default/files/ronniekosloff/files/cpl86.pdf>
+
+[^faber]:  W. Huisinga et al., J. Chem. Phys. 110, 5538 (1999)
+               <https://publications.imp.fu-berlin.de/91/1/JCP05538.pdf>

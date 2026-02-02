@@ -9,7 +9,7 @@ kernelspec:
 ```{note}
 This tutorial focuses on the *usage* of the {py:class}`wavepacket.solver.ChebychevSolver`.
 If you want to know more about the theory, see {doc}`/advanced/polynomial_solvers` or the original paper
-by Tal-Ezer and Kosloff [^ref-chebychev-real]
+by Tal-Ezer and Kosloff [^ChebychevReal]
 ```
 
 Before deciding on the solver to use, be aware of the different tradeoffs between ODE solvers and the Chebychev solver:
@@ -208,4 +208,6 @@ for t, psi in solver.propagate(psi0, t0=0.0, num_steps=10):
     print(f"t = {t:.4}, trace = {trace:.4}, <x> = {x:.4}")
 ```
 
-[^ref-chebychev-real]: H. Tal-Ezer and R. Kosloff, J. Chem. Phys. 81:3967 (1986)
+[^ChebychevReal]: H. Tal Ezer and R. Kosloff, J. Chem. Phys. 81:3967 (1986)
+                       <https://openscholar.huji.ac.il/sites/default/files/ronniekosloff/files/jcp1.448136.pdf>
+

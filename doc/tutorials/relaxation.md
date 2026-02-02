@@ -38,7 +38,7 @@ There are two main applications for such a time evolution:
 At its heart, the relaxation solver is just a modified version of the {py:class}`wavepacket.solver.ChebychevSolver`.
 Using Chebychev solvers is detailed in {doc}`chebychev_solvers`.
 All remarks apply here as well, in particular the spectrum guess and operator truncation.
-Details on the implementation can be found in the paper by Kosloff and Tal-Ezer [^ref-chebychev-imag].
+Details on the implementation can be found in the paper by Kosloff and Tal-Ezer [^ChebychevImag].
 
 We take the harmonic oscillator example of {doc}`chebychev_solvers`,
 
@@ -218,5 +218,6 @@ the Hamiltonian directly, not some Liouvillian.
 Side note: because this Liouvillian has the same spectrum as the Hamiltonian, we can use the
 same RelaxationSolver for density operators and wave functions, in contrast to the real-time ChebychevSolver.
 
-[^ref-chebychev-imag]: R. Kosloff and H. Tal-Ezer, Chem. Phys. Lett. 127(3) 223 (1986)
-https://doi.org/10.1016/0009-2614(86)80262-7
+[^ChebychevImag]: R. Kosloff and H. Tal-Ezer, Chem. Phys. Lett. 127(3) 223 (1986)
+                       <https://openscholar.huji.ac.il/sites/default/files/ronniekosloff/files/cpl86.pdf>
+
