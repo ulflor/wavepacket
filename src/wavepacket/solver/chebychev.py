@@ -15,16 +15,11 @@ class ChebychevSolver(SolverBase):
     """
     Solver that expands the time evolution operator into Chebychev polynomials.
 
-    The advantage of using Chebychev polynomials is that the series converges continuously.
-    That is, for a given order of the expansion, you can find a strict upper bound for the numerical error,
-    no matter the initial state. This solver is about an order of magnitude faster than a generic ODE solver.
+    This solver is fast and accurate, but works only for time-independent closed systems, and
+    requires explicit bounds for the spectrum of the Hamiltonian or Liouvillian, which is more
+    setup work.
 
-    However, there are two significant limitations.
-    Only time-independent systems are supported. Time-dependence introduces time-ordering in the operator product,
-    which is difficult to handle. Also, the expansion is only defined for an operator with a spectrum
-    inside the interval [-1,1]. Hence, the Hamiltonian needs to be mapped to a "normalized" operator;
-    this process requires the spectral range of the Hamiltonian or corresponding lower/upper bounds.
-    These can be principally obtained with the power method, but doing so can be a little cumbersome.
+    There is a dedicated tutorial for this solver, see :doc:`/tutorials/chebychev_solvers`.
 
     Parameters
     ----------
@@ -45,9 +40,12 @@ class ChebychevSolver(SolverBase):
     order
         The order of the expansion.
 
-    References
-    ----------
-    .. [1] https://sourceforge.net/p/wavepacket/cpp/blog/2021/04/convergence-2
+    Notes
+    -----
+
+    The name of this class deviates from the nowadays official transcription, which is "Chebyshev".
+    The original references by Tal-Ezer and Kosloff, however, use the outdated spelling, so we tried
+    to be consistent with these references.
     """
 
     def __init__(self, expression: ExpressionBase, dt: float,
@@ -112,15 +110,11 @@ class RelaxationSolver(SolverBase):
     """
     Solver for propagation in imaginary time.
 
-    This class is based on a different expansion in Chebychev polynomials, and largely similar
-    to :py:class:`ChebychevSolver`. As such, it also requires the spectral range of the Hamiltonian as input.
+    This class is similar to the :py:class:`wp.solver.ChebychevSolver`, but in imaginary time.
+    It relaxes an initial wave function to the ground state of a system or a density operator to
+    the density operator of a system at finite temperature.
 
-    This solver solves the imaginary-time equation :math:`\dot X = - \hat H X`
-    with the formal solution :math:`X(t) = \mathrm{e}^{-\hat H t} X(t=0)`,
-    where X can be a wave function or density operator, and H is the Hamiltonian.
-    Apart from normalization, this solution converges to the lowest-energy eigenstate of the Hamiltonian for
-    wave functions. For density operators, the solution with the unit operator at t=0 is the thermal state
-    at inverse temperature "t".
+    There is a dedicated tutorial for this solver, see :doc:`/tutorials/relaxation`.
 
     Parameters
     ----------
@@ -140,17 +134,6 @@ class RelaxationSolver(SolverBase):
         Smaller values reduce efficiency, much larger values can cause problems with overflows.
     order
         The order of the expansion.
-
-    Notes
-    -----
-
-    The name of this class deviates from the nowadays official transcription, which is "Chebyshev".
-    The original references by Tal-Ezer and Kosloff, however, use the outdated spelling, so we tried
-    to be consistent with these references.
-
-    References
-    ----------
-    .. [1] https://sourceforge.net/p/wavepacket/cpp/blog/2021/04/convergence-2
     """
 
     def __init__(self, hamiltonian: OperatorBase, dt: float,
