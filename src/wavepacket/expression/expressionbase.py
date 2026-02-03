@@ -42,7 +42,7 @@ class ExpressionBase(ABC):
         Some functionality, for example special solvers, may require time-independent expressions.
         This property typically evaluates the time-dependence of the underlying operator(s).
         """
-        pass
+        raise NotImplementedError()
 
     @abstractmethod
     def apply(self, state: State, t: float) -> State:
@@ -66,7 +66,7 @@ class ExpressionBase(ABC):
             If the state is invalid or has the wrong time. For example, a Schrödinger equation
             makes little sense for a density operator.
         """
-        pass
+        raise NotImplementedError()
 
 
 class ExpressionSum(ExpressionBase):

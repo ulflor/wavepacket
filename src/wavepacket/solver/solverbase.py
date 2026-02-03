@@ -1,4 +1,5 @@
 from abc import ABC, abstractmethod
+from typing import Iterable, Tuple
 
 import wavepacket as wp
 from ..grid import State
@@ -68,10 +69,10 @@ class SolverBase(ABC):
         wp.grid.State
             The state at the new time t+dt.
         """
-        pass
+        raise NotImplementedError()
 
     def propagate(self, state0: State, t0: float,
-                  num_steps: int, include_first: bool = True):
+                  num_steps: int, include_first: bool = True) -> Iterable[Tuple[float, State]]:
         """
         Generator function that yields the propagated wave function at multiple time steps.
 
@@ -91,10 +92,9 @@ class SolverBase(ABC):
 
         Yields
         ------
-        float
-            The time at which the state is yielded. Starts optionally with t0 and progresses in units of dt.
-        wp.grid.State
-            The propagated state at the given time.
+        Tuple[float, wp.grid.State]
+            A tuple consisting of the time and the result of the propagation at that time.
+            The time starts optionally with t0 and progresses in units of dt.
 
         Raises
         ------
@@ -105,8 +105,8 @@ class SolverBase(ABC):
         --------
         >>> solver = ...
         >>> psi0 = ...
-        >>> for t, psi in solver.propagate(psi0, t0, 5):
-        >>>    print(f't = {t}, trace = {wp.grid.trace(psi)}')
+        >>> for time, psi in solver.propagate(psi0, t0, 5):
+        >>>    print(f't = {time}, trace = {wp.grid.trace(psi)}')
         """
         if num_steps < 0:
             raise wp.InvalidValueError("Cannot propagate for negative number of steps.")

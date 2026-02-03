@@ -22,8 +22,8 @@ class Gaussian(wpt.Generator):
     p : float, default=0
         The momentum of the Gaussian.
     rms, fwhm : float
-        You must specify the width of the Gaussian using exactly one of these values,
-        either through the root-mean-square width, or the full-width-at-half-maximum.
+        You must specify the width of the Gaussian using exactly one of these keyword parameters,
+        either the root-mean-square width, or the full-width-at-half-maximum.
 
     Raises
     ------
@@ -40,7 +40,7 @@ class Gaussian(wpt.Generator):
     :math:`\sigma = \mathrm{FWHM} / \sqrt{8 \ln 2}`.
     """
 
-    def __init__(self, x: float = 0.0, p: float = 0.0,
+    def __init__(self, x: float = 0.0, p: float = 0.0, *,
                  rms: float | None = None, fwhm: float | None = None):
         if rms is not None and rms <= 0:
             raise wp.InvalidValueError(f"RMS width of Gaussian is {rms}, but should be positive.")

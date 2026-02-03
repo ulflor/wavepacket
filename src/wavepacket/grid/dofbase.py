@@ -111,7 +111,7 @@ class DofBase(ABC):
             into a :py:class:`wavepacket.grid.State`, because that class implicitly assumes a
             weighted DVR transformation.
         """
-        pass
+        raise NotImplementedError()
 
     @abstractmethod
     def from_fbr(self, data: wpt.ComplexData, index: int, is_ket: bool = True) -> wpt.ComplexData:
@@ -138,7 +138,7 @@ class DofBase(ABC):
             The appropriately transformed coefficients. You generally need to wrap the result in
             a :py:class:`wavepacket.grid.State` before further use.
         """
-        pass
+        raise NotImplementedError()
 
     @abstractmethod
     def to_dvr(self, data: wpt.ComplexData, index: int) -> wpt.ComplexData:
@@ -164,7 +164,7 @@ class DofBase(ABC):
             into a :py:class:`wavepacket.grid.State`, because that class implicitly assumes a
             weighted DVR transformation.
         """
-        pass
+        raise NotImplementedError()
 
     @abstractmethod
     def from_dvr(self, data: wpt.ComplexData, index: int) -> wpt.ComplexData:
@@ -188,4 +188,4 @@ class DofBase(ABC):
             The appropriately transformed coefficients. They need to be wrapped in a
             :py:class:`wavepacket.grid.State` before further use.
         """
-        pass
+        raise NotImplementedError()

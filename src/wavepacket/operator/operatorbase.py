@@ -111,7 +111,7 @@ class OperatorBase(ABC):
         """
         Returns if the operator is time-dependent or not
         """
-        pass
+        raise NotImplementedError()
 
     @abstractmethod
     def apply_to_wave_function(self, psi: wpt.ComplexData, t: float) -> wpt.ComplexData:
@@ -136,7 +136,7 @@ class OperatorBase(ABC):
         wpt.ComplexData
             The coefficients of the resulting wave function.
         """
-        pass
+        raise NotImplementedError()
 
     @abstractmethod
     def apply_from_left(self, rho: wpt.ComplexData, t: float) -> wpt.ComplexData:
@@ -161,7 +161,7 @@ class OperatorBase(ABC):
         wpt.ComplexData
             The coefficients of the resulting density operator.
         """
-        pass
+        raise NotImplementedError()
 
     @abstractmethod
     def apply_from_right(self, rho: wpt.ComplexData, t: float) -> wpt.ComplexData:
@@ -186,7 +186,7 @@ class OperatorBase(ABC):
         wpt.ComplexData
             The coefficients of the resulting density operator.
         """
-        pass
+        raise NotImplementedError()
 
 
 class OperatorSum(OperatorBase):

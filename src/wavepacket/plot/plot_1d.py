@@ -84,6 +84,7 @@ class BasePlot1D(ABC):
             The Matplotlib axes object on which we plotted the state for possible
             further manipulation.
         """
+        raise NotImplementedError()
 
     def _plot(self, axes: plt.Axes, state: State, t: float):
         """
