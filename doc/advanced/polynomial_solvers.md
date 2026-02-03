@@ -180,12 +180,10 @@ To count this value, we write a custom "counting expression" that just measures 
 ```{code-cell}
 class CountingExpression(wp.expression.ExpressionBase):
     def __init__(self, wrapped_expression):
+        super().__init__(False)
+
         self._wrapped_expression = wrapped_expression
         self.count = 0
-
-    @property
-    def time_dependent(self):
-        return False
 
     def apply(self, state, t):
         self.count += 1
@@ -221,10 +219,10 @@ simple ODE solvers are easily an order of magnitude slower.
 [^abramowitz]: M. Abramowitz and I. Stegun, "Handbook of Mathematical Functions"
 
 [^ChebychevReal]: H. Tal Ezer and R. Kosloff, J. Chem. Phys. 81:3967 (1986)
-                       <https://openscholar.huji.ac.il/sites/default/files/ronniekosloff/files/jcp1.448136.pdf>
+<https://openscholar.huji.ac.il/sites/default/files/ronniekosloff/files/jcp1.448136.pdf>
 
 [^ChebychevImag]: R. Kosloff and H. Tal-Ezer, Chem. Phys. Lett. 127(3) 223 (1986)
-                       <https://openscholar.huji.ac.il/sites/default/files/ronniekosloff/files/cpl86.pdf>
+<https://openscholar.huji.ac.il/sites/default/files/ronniekosloff/files/cpl86.pdf>
 
 [^faber]:  W. Huisinga et al., J. Chem. Phys. 110, 5538 (1999)
-               <https://publications.imp.fu-berlin.de/91/1/JCP05538.pdf>
+<https://publications.imp.fu-berlin.de/91/1/JCP05538.pdf>

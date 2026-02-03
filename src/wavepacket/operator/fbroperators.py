@@ -1,4 +1,4 @@
-from typing import override
+from typing import Final, override
 
 import numpy as np
 
@@ -61,12 +61,7 @@ class PlaneWaveFbrOperator(OperatorBase):
         self._ket_data = grid.operator_broadcast(shifted_data, dof_index)
         self._bra_data = grid.operator_broadcast(shifted_data, dof_index, is_ket=False)
 
-        super().__init__(grid)
-
-    @property
-    @override
-    def time_dependent(self) -> bool:
-        return False
+        super().__init__(grid, False)
 
     @override
     def apply_to_wave_function(self, psi: wpt.ComplexData, t: float) -> wpt.ComplexData:
@@ -103,6 +98,11 @@ class CartesianKineticEnergy(PlaneWaveFbrOperator):
         If set, truncate all operator values whose real value is above the cutoff.
         Default is not to truncate.
 
+    Attributes
+    ----------
+    mass: float, readonly
+        The mass of the particle
+
     Raises
     ------
     wp.InvalidValueError
@@ -114,6 +114,8 @@ class CartesianKineticEnergy(PlaneWaveFbrOperator):
                  cutoff: float | None = None) -> None:
         if mass <= 0:
             raise wp.InvalidValueError(f"Particle mass must be positive, but is {mass}")
+
+        self.mass: Final[float] = mass
 
         super().__init__(grid, dof_index, lambda fbr_points: fbr_points ** 2 / (2 * mass),
                          cutoff)
@@ -162,12 +164,7 @@ class FbrOperator1D(OperatorBase):
         self._bra_index = len(grid.dofs) + self._ket_index
         self._matrix = matrix
 
-        super().__init__(grid)
-
-    @property
-    @override
-    def time_dependent(self) -> bool:
-        return False
+        super().__init__(grid, False)
 
     @override
     def apply_to_wave_function(self, psi: wpt.ComplexData, t: float) -> wpt.ComplexData:
@@ -203,11 +200,15 @@ class RotationalKineticEnergy(FbrOperator1D):
     dof_index : int
         Degree of freedom along which the operator acts
     inertia : float
-        The moment of inertia of the rotor. Only fixed values are supported by this operator (no vibrational coupling).
+        The fixed moment of inertia of the rotor.
     cutoff: float | None, default None
         If set, truncate all operator values whose real value is above the cutoff.
         Default is not to truncate.
 
+    Attributes
+    ----------
+    inertia: float, readonly
+        The fixed moment of inertia of the rotor.
     Raises
     ------
     wp.InvalidValueError
@@ -223,6 +224,8 @@ class RotationalKineticEnergy(FbrOperator1D):
         if not isinstance(grid.dofs[dof_index], wp.grid.SphericalHarmonicsDof):
             raise wp.InvalidValueError(
                 f"Degree of freedom should be a SphericalHarmonicsDof, but is {grid.dofs[dof_index].__class__}")
+
+        self.inertia: Final[float] = inertia
 
         super().__init__(grid, dof_index,
                          lambda fbr_points: fbr_points * (fbr_points + 1) / (2 * inertia),

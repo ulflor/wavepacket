@@ -15,12 +15,7 @@ class DummyOperator(OperatorBase):
     """
 
     def __init__(self, grid: Grid) -> None:
-        super().__init__(grid)
-
-    @property
-    @override
-    def time_dependent(self) -> bool:
-        return False
+        super().__init__(grid, False)
 
     @override
     def apply_to_wave_function(self, psi: wpt.ComplexData, t: float) -> wpt.ComplexData:

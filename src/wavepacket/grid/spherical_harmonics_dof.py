@@ -27,6 +27,13 @@ class SphericalHarmonicsDof(DofBase):
     m: int
         The magnetic quantum number
 
+    Attributes
+    ----------
+    lmax: int, readonly
+        The maximum azimuthal quantum number that is expressed by the grid.
+    m: int, readonly
+        The magnetic quantum number
+
     Raises
     ------
     wavepacket.InvalidError
@@ -37,6 +44,7 @@ class SphericalHarmonicsDof(DofBase):
         if lmax < abs(m):
             raise wp.InvalidValueError("Maximum angular momentum too small, grid has size 0.")
 
+        self.lmax: Final[int] = lmax
         self.m: Final[int] = m
 
         dvr_points, weights = _quadrature(lmax, m)

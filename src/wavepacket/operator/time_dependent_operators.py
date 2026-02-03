@@ -24,14 +24,9 @@ class TimeDependentOperator(OperatorBase):
     """
 
     def __init__(self, grid: wp.grid.Grid, func: Callable[[float], complex]) -> None:
-        super().__init__(grid)
-
         self._func = func
 
-    @property
-    @override
-    def time_dependent(self) -> bool:
-        return True
+        super().__init__(grid, True)
 
     @override
     def apply_to_wave_function(self, psi: wpt.ComplexData, t: float) -> wpt.ComplexData:

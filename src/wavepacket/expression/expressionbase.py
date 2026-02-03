@@ -1,5 +1,5 @@
 from abc import ABC, abstractmethod
-from typing import Self, Iterable
+from typing import Final, Iterable, override
 
 import numpy as np
 
@@ -14,10 +14,18 @@ class ExpressionBase(ABC):
     By deriving from this class and implementing the method
     :py:meth:`ExpressionBase.apply`, you can add custom expressions.
 
-    Attributes
+    Parameters
     ----------
     time_dependent: bool
-        If the expression is time-dependent or not. Some functionality may not work for time-dependent operators.
+        Sets whether the expression is time-dependent or not.
+
+    Attributes
+    ----------
+    time_dependent: bool, readonly
+        If the expression is time-dependent or not.
+
+        Some functionality, for example special solvers, may require time-independent expressions.
+        This property typically evaluates the time-dependence of the underlying operator(s).
 
     Notes
     -----
@@ -30,19 +38,11 @@ class ExpressionBase(ABC):
     is on the left-hand side of the equation.
     """
 
-    def __add__(self, other: Self) -> Self:
+    def __init__(self, time_dependent: bool) -> None:
+        self.time_dependent: Final[bool] = time_dependent
+
+    def __add__(self, other: 'ExpressionBase') -> 'ExpressionBase':
         return ExpressionSum([self, other])
-
-    @property
-    @abstractmethod
-    def time_dependent(self) -> bool:
-        """
-        Returns if the expression is time-dependent or not.
-
-        Some functionality, for example special solvers, may require time-independent expressions.
-        This property typically evaluates the time-dependence of the underlying operator(s).
-        """
-        raise NotImplementedError()
 
     @abstractmethod
     def apply(self, state: State, t: float) -> State:
@@ -95,11 +95,10 @@ class ExpressionSum(ExpressionBase):
 
         self._expressions = list(expressions)
 
-    @property
-    def time_dependent(self) -> bool:
-        td_vals = [expr.time_dependent for expr in self._expressions]
-        return any(td_vals)
+        td_vals = [expr.time_dependent for expr in expressions]
+        super().__init__(any(td_vals))
 
+    @override
     def apply(self, state: State, t: float) -> State:
         result = wp.grid.State(state.grid, np.zeros(state.data.shape))
         for expression in self._expressions:

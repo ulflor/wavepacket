@@ -19,9 +19,9 @@ class BasePlot1D(ABC):
 
     Attributes
     ----------
-    xlim: list[float]
+    xlim: tuple[float, float]
         The range of the x-axis [min, max]
-    ylim: list[float]
+    ylim: tuple[float, float]
         The range of the y-axis of the plot [min, max]
     conversion_factor: float
         The factor that converts from the density to energy units. Constant 1 if no potential is plotted.
@@ -33,13 +33,13 @@ class BasePlot1D(ABC):
         assert len(state.grid.dofs) == 1
         dvr_grid = state.grid.dofs[0].dvr_points
         xrange = dvr_grid.max() - dvr_grid.min()
-        self.xlim = [dvr_grid.min() - 1e-2 * xrange, dvr_grid.max() + 1e-2 * xrange]
+        self.xlim = (dvr_grid.min() - 1e-2 * xrange, dvr_grid.max() + 1e-2 * xrange)
 
         max_density = dvr_density(state).max()
         if potential is None:
             # We only plot the density, and ignore whatever energy the states have.
             # Set the y ranges accordingly
-            self.ylim = [-1e-2 * max_density, 1.01 * max_density]
+            self.ylim = (-1e-2 * max_density, 1.01 * max_density)
             self.conversion_factor = 1.0
             self._potential = None
         else:
@@ -57,7 +57,7 @@ class BasePlot1D(ABC):
             max_potential = potential_values.max()
             energy = abs(expectation_value(self._hamiltonian, state))
 
-            self.ylim = [min_potential, max(max_potential, energy + 0.5 * (max_potential - min_potential))]
+            self.ylim = (min_potential, max(max_potential, energy + 0.5 * (max_potential - min_potential)))
             self.conversion_factor = (self.ylim[1] - energy) / max_density
 
     @abstractmethod

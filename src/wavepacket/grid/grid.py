@@ -25,14 +25,18 @@ class Grid:
 
     Attributes
     ----------
-    shape
-        The shape of a NumPy array that describes a wave function
-    operator_shape
+    shape: tuple[int, ...], readonly
+        The shape of a NumPy array that describes a wave function.
+    operator_shape: tuple[int, ...], readonly
         The shape of a NumPy array that describes an operator
-    dofs
-        A list of degrees of freedom that describe the degrees of freedom of the grid
-    size
+
+        An example of such a matrix would be the coefficient array for a density operator.
+        The operator dimensions are the dimensions of the grid concatenated with themselves.
+        For example, a grid with dimensions (5, 4) has operator dimensions (5, 4, 5, 4).
+    size: int, readonly
         The total number of grid points
+    dofs: int, readonly
+        A list of degrees of freedom that describe the degrees of freedom of the grid
 
     Raises
     ------
@@ -47,35 +51,10 @@ class Grid:
         if isinstance(dofs, DofBase):
             dofs = [dofs]
 
+        self.shape: Final[tuple[int, ...]] = tuple(dof.size for dof in dofs)
+        self.operator_shape: Final[tuple[int, ...]] = self.shape + self.shape
+        self.size: Final[int] = math.prod(dof.size for dof in dofs)
         self.dofs: Final[Sequence] = list(dofs)
-
-        self._shape = tuple(dof.size for dof in self.dofs)
-
-    @property
-    def shape(self) -> tuple[int, ...]:
-        """
-        The dimensions of the grid, for use in e.g. array creation.
-        """
-        # note: dvr shape
-        return self._shape
-
-    @property
-    def operator_shape(self) -> tuple[int, ...]:
-        """
-        The dimensions of an operator matrix on this grid.
-
-        An example of such a matrix would be the coefficient array for a density operator.
-        The operator dimensions are the dimensions of the grid concatenated with themselves.
-        For example, a grid with dimensions (5, 4) has operator dimensions (5, 4, 5, 4).
-        """
-        return self._shape + self._shape
-
-    @property
-    def size(self) -> int:
-        """
-        The total number of grid points.
-        """
-        return math.prod(dof.size for dof in self.dofs)
 
     def normalize_index(self, index: int) -> int:
         """

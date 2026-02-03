@@ -22,17 +22,20 @@ class OperatorBase(ABC):
     grid : wp.grid.Grid
         The grid on which the operator is defined.
         Particular operators may require additional parameters.
+    time_dependent: bool
+        If the operator is time-dependent or not.
 
     Attributes
     ----------
     grid: wp.grid.Grid
         The grid on which the operator is defined.
-    time_dependent: bool
+    time_dependent: bool, readonly
         If the operator is time-dependent or not. Some functionality may not work for time-dependent operators.
     """
 
-    def __init__(self, grid: Grid) -> None:
+    def __init__(self, grid: Grid, time_dependent: bool) -> None:
         self.grid: Final[Grid] = grid
+        self.time_dependent: Final[bool] = time_dependent
 
     def apply(self, state: State, t: float) -> State:
         """
@@ -97,14 +100,6 @@ class OperatorBase(ABC):
 
     def __rmul__(self, other: 'OperatorBase | complex') -> 'OperatorBase':
         return self * other
-
-    @property
-    @abstractmethod
-    def time_dependent(self) -> bool:
-        """
-        Returns if the operator is time-dependent or not
-        """
-        raise NotImplementedError()
 
     @abstractmethod
     def apply_to_wave_function(self, psi: wpt.ComplexData, t: float) -> wpt.ComplexData:
@@ -209,14 +204,8 @@ class OperatorSum(OperatorBase):
                 raise wp.BadGridError("All grids in a sum operator must be equal.")
 
         self._ops = ops
-        grid = ops[0].grid
-        super().__init__(grid)
 
-    @property
-    @override
-    def time_dependent(self) -> bool:
-        td_vals = [op.time_dependent for op in self._ops]
-        return any(td_vals)
+        super().__init__(ops[0].grid, any(op.time_dependent for op in ops))
 
     @override
     def apply_to_wave_function(self, psi: wpt.ComplexData, t: float) -> wpt.ComplexData:
@@ -270,13 +259,8 @@ class OperatorProduct(OperatorBase):
                 raise wp.BadGridError("All grids in a sum operator must be equal.")
 
         self._ops = ops
-        super().__init__(ops[0].grid)
 
-    @property
-    @override
-    def time_dependent(self) -> bool:
-        td_vals = [op.time_dependent for op in self._ops]
-        return any(td_vals)
+        super().__init__(ops[0].grid, any(op.time_dependent for op in ops))
 
     @override
     def apply_to_wave_function(self, psi: wpt.ComplexData, t: float) -> wpt.ComplexData:

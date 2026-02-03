@@ -31,10 +31,7 @@ class SchroedingerEquation(ExpressionBase):
     def __init__(self, hamiltonian: OperatorBase) -> None:
         self._hamiltonian = hamiltonian
 
-    @property
-    @override
-    def time_dependent(self) -> bool:
-        return self._hamiltonian.time_dependent
+        super().__init__(hamiltonian.time_dependent)
 
     @override
     def apply(self, psi: State, t: float) -> State:

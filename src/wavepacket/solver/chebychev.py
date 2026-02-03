@@ -34,10 +34,10 @@ class ChebychevSolver(SolverBase):
 
     Attributes
     ----------
-    alpha
+    alpha: float, readonly
         The Kosloff alpha number "spectral range * dt / 2". Ideally, it should be around 40.
         Smaller values reduce efficiency, much larger values can cause problems with overflows.
-    order
+    order: int, readonly
         The order of the expansion.
 
     Notes
@@ -61,21 +61,19 @@ class ChebychevSolver(SolverBase):
         self._spec_min = spectrum[0]
         self._spec_range = spectrum[1] - spectrum[0]
 
-        self.alpha: Final[float] = self._spec_range * self.dt / 2.0
-
+        alpha = self._spec_range * self.dt / 2.0
         self._prefactor = math.e ** (-1j * (spectrum[0] + spectrum[1]) / 2.0 * dt)
-        self._coeffs = [scipy.special.j0(self.alpha)]
+        self._coeffs = [scipy.special.j0(alpha)]
         for n in itertools.count(1):
-            c = 2 * scipy.special.jv(n, self.alpha)
+            c = 2 * scipy.special.jv(n, alpha)
             self._coeffs.append(c)
 
             # We fix the cutoff to 1e-12, because there is little point in varying it.
             if abs(c) < 1e-12 and n > 2:
                 break
 
-    @property
-    def order(self) -> int:
-        return len(self._coeffs) - 1
+        self.alpha: Final[float] = alpha
+        self.order: Final[int] = len(self._coeffs) - 1
 
     @override
     def step(self, state: State, t: float) -> State:
@@ -130,10 +128,10 @@ class RelaxationSolver(SolverBase):
 
     Attributes
     ----------
-    alpha
+    alpha: float, readonly
         The Kosloff alpha number "spectral range * dt / 2". Ideally, it should be around 40.
         Smaller values reduce efficiency, much larger values can cause problems with overflows.
-    order
+    order: int, readonly
         The order of the expansion.
     """
 
@@ -150,21 +148,19 @@ class RelaxationSolver(SolverBase):
         self._spec_min = spectrum[0]
         self._spec_range = spectrum[1] - spectrum[0]
 
-        self.alpha: Final[float] = self._spec_range * self.dt / 2.0
-
+        alpha = self._spec_range * self.dt / 2.0
         self._prefactor = math.e ** (-(spectrum[0] + spectrum[1]) / 2.0 * dt)
-        self._coeffs = [scipy.special.i0(self.alpha)]
+        self._coeffs = [scipy.special.i0(alpha)]
         for n in itertools.count(1):
-            c = 2 * scipy.special.iv(n, self.alpha)
+            c = 2 * scipy.special.iv(n, alpha)
             self._coeffs.append(c)
 
             # There is almost no use in playing with the cutoff, so we fix it at 1e-12
             if abs(c) < 1e-12 and n > 2:
                 break
 
-    @property
-    def order(self) -> int:
-        return len(self._coeffs) - 1
+        self.alpha: Final[float] = alpha
+        self.order: Final[int] = len(self._coeffs) - 1
 
     @override
     def step(self, state: State, t: float) -> State:

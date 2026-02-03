@@ -31,11 +31,7 @@ class CommutatorLiouvillian(ExpressionBase):
 
     def __init__(self, op: OperatorBase) -> None:
         self._op = op
-
-    @property
-    @override
-    def time_dependent(self) -> bool:
-        return self._op.time_dependent
+        super().__init__(op.time_dependent)
 
     @override
     def apply(self, rho: State, t: float) -> State:
@@ -75,10 +71,7 @@ class OneSidedLiouvillian(ExpressionBase):
         self._op = op
         self._side = side
 
-    @property
-    @override
-    def time_dependent(self) -> bool:
-        return self._op.time_dependent
+        super().__init__(op.time_dependent)
 
     @override
     def apply(self, rho: State, t: float) -> State:

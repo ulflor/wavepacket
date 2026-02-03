@@ -53,12 +53,7 @@ class Potential1D(OperatorBase):
         self._ket_data = grid.operator_broadcast(data, dof_index)
         self._bra_data = grid.operator_broadcast(data, dof_index, False)
 
-        super().__init__(grid)
-
-    @property
-    @override
-    def time_dependent(self) -> bool:
-        return False
+        super().__init__(grid, False)
 
     @override
     def apply_to_wave_function(self, psi: wpt.ComplexData, t: float) -> wpt.ComplexData:

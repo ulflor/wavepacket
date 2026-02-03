@@ -1,5 +1,5 @@
 import numpy as np
-from typing import Sequence, override
+from typing import Final, Sequence, override
 
 import wavepacket as wp
 import wavepacket.typing as wpt
@@ -60,12 +60,7 @@ class Projection(OperatorBase):
         self._bra_nd = np.conj(self._ket_nd)
         self._ket_ravelled = np.reshape(self._ket_nd, (len(basis), basis[0].grid.size))
         self._bra_ravelled = np.conj(self._ket_ravelled)
-        super().__init__(basis[0].grid)
-
-    @property
-    @override
-    def time_dependent(self) -> bool:
-        return False
+        super().__init__(basis[0].grid, False)
 
     @override
     def apply_to_wave_function(self, psi: wpt.ComplexData, t: float) -> wpt.ComplexData:
@@ -101,25 +96,25 @@ class Constant(OperatorBase):
         The grid on which this operator is defined.
     value: complex
         The value that this operator wraps.
+
+    Attributes
+    ----------
+    value: complex, readonly
+        The wrapped value.
     """
 
     def __init__(self, grid: wp.grid.Grid, value: complex) -> None:
-        self._value = value
-        super().__init__(grid)
-
-    @property
-    @override
-    def time_dependent(self) -> bool:
-        return False
+        self.value: Final[complex] = value
+        super().__init__(grid, False)
 
     @override
     def apply_to_wave_function(self, psi: wpt.ComplexData, t: float) -> wpt.ComplexData:
-        return self._value * psi
+        return self.value * psi
 
     @override
     def apply_from_left(self, rho: wpt.ComplexData, t: float) -> wpt.ComplexData:
-        return self._value * rho
+        return self.value * rho
 
     @override
     def apply_from_right(self, rho: wpt.ComplexData, t: float) -> wpt.ComplexData:
-        return self._value * rho
+        return self.value * rho
