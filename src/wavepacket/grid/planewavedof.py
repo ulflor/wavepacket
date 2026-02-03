@@ -1,5 +1,4 @@
 import math
-from typing import override
 
 import numpy as np
 
@@ -56,11 +55,11 @@ class PlaneWaveDof(DofBase):
 
         dx = (xmax - xmin) / n
 
-        dvr = np.linspace(xmin, xmax, n, endpoint=False)
+        dvr = np.linspace(xmin, xmax, n, endpoint=False, dtype=np.float64)
         if n % 2 == 0:
-            fbr = np.linspace(-math.pi / dx, math.pi / dx, n, endpoint=False)
+            fbr = np.linspace(-math.pi / dx, math.pi / dx, n, endpoint=False, dtype=np.float64)
         else:
-            fbr = np.linspace(-math.pi / dx * (n - 1) / n, math.pi / dx * (n - 1) / n, n)
+            fbr = np.linspace(-math.pi / dx * (n - 1) / n, math.pi / dx * (n - 1) / n, n, dtype=np.float64)
 
         super().__init__(dvr, fbr)
 
@@ -68,7 +67,6 @@ class PlaneWaveDof(DofBase):
         self._phase: wpt.ComplexData = np.exp(-1j * fbr * xmin) / np.sqrt(n)
         self._conj_phase: wpt.ComplexData = n * np.conj(self._phase)
 
-    @override
     def to_fbr(self, data: wpt.ComplexData, index: int, is_ket: bool = True) -> wpt.ComplexData:
         if is_ket:
             phase = broadcast(self._phase, data.ndim, index)
@@ -79,7 +77,6 @@ class PlaneWaveDof(DofBase):
 
         return phase * transformed
 
-    @override
     def from_fbr(self, data: wpt.ComplexData, index: int, is_ket: bool = True) -> wpt.ComplexData:
         if is_ket:
             phase = broadcast(self._conj_phase, data.ndim, index)
@@ -90,12 +87,10 @@ class PlaneWaveDof(DofBase):
             untransformed = phase * data
             return np.fft.fft(np.fft.ifftshift(untransformed, axes=index), axis=index)
 
-    @override
     def to_dvr(self, data: wpt.ComplexData, index: int) -> wpt.ComplexData:
         conversion_factor = broadcast(self._sqrt_weights, data.ndim, index)
         return data / conversion_factor
 
-    @override
     def from_dvr(self, data: wpt.ComplexData, index: int) -> wpt.ComplexData:
         conversion_factor = broadcast(self._sqrt_weights, data.ndim, index)
         return data * conversion_factor

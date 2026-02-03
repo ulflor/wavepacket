@@ -1,5 +1,5 @@
 from abc import ABC, abstractmethod
-from typing import Final, Iterable, override
+from typing import Final, Iterable
 
 import numpy as np
 
@@ -97,7 +97,6 @@ class ExpressionSum(ExpressionBase):
         td_vals = [expr.time_dependent for expr in expressions]
         super().__init__(any(td_vals))
 
-    @override
     def apply(self, state: wp.grid.State, t: float) -> wp.grid.State:
         result = wp.grid.State(state.grid, np.zeros(state.data.shape))
         for expression in self._expressions:

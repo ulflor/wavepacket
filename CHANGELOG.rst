@@ -16,6 +16,9 @@ ChangeLog
 
 - (#11) operator truncation and systematic handling of operator time-dependence
 
+- significantly improved type information, simplified attributes,
+  implemented some annotation best practices
+
 
 0.2
 ---

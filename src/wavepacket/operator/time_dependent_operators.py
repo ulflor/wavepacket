@@ -1,5 +1,5 @@
 import math
-from typing import Callable, override
+from typing import Callable
 
 import wavepacket as wp
 import wavepacket.typing as wpt
@@ -28,15 +28,12 @@ class TimeDependentOperator(OperatorBase):
 
         super().__init__(grid, True)
 
-    @override
     def apply_to_wave_function(self, psi: wpt.ComplexData, t: float) -> wpt.ComplexData:
         return self._func(t) * psi
 
-    @override
     def apply_from_left(self, rho: wpt.ComplexData, t: float) -> wpt.ComplexData:
         return self._func(t) * rho
 
-    @override
     def apply_from_right(self, rho: wpt.ComplexData, t: float) -> wpt.ComplexData:
         return self._func(t).conjugate() * rho
 

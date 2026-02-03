@@ -1,5 +1,4 @@
 from enum import Enum
-from typing import override
 
 import wavepacket as wp
 
@@ -31,7 +30,6 @@ class CommutatorLiouvillian(ExpressionBase):
         self._op = op
         super().__init__(op.time_dependent)
 
-    @override
     def apply(self, rho: wp.grid.State, t: float) -> wp.grid.State:
         if rho.grid != self._op.grid:
             raise wp.BadGridError("Input state is defined on the wrong grid.")
@@ -71,7 +69,6 @@ class OneSidedLiouvillian(ExpressionBase):
 
         super().__init__(op.time_dependent)
 
-    @override
     def apply(self, rho: wp.grid.State, t: float) -> wp.grid.State:
         if rho.grid != self._op.grid:
             raise wp.BadGridError("Input state is defined on the wrong grid.")

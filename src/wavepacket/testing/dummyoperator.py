@@ -1,5 +1,3 @@
-from typing import override
-
 import wavepacket as wp
 import wavepacket.typing as wpt
 
@@ -17,14 +15,11 @@ class DummyOperator(OperatorBase):
     def __init__(self, grid: wp.grid.Grid) -> None:
         super().__init__(grid, False)
 
-    @override
     def apply_to_wave_function(self, psi: wpt.ComplexData, t: float) -> wpt.ComplexData:
         raise wp.BadFunctionCall("Should be patched.")
 
-    @override
     def apply_from_left(self, rho: wpt.ComplexData, t: float) -> wpt.ComplexData:
         raise wp.BadFunctionCall("Should be patched.")
 
-    @override
     def apply_from_right(self, rho: wpt.ComplexData, t: float) -> wpt.ComplexData:
         raise wp.BadFunctionCall("Should be patched.")

@@ -1,4 +1,4 @@
-from typing import Final, override
+from typing import Final
 
 import numpy as np
 
@@ -48,7 +48,7 @@ class SphericalHarmonicsDof(DofBase):
         self.m: Final[int] = m
 
         dvr_points, weights = _quadrature(lmax, m)
-        fbr_points = np.linspace(abs(m), lmax, lmax - abs(m) + 1)
+        fbr_points = np.linspace(abs(m), lmax, lmax - abs(m) + 1, dtype=dvr_points.dtype)
 
         super().__init__(dvr_points, fbr_points)
         self._sqrt_weights = np.sqrt(weights)
@@ -56,24 +56,20 @@ class SphericalHarmonicsDof(DofBase):
         harmonics = np.stack([wp.SphericalHarmonic(L, m)(dvr_points) for L in range(abs(m), lmax + 1)], 1)
         self._fbr2weighted = self.from_dvr(harmonics, 0)
 
-    @override
     def to_fbr(self, data: wpt.ComplexData, index: int, is_ket: bool = True) -> wpt.ComplexData:
         swapped_data = np.swapaxes(data, 0, index)
         result = np.tensordot(self._fbr2weighted, swapped_data, axes=(0, 0))
         return np.swapaxes(result, 0, index)
 
-    @override
     def from_fbr(self, data: wpt.ComplexData, index: int, is_ket: bool = True) -> wpt.ComplexData:
         swapped_data = np.swapaxes(data, 0, index)
         result = np.tensordot(self._fbr2weighted, swapped_data, axes=(1, 0))
         return np.swapaxes(result, 0, index)
 
-    @override
     def to_dvr(self, data: wpt.ComplexData, index: int) -> wpt.ComplexData:
         conversion_factor = broadcast(self._sqrt_weights, data.ndim, index)
         return data / conversion_factor
 
-    @override
     def from_dvr(self, data: wpt.ComplexData, index: int) -> wpt.ComplexData:
         conversion_factor = broadcast(self._sqrt_weights, data.ndim, index)
         return data * conversion_factor
