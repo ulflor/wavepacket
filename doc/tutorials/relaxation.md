@@ -8,7 +8,7 @@ kernelspec:
 
 ## Introduction
 
-If we  make the time imaginary, {math}`t \to \imath \tau`, the Schrödinger equation becomes
+In imaginary time, {math}`t \to \imath \tau`, the Schrödinger equation becomes
 
 ```{math}
     \frac{\partial \psi}{\partial \tau} = - \hat H \psi(\tau)
@@ -35,10 +35,10 @@ There are two main applications for such a time evolution:
 
 ### Calculating the ground state
 
-At its heart, the relaxation solver is just a modified version of the {py:class}`wavepacket.solver.ChebychevSolver`.
-Using Chebychev solvers is detailed in {doc}`chebychev_solvers`.
-All remarks apply here as well, in particular the spectrum guess and operator truncation.
-Details on the implementation can be found in the paper by Kosloff and Tal-Ezer [^ChebychevImag].
+At its heart, the relaxation solver is just a modified version [^ChebychevImag]
+of the {py:class}`wavepacket.solver.ChebychevSolver`,
+whose use is detailed in {doc}`chebychev_solvers`.
+Most remarks in the reference apply here as well, in particular the spectrum guess and operator truncation.
 
 We take the harmonic oscillator example of {doc}`chebychev_solvers`,
 
@@ -82,12 +82,12 @@ psi0 = wp.builder.product_wave_function(grid, wp.Gaussian(rms=2))
 relax(solver, psi0);
 ```
 
-Note how the energy and fluctuations decay exponentially by about a factor of five for each time step.
+Note how the energy uncertainties decay exponentially by about a factor of five for each time step.
 In the example here, we are basically converged after about three steps,
 but the relaxation is usually the least expensive part of the calculation,
 so you can afford to spend a few more CPU cycles on a converged solution.
 
-Note, however, that the initial state must have overlap with the ground state.
+Beware that the initial state must have overlap with the ground state!
 This most often fails because the symmetry is incorrect.
 In our harmonic oscillator example, the ground state has even parity, {math}`\psi(x) = \psi(-x)`.
 Let us check what happens if we choose an initial state with odd parity, for example a sign function:
@@ -161,9 +161,9 @@ A few notes about the code:
   of the harmonic oscillator toggle between even and odd parity, we need an asymmetric initial state that contains
   contributions with both parities.
   If I had chosen an even or odd function as initial state, I would only get excited states of that parity.
-* The code uses a semi-internal detail of the orthonormalization procedure; it normalizes the first entry, then
+* The code exploits a semi-internal detail of the orthonormalization function; it normalizes the first entry, then
   orthonormalizes the second etc., so that the last entry is our wave function with the other components removed.
-* We manipulate the state while we evolve it in time. Therefore we can no longer propagate() in one go, but must
+* We manipulate the state while we evolve it in time. Therefore we can no longer `propagate()` in one go, but must
   explicitly step through the solution.
 
 In theory, you can now go on to get arbitrary excited states with this technique.
@@ -179,7 +179,7 @@ oscillator example seems pretty robust against this issue.
 In conclusion, you may only want to recover a few excited states of the Hamiltonian and monitor the
 convergence carefully.
 
-### Propagating density operators in imaginary time
+## Propagating density operators in imaginary time
 
 The calculation of the density operator for finite temperatures is derived in a roundabout way.
 The Liouville-von-Neumann (LvNe) equation

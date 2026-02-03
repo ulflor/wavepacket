@@ -13,7 +13,7 @@ In particular, we shall derive the formulas in a little more depth, discuss the 
 number, and compare the performance of Chebychev solver to that of ODE solvers.
 
 We will restrict the discussion to closed systems with real eigenvalues.
-The use of Chebychev polynomials was pioneered by Tal-Ezer and Kosloff, see [^ChebychevReal].
+The use of Chebychev polynomials was pioneered by Tal-Ezer and Kosloff [^ChebychevReal].
 It is possible to extend the treatment to purely imaginary eigenvalues, this is discussed in
 {doc}`/tutorials/relaxation`, and the original work [^ChebychevImag].
 An extension of the Chebychev method to arbitrary complex-valued systems (open systems, absorbing boundary conditions)
@@ -47,8 +47,8 @@ To get there, we first rescale the Hamiltonian,
 where
 
 ```{math}
-    \alpha = \frac{\Delta E \  \Delta t}{2}\\
-    \hat H_\mathrm{norm} = \frac{2}{\Delta E} (\hat H - E_\mathrm{min} - \frac{\Delta E}{2})
+    \alpha &= \frac{\Delta E \  \Delta t}{2}\\
+    \hat H_\mathrm{norm} &= \frac{2}{\Delta E} (\hat H - E_\mathrm{min} - \frac{\Delta E}{2})
     .
 ```
 
@@ -73,8 +73,8 @@ We start with two inequalities, see [^abramowitz], equations 22.14.4 and 9.1.62,
 functions of operators:
 
 ```{math}
-    |\phi_n(x)| = |T_n(-\imath x)| i&\leq 1 (x \in [-i, i])
-        \qquad \rightarrow \qquad \|\phi_n(-\imath \hat H_\mathrm{norm}) \psi\| \leq 1 (\|\psi\| = 1)\\
+    |\phi_n(x)| = |T_n(-\imath x)| &\leq 1 (x \in [-i, i])
+        \qquad \rightarrow \qquad \|\phi_n(-\imath \hat H_\mathrm{norm}) \psi\| \leq \|\psi\|\\
     |J_n(x)| &\leq  \frac{|x/2|^n}{n!}
 ```
 
@@ -96,7 +96,7 @@ We do not care about the exact value of the error, just note two properties of t
    there are no individual states for which the series does not converge.
 2. For large enough N, the right-hand side decreases exponentially with increasing N.
 
-In practice, we do not target a specific value of (the upper bound of) the propagation error,
+In practice, we do not target a specific value of the (upper bound of the) propagation error,
 but simply truncate the series as soon as the Bessel function has reached a certain cutoff.
 This cutoff can still be considered a proxy for the order of magnitude of the error,
 but is not a rigorous quantity.
@@ -158,7 +158,7 @@ which is why we use a fixed value of 1e-12 for the cutoff.
 
 So far we have only *claimed* that the Chebychev solver is much faster than ODE solvers,
 so let us back this up with numbers.
-For simplicity, we take the truncated harmonic oscillator example from {doc}`/tutorials/chebychev_solvers`.
+We choose the truncated harmonic oscillator example from {doc}`/tutorials/chebychev_solvers`.
 
 ```{code-cell}
 import math
@@ -175,7 +175,7 @@ equation = wp.expression.SchroedingerEquation(kinetic + potential)
 First, we need to measure the speed.
 A good proxy is the number of times that our Hamiltonian is applied, because this is often the most expensive
 single operation.
-As a first step, we write a custom "counting expression" that just measures how often the solver calls it.
+To count this value, we write a custom "counting expression" that just measures how often the solver calls it.
 
 ```{code-cell}
 class CountingExpression(wp.expression.ExpressionBase):
@@ -198,17 +198,16 @@ Then we only wrap our (truncated) expression and propagate for a common time.
 counting_equation = CountingExpression(equation)
 
 solver_chebychev = wp.solver.ChebychevSolver(counting_equation, math.pi/2, (0, 70))
-solver_rk45 = wp.solver.OdeSolver(counting_equation, math.pi/2)
-solver_rk45_precise = wp.solver.OdeSolver(counting_equation, math.pi/2, rtol=1e-9, atol=1e-9)
-
 solver_chebychev.step(psi0, t=0)
-print(f"Chebychev solver: count={counting_equation.count}, alpha={solver_chebychev.alpha}")
+print(f"Chebychev solver:                      count={counting_equation.count}, alpha={solver_chebychev.alpha:.4}")
 
 counting_equation.count = 0
+solver_rk45 = wp.solver.OdeSolver(counting_equation, math.pi/2)
 solver_rk45.step(psi0, t=0)
-print(f"Runge-Kutta 4/5 solver: count={counting_equation.count}")
+print(f"Runge-Kutta 4/5 solver:                count={counting_equation.count}")
 
 counting_equation.count = 0
+solver_rk45_precise = wp.solver.OdeSolver(counting_equation, math.pi/2, rtol=1e-9, atol=1e-9)
 solver_rk45_precise.step(psi0, t=0)
 print(f"High-precision Runge-Kutta 4/5 solver: count={counting_equation.count}")
 ```
@@ -219,7 +218,7 @@ the Chebychev solver yields a factor of 4.5 in performance.
 If you require the higher precisions that you get for free with the Chebychev solver,
 simple ODE solvers are easily an order of magnitude slower.
 
-[^abramowitz]: M. Abramowitz and I. Stegun "Handbook of Mathematical Functions"
+[^abramowitz]: M. Abramowitz and I. Stegun, "Handbook of Mathematical Functions"
 
 [^ChebychevReal]: H. Tal Ezer and R. Kosloff, J. Chem. Phys. 81:3967 (1986)
                        <https://openscholar.huji.ac.il/sites/default/files/ronniekosloff/files/jcp1.448136.pdf>

@@ -52,7 +52,7 @@ The length of the time step is finally given through the alpha value:
 
 where {math}`\delta E` is the difference between our guessed upper and lower bound of the spectrum
 (the "spectral range" of the Hamiltonian/Liouvillian).
-This value should be larger than 40, otherwise the efficiency goes down.
+The alpha value should be larger than 40, otherwise the efficiency goes down.
 If it is much larger than say 100, you might run into numerical problems.
 
 ```{note}
@@ -65,7 +65,7 @@ Open a ticket or drop me a mail if this is an issue for your application.
 ### Determining the spectrum
 
 Let us come to the tricky part: How do we obtain good bounds for the spectrum of the Hamiltonian?
-As an example, let us set up the simple harmonic oscillator example from {doc}`plotting`.
+As an example, let us set up a simple harmonic oscillator.
 
 ```{code-cell}
 import wavepacket as wp
@@ -90,7 +90,7 @@ For didactic reasons, we will discuss three items in the following:
 
 If the spectrum of the Hamiltonian is inside the interval
 {math}`[E_\mathrm{min}, E_\mathrm{min} + \delta E]`, then the corresponding
-{py:class}`wp.expression.CommutatorLiouvillian` has the spectrum {math}`[-\delta E, \delta E]`,
+{py:class}`wp.expression.CommutatorLiouvillian` has the spectrum inside {math}`[-\delta E, \delta E]`,
 because the coherence terms with the fastest oscillations {math}`\sim \mathrm{e}^{\pm \imath \delta E t}`
 occur between the eigenstates with the largest and smallest eigenvalues, respectively.
 
@@ -100,7 +100,8 @@ can normally only be used for wave functions *or* density operators.
 #### How can I estimate the bounds of a Hamiltonian's spectrum?
 
 First, we suggest not to spend too much effort on the exact spectrum, but take reasonable bounds instead.
-Your time is usually more valuable than the small inefficiency from guessing generous bounds to the spectrum.
+Your time is usually more valuable than the additional computing time
+from guessing generous bounds to the spectrum.
 
 A simple lower bound of the Hamiltonian is given by the smallest value of the potential,
 that is, zero in our harmonic oscillator example.
@@ -123,7 +124,7 @@ print(f"Energy guess = {energy_guess:.4}")
 ```
 
 The initial state must contain the highest-energy eigenstate as a non-negligible component,
-but has no relevance otherwise.
+but has negligible relevance otherwise.
 The factor of 1.2 is an arbitrary safety margin to compensate that the result may not have been converged yet.
 Thus, we arrive at an estimate of the spectrum of about [0, 280].
 For an alpha value of 40 or more, our time step must be at least {math}`2 \cdot 40 / 280 = 2/7`.
