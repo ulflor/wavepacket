@@ -27,7 +27,7 @@ class BasePlot1D(ABC):
     """
 
     def __init__(self, state: State,
-                 potential: OperatorBase = None, hamiltonian: OperatorBase = None):
+                 potential: OperatorBase | None = None, hamiltonian: OperatorBase | None = None):
         # By default, span the total grid range
         assert len(state.grid.dofs) == 1
         dvr_grid = state.grid.dofs[0].dvr_points
@@ -139,7 +139,7 @@ class SimplePlot1D(BasePlot1D):
     """
 
     def __init__(self, state: State,
-                 potential: OperatorBase = None, hamiltonian: OperatorBase = None):
+                 potential: OperatorBase | None = None, hamiltonian: OperatorBase | None = None):
         self.figure, self._axes = plt.subplots()
 
         super().__init__(state, potential, hamiltonian)
@@ -193,8 +193,8 @@ class StackedPlot1D(BasePlot1D):
         The figure that we plot on.
     """
 
-    def __init__(self, num_plots, state: State,
-                 potential: OperatorBase = None, hamiltonian: OperatorBase = None):
+    def __init__(self, num_plots: int, state: State,
+                 potential: OperatorBase | None = None, hamiltonian: OperatorBase | None = None):
         # First, create, layout and expose the figure
         self.figure, self._axes = plt.subplots(num_plots, 1, sharex=True)
         self._index = 0

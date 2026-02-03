@@ -1,5 +1,5 @@
 import numpy as np
-from typing import Iterable, Optional, Tuple
+from typing import Iterable, Tuple
 
 import wavepacket as wp
 import wavepacket.typing as wpt
@@ -8,7 +8,7 @@ from ..operator.operatorbase import OperatorBase
 
 
 def diagonalize(op: OperatorBase,
-                t: Optional[float] = None) -> Iterable[Tuple[float, wpt.ComplexData]]:
+                t: float | None = None) -> Iterable[Tuple[float, wpt.ComplexData]]:
     """
     Calculates the eigenstates and -values of an operator.
 
@@ -28,9 +28,9 @@ def diagonalize(op: OperatorBase,
     op: wp.operator.OperatorBase
         The operator whose eigenstates and -values are calculated.
 
-    t: Optional[float] = None
+    t: float | None = None
         The time at which the operator is evaluated.
-        Not required for time-independent operators.
+        Required only for time-dependent operators.
 
     Yields
     ------

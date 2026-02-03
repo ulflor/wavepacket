@@ -1,5 +1,3 @@
-from typing import Optional
-
 import numpy as np
 
 import wavepacket as wp
@@ -30,7 +28,7 @@ class PlaneWaveFbrOperator(OperatorBase):
         The degree of freedom along which the operator is defined.
     generator : wpt.Generator
         A callable that gives the operator value for each FBR point.
-    cutoff: Optional[float], default None
+    cutoff: float | None, default None
         If set, truncate all operator values whose real value is above the cutoff.
         Default is not to truncate.
 
@@ -41,7 +39,7 @@ class PlaneWaveFbrOperator(OperatorBase):
     """
 
     def __init__(self, grid: Grid, dof_index: int, generator: wpt.Generator,
-                 cutoff: Optional[float] = None):
+                 cutoff: float | None = None):
         if not isinstance(grid.dofs[dof_index], wp.grid.PlaneWaveDof):
             raise wp.InvalidValueError(
                 f"PlaneWaveFbrOperator requires a PlaneWaveDof, but got {grid.dofs[dof_index].__class__}")
@@ -95,7 +93,7 @@ class CartesianKineticEnergy(PlaneWaveFbrOperator):
         Degree of freedom along which the operator acts
     mass : float
         The mass of the particle.
-    cutoff: Optional[float], default=None
+    cutoff: float | None, default=None
         If set, truncate all operator values whose real value is above the cutoff.
         Default is not to truncate.
 
@@ -107,7 +105,7 @@ class CartesianKineticEnergy(PlaneWaveFbrOperator):
     """
 
     def __init__(self, grid: Grid, dof_index: int, mass: float,
-                 cutoff: Optional[float] = None):
+                 cutoff: float | None = None):
         if mass <= 0:
             raise wp.InvalidValueError(f"Particle mass must be positive, but is {mass}")
 
@@ -137,12 +135,13 @@ class FbrOperator1D(OperatorBase):
         Degree of freedom along which the operator acts
     generator : wpt.Generator
         A callable that gives the operator value for each FBR point.
-    cutoff: Optional[float], default None
+    cutoff: float | None, default None
         If set, truncate all operator values whose real value is above the cutoff.
         Default is not to truncate.
     """
 
-    def __init__(self, grid: Grid, dof_index: int, generator: wpt.Generator, cutoff: Optional[float] = None):
+    def __init__(self, grid: Grid, dof_index: int, generator: wpt.Generator,
+                 cutoff: float | None = None):
         dof = grid.dofs[dof_index]
         fbr_values = generator(dof.fbr_points)
 
@@ -195,7 +194,7 @@ class RotationalKineticEnergy(FbrOperator1D):
         Degree of freedom along which the operator acts
     inertia : float
         The moment of inertia of the rotor. Only fixed values are supported by this operator (no vibrational coupling).
-    cutoff: Optional[float], default None
+    cutoff: float | None, default None
         If set, truncate all operator values whose real value is above the cutoff.
         Default is not to truncate.
 
@@ -206,7 +205,8 @@ class RotationalKineticEnergy(FbrOperator1D):
         spherical harmonics expansion.
     """
 
-    def __init__(self, grid: wp.grid.Grid, dof_index: int, inertia: float, cutoff: Optional[float] = None):
+    def __init__(self, grid: wp.grid.Grid, dof_index: int, inertia: float,
+                 cutoff: float | None = None):
         if inertia <= 0:
             raise wp.InvalidValueError(f"Moment of inertia must be positive, but is {inertia}")
 

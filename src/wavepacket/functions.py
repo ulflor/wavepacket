@@ -64,7 +64,7 @@ class SoftRectangularFunction:
         If the half-width or the border region is not positive.
     """
 
-    def __init__(self, t0: float, half_width: float, border: float = None):
+    def __init__(self, t0: float, half_width: float, border: float | None = None):
         if border is None:
             border = half_width / 10
 

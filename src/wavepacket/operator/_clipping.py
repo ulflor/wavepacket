@@ -1,4 +1,4 @@
-from typing import Optional, overload
+from typing import overload
 
 import numpy as np
 
@@ -7,10 +7,10 @@ import wavepacket.typing as wpt
 
 @overload
 def clip_real(data: wpt.ComplexData,
-              lower: Optional[float] = ..., upper: Optional[float] = ...) -> wpt.ComplexData: ...
+              lower: float | None = ..., upper: float | None = ...) -> wpt.ComplexData: ...
 @overload
 def clip_real(data: wpt.RealData,
-              lower: Optional[float] = ..., upper: Optional[float] = ...) -> wpt.RealData: ...
+              lower: float | None = ..., upper: float | None = ...) -> wpt.RealData: ...
 def clip_real(data, lower = None, upper = None):
     """
     Clips only the real part of a potentially complex-valued array.
@@ -22,9 +22,9 @@ def clip_real(data, lower = None, upper = None):
     ----------
     data: wpt.ComplexData
         The data to be clipped
-    lower: Optional[float], default=None
+    lower: float | None, default=None
         The lower bound of the clipping interval. Default ist not to clip from below.
-    upper: Optional[float], default=None
+    upper: float | None, default=None
         The upper bound of the clipping interval. Default is not to clip from above
 
     Returns

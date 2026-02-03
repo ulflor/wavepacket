@@ -1,5 +1,4 @@
 import math
-from typing import Optional
 
 import numpy as np
 import scipy
@@ -42,7 +41,7 @@ class Gaussian(wpt.Generator):
     """
 
     def __init__(self, x: float = 0.0, p: float = 0.0,
-                 rms: Optional[float] = None, fwhm: Optional[float] = None):
+                 rms: float | None = None, fwhm: float | None = None):
         if rms is not None and rms <= 0:
             raise wp.InvalidValueError(f"RMS width of Gaussian is {rms}, but should be positive.")
 

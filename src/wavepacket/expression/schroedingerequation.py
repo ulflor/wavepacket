@@ -1,5 +1,3 @@
-from typing import Optional
-
 import wavepacket as wp
 from .expressionbase import ExpressionBase
 from ..grid import State

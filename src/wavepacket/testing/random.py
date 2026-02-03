@@ -3,7 +3,7 @@ import numpy as np
 import wavepacket as wp
 
 
-def random_state(grid, seed) -> wp.grid.State:
+def random_state(grid: wp.grid.Grid, seed: int) -> wp.grid.State:
     """
     Creates a random wave function.
 
