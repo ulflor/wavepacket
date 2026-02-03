@@ -1,3 +1,5 @@
+from typing import override
+
 import wavepacket as wp
 from .expressionbase import ExpressionBase
 from ..grid import State
@@ -30,9 +32,11 @@ class SchroedingerEquation(ExpressionBase):
         self._hamiltonian = hamiltonian
 
     @property
+    @override
     def time_dependent(self) -> bool:
         return self._hamiltonian.time_dependent
 
+    @override
     def apply(self, psi: State, t: float) -> State:
         if psi.grid != self._hamiltonian.grid:
             raise wp.BadGridError("Input state has wrong grid.")

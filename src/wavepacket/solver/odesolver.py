@@ -1,3 +1,5 @@
+from typing import override
+
 import numpy as np
 from scipy.integrate import solve_ivp
 
@@ -57,6 +59,7 @@ class OdeSolver(SolverBase):
         # The default error tolerance is typically too generous for our use cases. Override
         self._kwargs.setdefault('rtol', 1e-6)
 
+    @override
     def step(self, state: State, t: float) -> State:
         t_span = (t, t + self.dt)
         y0 = state.data.ravel()

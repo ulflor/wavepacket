@@ -1,6 +1,6 @@
 import itertools
 import math
-from typing import Tuple
+from typing import override
 
 import scipy
 
@@ -27,7 +27,7 @@ class ChebychevSolver(SolverBase):
         The Schrödinger equation or Liouvillian that describes the right-hand side of the differential equation.
     dt: float
         The time step that is propagated in one go.
-    spectrum: Tuple[float, float]
+    spectrum: tuple[float, float]
         Lower and upper bound of the spectrum of the Hamiltonian or Liouvillian.
         If the bound is generous, the solver is less efficient. If the spectrum extends beyond the bounds,
         the solution may diverge.
@@ -49,7 +49,7 @@ class ChebychevSolver(SolverBase):
     """
 
     def __init__(self, expression: ExpressionBase, dt: float,
-                 spectrum: Tuple[float, float]) -> None:
+                 spectrum: tuple[float, float]) -> None:
         super().__init__(dt)
 
         if spectrum[1] <= spectrum[0]:
@@ -77,6 +77,7 @@ class ChebychevSolver(SolverBase):
     def order(self) -> int:
         return len(self._coeffs) - 1
 
+    @override
     def step(self, state: State, t: float) -> State:
         # Note that we solve a differential equation of the form
         # dX/dt = L[X]
@@ -122,7 +123,7 @@ class RelaxationSolver(SolverBase):
         The Hamiltonian operator that describes the right-hand side of the differential equation.
     dt: float
         The time step that is propagated in one go.
-    spectrum: Tuple[float, float]
+    spectrum: tuple[float, float]
         Lower and upper bound of the spectrum of the Hamiltonian or Liouvillian.
         If the bound is generous, the solver is less efficient. If the spectrum extends beyond the bounds,
         the solution may diverge.
@@ -137,7 +138,7 @@ class RelaxationSolver(SolverBase):
     """
 
     def __init__(self, hamiltonian: OperatorBase, dt: float,
-                 spectrum: Tuple[float, float]) -> None:
+                 spectrum: tuple[float, float]) -> None:
         super().__init__(dt)
 
         if spectrum[1] <= spectrum[0]:
@@ -165,6 +166,7 @@ class RelaxationSolver(SolverBase):
     def order(self) -> int:
         return len(self._coeffs) - 1
 
+    @override
     def step(self, state: State, t: float) -> State:
         term_minus2 = state
         term_minus1 = -self._apply_normalized(state)

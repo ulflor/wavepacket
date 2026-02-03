@@ -1,5 +1,6 @@
 from abc import ABC, abstractmethod
 from collections.abc import Sequence
+from typing import override
 
 import numpy as np
 
@@ -219,10 +220,12 @@ class OperatorSum(OperatorBase):
         super().__init__(grid)
 
     @property
+    @override
     def time_dependent(self) -> bool:
         td_vals = [op.time_dependent for op in self._ops]
         return any(td_vals)
 
+    @override
     def apply_to_wave_function(self, psi: wpt.ComplexData, t: float) -> wpt.ComplexData:
         result = np.zeros(self.grid.shape, dtype=np.complex128)
         for op in self._ops:
@@ -230,6 +233,7 @@ class OperatorSum(OperatorBase):
 
         return result
 
+    @override
     def apply_from_left(self, rho: wpt.ComplexData, t: float) -> wpt.ComplexData:
         result = np.zeros(self.grid.operator_shape, dtype=np.complex128)
         for op in self._ops:
@@ -237,6 +241,7 @@ class OperatorSum(OperatorBase):
 
         return result
 
+    @override
     def apply_from_right(self, rho: wpt.ComplexData, t: float) -> wpt.ComplexData:
         result = np.zeros(self.grid.operator_shape, dtype=np.complex128)
         for op in self._ops:
@@ -275,22 +280,26 @@ class OperatorProduct(OperatorBase):
         super().__init__(ops[0].grid)
 
     @property
+    @override
     def time_dependent(self) -> bool:
         td_vals = [op.time_dependent for op in self._ops]
         return any(td_vals)
 
+    @override
     def apply_to_wave_function(self, psi: wpt.ComplexData, t: float) -> wpt.ComplexData:
         result = psi
         for op in reversed(self._ops):
             result = op.apply_to_wave_function(result, t)
         return result
 
+    @override
     def apply_from_left(self, rho: wpt.ComplexData, t: float) -> wpt.ComplexData:
         result = rho
         for op in reversed(self._ops):
             result = op.apply_from_left(result, t)
         return result
 
+    @override
     def apply_from_right(self, rho: wpt.ComplexData, t: float) -> wpt.ComplexData:
         result = rho
         for op in self._ops:

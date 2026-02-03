@@ -1,4 +1,4 @@
-from typing import Callable, TypeAlias
+from typing import Callable, TypeAlias, TypeVar
 
 import numpy as np
 import numpy.typing as npt
@@ -13,6 +13,12 @@ ComplexData: TypeAlias = npt.NDArray[np.float64] | npt.NDArray[np.complex128]
 Type for complex-valued input or output data.
 
 Note that all client places should be able to consume real-valued data as well.
+"""
+
+# TODO: Replace by modern generic syntax once we drop support for Python 3.11
+AnyData = TypeVar("AnyData", npt.NDArray[np.float64], npt.NDArray[np.complex128])
+"""
+Generic helper for functions that return real/complex output on real/complex input, respectively.
 """
 
 Generator: TypeAlias = Callable[[RealData], ComplexData]

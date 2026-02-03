@@ -1,5 +1,5 @@
 from abc import ABC, abstractmethod
-from typing import Iterator, Tuple
+from typing import Iterator
 
 import wavepacket as wp
 from ..grid import State
@@ -72,7 +72,7 @@ class SolverBase(ABC):
         raise NotImplementedError()
 
     def propagate(self, state0: State, t0: float,
-                  num_steps: int, include_first: bool = True) -> Iterator[Tuple[float, State]]:
+                  num_steps: int, include_first: bool = True) -> Iterator[tuple[float, State]]:
         """
         Generator function that yields the propagated wave function at multiple time steps.
 

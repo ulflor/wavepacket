@@ -1,4 +1,7 @@
+from typing import override
+
 import numpy as np
+
 import wavepacket as wp
 import wavepacket.typing as wpt
 
@@ -45,20 +48,24 @@ class SphericalHarmonicsDof(DofBase):
         harmonics = np.stack([wp.SphericalHarmonic(L, m)(dvr_points) for L in range(abs(m), lmax + 1)], 1)
         self._fbr2weighted = self.from_dvr(harmonics, 0)
 
+    @override
     def to_fbr(self, data: wpt.ComplexData, index: int, is_ket: bool = True) -> wpt.ComplexData:
         swapped_data = np.swapaxes(data, 0, index)
         result = np.tensordot(self._fbr2weighted, swapped_data, axes=(0, 0))
         return np.swapaxes(result, 0, index)
 
+    @override
     def from_fbr(self, data: wpt.ComplexData, index: int, is_ket: bool = True) -> wpt.ComplexData:
         swapped_data = np.swapaxes(data, 0, index)
         result = np.tensordot(self._fbr2weighted, swapped_data, axes=(1, 0))
         return np.swapaxes(result, 0, index)
 
+    @override
     def to_dvr(self, data: wpt.ComplexData, index: int) -> wpt.ComplexData:
         conversion_factor = broadcast(self._sqrt_weights, data.ndim, index)
         return data / conversion_factor
 
+    @override
     def from_dvr(self, data: wpt.ComplexData, index: int) -> wpt.ComplexData:
         conversion_factor = broadcast(self._sqrt_weights, data.ndim, index)
         return data * conversion_factor

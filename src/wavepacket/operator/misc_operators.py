@@ -1,5 +1,5 @@
 import numpy as np
-from typing import Sequence
+from typing import Sequence, override
 
 import wavepacket as wp
 import wavepacket.typing as wpt
@@ -63,20 +63,24 @@ class Projection(OperatorBase):
         super().__init__(basis[0].grid)
 
     @property
+    @override
     def time_dependent(self) -> bool:
         return False
 
+    @override
     def apply_to_wave_function(self, psi: wpt.ComplexData, t: float) -> wpt.ComplexData:
         tmp = np.reshape(psi, self._grid.size)
         coefficients = np.tensordot(self._bra_ravelled, tmp, axes=(1, 0))
         return np.tensordot(self._ket_nd, coefficients, axes=(0, 0))
 
+    @override
     def apply_from_left(self, rho: wpt.ComplexData, t: float) -> wpt.ComplexData:
         matrix_form = np.reshape(rho, (self._grid.size, self._grid.size))
         coefficients = np.tensordot(self._bra_ravelled, matrix_form, (1, 0))
         ket_projection = np.tensordot(self._ket_nd, coefficients, (0, 0))
         return np.reshape(ket_projection, self._grid.operator_shape)
 
+    @override
     def apply_from_right(self, rho: wpt.ComplexData, t: float) -> wpt.ComplexData:
         matrix_form = np.reshape(rho, (self._grid.size, self._grid.size))
         coefficients = np.tensordot(matrix_form, self._ket_ravelled, (1, 1))
@@ -104,14 +108,18 @@ class Constant(OperatorBase):
         super().__init__(grid)
 
     @property
+    @override
     def time_dependent(self) -> bool:
         return False
 
+    @override
     def apply_to_wave_function(self, psi: wpt.ComplexData, t: float) -> wpt.ComplexData:
         return self._value * psi
 
+    @override
     def apply_from_left(self, rho: wpt.ComplexData, t: float) -> wpt.ComplexData:
         return self._value * rho
 
+    @override
     def apply_from_right(self, rho: wpt.ComplexData, t: float) -> wpt.ComplexData:
         return self._value * rho

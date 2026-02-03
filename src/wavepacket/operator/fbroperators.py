@@ -1,3 +1,5 @@
+from typing import override
+
 import numpy as np
 
 import wavepacket as wp
@@ -62,17 +64,21 @@ class PlaneWaveFbrOperator(OperatorBase):
         super().__init__(grid)
 
     @property
+    @override
     def time_dependent(self) -> bool:
         return False
 
+    @override
     def apply_to_wave_function(self, psi: wpt.ComplexData, t: float) -> wpt.ComplexData:
         psi_fft = np.fft.fft(psi, axis=self._wf_index)
         return np.fft.ifft(psi_fft * self._wf_data, axis=self._wf_index)
 
+    @override
     def apply_from_left(self, rho: wpt.ComplexData, t: float) -> wpt.ComplexData:
         rho_fft = np.fft.fft(rho, axis=self._ket_index)
         return np.fft.ifft(rho_fft * self._ket_data, axis=self._ket_index)
 
+    @override
     def apply_from_right(self, rho: wpt.ComplexData, t: float) -> wpt.ComplexData:
         rho_fft = np.fft.ifft(rho, axis=self._bra_index)
         return np.fft.fft(rho_fft * self._bra_data, axis=self._bra_index)
@@ -159,19 +165,23 @@ class FbrOperator1D(OperatorBase):
         super().__init__(grid)
 
     @property
+    @override
     def time_dependent(self) -> bool:
         return False
 
+    @override
     def apply_to_wave_function(self, psi: wpt.ComplexData, t: float) -> wpt.ComplexData:
         swapped_psi = np.swapaxes(psi, 0, self._ket_index)
         result = np.tensordot(self._matrix, swapped_psi, (1, 0))
         return np.swapaxes(result, 0, self._ket_index)
 
+    @override
     def apply_from_left(self, rho: wpt.ComplexData, t: float) -> wpt.ComplexData:
         swapped_rho = np.swapaxes(rho, 0, self._ket_index)
         result = np.tensordot(self._matrix, swapped_rho, (1, 0))
         return np.swapaxes(result, 0, self._ket_index)
 
+    @override
     def apply_from_right(self, rho: wpt.ComplexData, t: float) -> wpt.ComplexData:
         swapped_rho = np.swapaxes(rho, 0, self._bra_index)
         result = np.tensordot(self._matrix, swapped_rho, (0, 0))

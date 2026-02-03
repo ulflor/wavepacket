@@ -1,4 +1,5 @@
 from abc import abstractmethod, ABC
+from typing import override
 
 import matplotlib.pyplot as plt
 import numpy as np
@@ -145,6 +146,7 @@ class SimplePlot1D(BasePlot1D):
 
         super().__init__(state, potential, hamiltonian)
 
+    @override
     def plot(self, state: State, t: float) -> plt.Axes:
         super()._plot(self._axes, state, t)
 
@@ -209,6 +211,7 @@ class StackedPlot1D(BasePlot1D):
 
         super().__init__(state, potential, hamiltonian)
 
+    @override
     def plot(self, state: State, t: float) -> plt.Axes:
         axes: plt.Axes = self._axes.flat[self._index]
         self._index = min(self._index + 1, self._axes.size)
