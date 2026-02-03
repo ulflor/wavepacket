@@ -3,6 +3,7 @@ from typing import Final
 
 import wavepacket as wp
 import wavepacket.typing as wpt
+from ._utils import clone_readonly
 
 
 class DofBase(ABC):
@@ -32,11 +33,14 @@ class DofBase(ABC):
 
     Attributes
     ----------
-    dvr_points
+    dvr_points: wpt.RealData, readonly
         Numpy array that gives the grid points in real space as supplied in the constructor.
-    fbr_points
+        This array is read-only and must never be modified.
+    fbr_points: wpt.RealData, readonly
         Numpy array that gives the grid points of the underlying basis as supplied in the constructor.
-    size
+        This array is read-only and must never be modified.
+    size: int, readonly
+        The size of the grid (number of elements of `dvr_points`/`fbr_points`)
 
     Raises
     ------
@@ -60,15 +64,9 @@ class DofBase(ABC):
         if dvr_points.size != fbr_points.size:
             raise wp.InvalidValueError("The DVR and FBR grids must have the same size.")
 
-        self.dvr_points: Final[wpt.RealData] = dvr_points
-        self.fbr_points: Final[wpt.RealData] = fbr_points
-
-    @property
-    def size(self) -> int:
-        """
-        The size of the grid (number of elements of `dvr_points`/`fbr_points`)
-        """
-        return self.dvr_points.size
+        self.dvr_points: Final[wpt.RealData] = clone_readonly(dvr_points)
+        self.fbr_points: Final[wpt.RealData] = clone_readonly(fbr_points)
+        self.size: Final[int] = self.dvr_points.size
 
     @abstractmethod
     def to_fbr(self, data: wpt.ComplexData, index: int, is_ket: bool = True) -> wpt.ComplexData:

@@ -21,3 +21,7 @@ def broadcast(data: wpt.AnyData, ndim: int, index: int) -> wpt.AnyData:
     return np.reshape(data, shape)
 
 
+def clone_readonly(data: wpt.AnyData) -> wpt.AnyData:
+    clone = data.copy()
+    clone.setflags(write=False)
+    return clone
