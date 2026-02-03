@@ -4,9 +4,8 @@ from typing import override
 import matplotlib.pyplot as plt
 import numpy as np
 
-from ..builder import zero_wave_function
-from ..grid import State, dvr_density
-from ..operator import OperatorBase, expectation_value
+import wavepacket as wp
+from wavepacket.operator import OperatorBase
 
 
 class BasePlot1D(ABC):
@@ -27,7 +26,7 @@ class BasePlot1D(ABC):
         The factor that converts from the density to energy units. Constant 1 if no potential is plotted.
     """
 
-    def __init__(self, state: State,
+    def __init__(self, state: wp.grid.State,
                  potential: OperatorBase | None = None, hamiltonian: OperatorBase | None = None) -> None:
         # By default, span the total grid range
         assert len(state.grid.dofs) == 1
@@ -35,7 +34,7 @@ class BasePlot1D(ABC):
         xrange = dvr_grid.max() - dvr_grid.min()
         self.xlim = (dvr_grid.min() - 1e-2 * xrange, dvr_grid.max() + 1e-2 * xrange)
 
-        max_density = dvr_density(state).max()
+        max_density = wp.grid.dvr_density(state).max()
         if potential is None:
             # We only plot the density, and ignore whatever energy the states have.
             # Set the y ranges accordingly
@@ -52,16 +51,16 @@ class BasePlot1D(ABC):
             # We choose the y-range such that
             # a) the whole potential fits into the plot
             # b) the density also fits into the plot and is at least half as large as the plot
-            potential_values = potential.apply(zero_wave_function(state.grid) + 1, 0).data
+            potential_values = potential.apply(wp.builder.zero_wave_function(state.grid) + 1, 0).data
             min_potential = potential_values.min()
             max_potential = potential_values.max()
-            energy = abs(expectation_value(self._hamiltonian, state))
+            energy = abs(wp.operator.expectation_value(self._hamiltonian, state))
 
             self.ylim = (min_potential, max(max_potential, energy + 0.5 * (max_potential - min_potential)))
             self.conversion_factor = (self.ylim[1] - energy) / max_density
 
     @abstractmethod
-    def plot(self, state: State, t: float) -> plt.Axes:
+    def plot(self, state: wp.grid.State, t: float) -> plt.Axes:
         """
         Plots a state, possibly together with the potential.
 
@@ -87,7 +86,7 @@ class BasePlot1D(ABC):
         """
         raise NotImplementedError()
 
-    def _plot(self, axes: plt.Axes, state: State, t: float) -> None:
+    def _plot(self, axes: plt.Axes, state: wp.grid.State, t: float) -> None:
         """
         Internal plotting function that actually draws the density on a given Axes.
         """
@@ -99,11 +98,11 @@ class BasePlot1D(ABC):
 
         if self._potential is None:
             # Just plot the wave function
-            axes.plot(dvr_grid, dvr_density(state), 'b-')
+            axes.plot(dvr_grid, wp.grid.dvr_density(state), 'b-')
         else:
-            potential_values = self._potential.apply(zero_wave_function(state.grid) + 1, 0).data
-            energy = abs(expectation_value(self._hamiltonian, state, t) * np.ones(dvr_grid.shape))
-            density = dvr_density(state)
+            potential_values = self._potential.apply(wp.builder.zero_wave_function(state.grid) + 1, 0).data
+            energy = abs(wp.operator.expectation_value(self._hamiltonian, state, t) * np.ones(dvr_grid.shape))
+            density = wp.grid.dvr_density(state)
 
             axes.plot(dvr_grid, potential_values, 'b-')
             axes.plot(dvr_grid, energy, 'r-')
@@ -140,14 +139,14 @@ class SimplePlot1D(BasePlot1D):
         The figure that we plot on.
     """
 
-    def __init__(self, state: State,
+    def __init__(self, state: wp.grid.State,
                  potential: OperatorBase | None = None, hamiltonian: OperatorBase | None = None) -> None:
         self.figure, self._axes = plt.subplots()
 
         super().__init__(state, potential, hamiltonian)
 
     @override
-    def plot(self, state: State, t: float) -> plt.Axes:
+    def plot(self, state: wp.grid.State, t: float) -> plt.Axes:
         super()._plot(self._axes, state, t)
 
         self._axes.set_xlabel("x [a.u.]")
@@ -196,7 +195,7 @@ class StackedPlot1D(BasePlot1D):
         The figure that we plot on.
     """
 
-    def __init__(self, num_plots: int, state: State,
+    def __init__(self, num_plots: int, state: wp.grid.State,
                  potential: OperatorBase | None = None, hamiltonian: OperatorBase | None = None) -> None:
         # First, create, layout and expose the figure
         self.figure, self._axes = plt.subplots(num_plots, 1, sharex=True)
@@ -212,7 +211,7 @@ class StackedPlot1D(BasePlot1D):
         super().__init__(state, potential, hamiltonian)
 
     @override
-    def plot(self, state: State, t: float) -> plt.Axes:
+    def plot(self, state: wp.grid.State, t: float) -> plt.Axes:
         axes: plt.Axes = self._axes.flat[self._index]
         self._index = min(self._index + 1, self._axes.size)
 

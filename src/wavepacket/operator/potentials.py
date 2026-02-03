@@ -5,7 +5,6 @@ import wavepacket.typing as wpt
 
 from .operatorbase import OperatorBase
 from ._clipping import clip_real
-from ..grid import Grid
 
 
 class Potential1D(OperatorBase):
@@ -42,7 +41,7 @@ class Potential1D(OperatorBase):
     >>> harmonicPotential = wp.operator.Potential1D(grid, 1, lambda x: x**2)
     """
 
-    def __init__(self, grid: Grid, dof_index: int, generator: wpt.Generator,
+    def __init__(self, grid: wp.grid.Grid, dof_index: int, generator: wpt.Generator,
                  cutoff: float = None) -> None:
         data = generator(grid.dofs[dof_index].dvr_points).copy()
 

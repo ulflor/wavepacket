@@ -2,10 +2,9 @@ import numpy as np
 
 import wavepacket as wp
 from .operatorbase import OperatorBase
-from ..grid import State
 
 
-def expectation_value(op: OperatorBase, state: State, t: float | None = None) -> complex:
+def expectation_value(op: OperatorBase, state: wp.grid.State, t: float | None = None) -> complex:
     """
     Calculates the expectation value of an operator for a given state.
 

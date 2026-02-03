@@ -1,6 +1,7 @@
 from typing import override
 
 import wavepacket.typing as wpt
+
 from ..grid import DofBase
 
 

@@ -1,10 +1,9 @@
 import numpy as np
 
 import wavepacket as wp
-from ..grid import State
 
 
-def pure_density(psi: State) -> State:
+def pure_density(psi: wp.grid.State) -> wp.grid.State:
     """
     Given an input wave function, create the corresponding pure density operator.
 
@@ -33,7 +32,7 @@ def pure_density(psi: State) -> State:
     return direct_product(psi, psi)
 
 
-def direct_product(ket: State, bra: State) -> State:
+def direct_product(ket: wp.grid.State, bra: wp.grid.State) -> wp.grid.State:
     """
     Returns the direct product of wave functions as a density operator.
 
@@ -70,7 +69,7 @@ def direct_product(ket: State, bra: State) -> State:
 
     rho_matrix = np.outer(ket.data, np.conj(bra.data))
 
-    return State(ket.grid, np.reshape(rho_matrix, ket.grid.operator_shape))
+    return wp.grid.State(ket.grid, np.reshape(rho_matrix, ket.grid.operator_shape))
 
 
 def unit_density(grid: wp.grid.Grid) -> wp.grid.State:

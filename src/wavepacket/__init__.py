@@ -10,14 +10,17 @@ __all__ = ['__version__', 'log', 'BadFunctionCall', 'BadGridError', 'BadStateErr
            'Gaussian', 'PlaneWave', 'SphericalHarmonic',
            'builder', 'expression', 'grid', 'operator', 'solver', 'testing', 'typing']
 
-from . import builder
-from . import expression
-from . import grid
-from . import operator
-from . import plot
-from . import solver
-from . import testing
+# order matters, because subpackages depend on each other at times.
+# Though that should only matter for typing, so we could choose an alphabetic order again
+# once we drop support for Python < 3.13 where type annotation are stored as strings, not types.
 from . import typing
+from . import grid
+from . import builder
+from . import operator
+from . import expression
+from . import solver
+from . import plot
+from . import testing
 
 from .exceptions import (BadFunctionCall, BadGridError, BadStateError, ExecutionError,
                          InvalidValueError)

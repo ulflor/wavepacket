@@ -2,7 +2,6 @@ from abc import ABC, abstractmethod
 from typing import Final, Iterator
 
 import wavepacket as wp
-from ..grid import State
 
 
 class SolverBase(ABC):
@@ -41,7 +40,7 @@ class SolverBase(ABC):
         self.dt: Final[float] = dt
 
     @abstractmethod
-    def step(self, state: State, t: float) -> State:
+    def step(self, state: wp.grid.State, t: float) -> wp.grid.State:
         """
         Evolves the given state for one elementary time step.
 
@@ -64,8 +63,8 @@ class SolverBase(ABC):
         """
         raise NotImplementedError()
 
-    def propagate(self, state0: State, t0: float,
-                  num_steps: int, include_first: bool = True) -> Iterator[tuple[float, State]]:
+    def propagate(self, state0: wp.grid.State, t0: float, num_steps: int,
+                  include_first: bool = True) -> Iterator[tuple[float, wp.grid.State]]:
         """
         Generator function that yields the propagated wave function at multiple time steps.
 

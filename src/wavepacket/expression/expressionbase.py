@@ -4,7 +4,6 @@ from typing import Final, Iterable, override
 import numpy as np
 
 import wavepacket as wp
-from ..grid import State
 
 
 class ExpressionBase(ABC):
@@ -45,7 +44,7 @@ class ExpressionBase(ABC):
         return ExpressionSum([self, other])
 
     @abstractmethod
-    def apply(self, state: State, t: float) -> State:
+    def apply(self, state: wp.grid.State, t: float) -> wp.grid.State:
         """
         Applies the expression to the input state and returns the result.
 
@@ -99,7 +98,7 @@ class ExpressionSum(ExpressionBase):
         super().__init__(any(td_vals))
 
     @override
-    def apply(self, state: State, t: float) -> State:
+    def apply(self, state: wp.grid.State, t: float) -> wp.grid.State:
         result = wp.grid.State(state.grid, np.zeros(state.data.shape))
         for expression in self._expressions:
             result = result + expression.apply(state, t)

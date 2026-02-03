@@ -4,8 +4,6 @@ from typing import override
 import wavepacket as wp
 
 from .expressionbase import ExpressionBase
-from ..grid import State
-from ..operator import OperatorBase
 
 
 class CommutatorLiouvillian(ExpressionBase):
@@ -29,20 +27,20 @@ class CommutatorLiouvillian(ExpressionBase):
     the imaginary number.
     """
 
-    def __init__(self, op: OperatorBase) -> None:
+    def __init__(self, op: wp.operator.OperatorBase) -> None:
         self._op = op
         super().__init__(op.time_dependent)
 
     @override
-    def apply(self, rho: State, t: float) -> State:
+    def apply(self, rho: wp.grid.State, t: float) -> wp.grid.State:
         if rho.grid != self._op.grid:
             raise wp.BadGridError("Input state is defined on the wrong grid.")
 
         if not rho.is_density_operator():
             raise wp.BadStateError("CommutatorLiouvillian requires a density operator.")
 
-        return State(rho.grid,
-                     -1j * (self._op.apply_from_left(rho.data, t) - self._op.apply_from_right(rho.data, t)))
+        return wp.grid.State(rho.grid,
+                             -1j * (self._op.apply_from_left(rho.data, t) - self._op.apply_from_right(rho.data, t)))
 
 
 class OneSidedLiouvillian(ExpressionBase):
@@ -67,14 +65,14 @@ class OneSidedLiouvillian(ExpressionBase):
         LEFT = 0
         RIGHT = 1
 
-    def __init__(self, op: OperatorBase, side: Side = Side.LEFT) -> None:
+    def __init__(self, op: wp.operator.OperatorBase, side: Side = Side.LEFT) -> None:
         self._op = op
         self._side = side
 
         super().__init__(op.time_dependent)
 
     @override
-    def apply(self, rho: State, t: float) -> State:
+    def apply(self, rho: wp.grid.State, t: float) -> wp.grid.State:
         if rho.grid != self._op.grid:
             raise wp.BadGridError("Input state is defined on the wrong grid.")
 
@@ -83,7 +81,7 @@ class OneSidedLiouvillian(ExpressionBase):
 
         if self._side == OneSidedLiouvillian.Side.LEFT:
             result = self._op.apply_from_left(rho.data, t)
-            return State(rho.grid, result)
+            return wp.grid.State(rho.grid, result)
         else:
             result = self._op.apply_from_right(rho.data, t)
-            return State(rho.grid, result)
+            return wp.grid.State(rho.grid, result)

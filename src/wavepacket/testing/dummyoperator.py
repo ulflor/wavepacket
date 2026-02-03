@@ -2,7 +2,7 @@ from typing import override
 
 import wavepacket as wp
 import wavepacket.typing as wpt
-from ..grid import Grid
+
 from ..operator import OperatorBase
 
 
@@ -14,7 +14,7 @@ class DummyOperator(OperatorBase):
     as far as actually doing something.
     """
 
-    def __init__(self, grid: Grid) -> None:
+    def __init__(self, grid: wp.grid.Grid) -> None:
         super().__init__(grid, False)
 
     @override

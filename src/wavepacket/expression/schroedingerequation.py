@@ -2,8 +2,6 @@ from typing import override
 
 import wavepacket as wp
 from .expressionbase import ExpressionBase
-from ..grid import State
-from ..operator import OperatorBase
 
 
 class SchroedingerEquation(ExpressionBase):
@@ -28,17 +26,17 @@ class SchroedingerEquation(ExpressionBase):
     into an expression so that solvers can work with it.
     """
 
-    def __init__(self, hamiltonian: OperatorBase) -> None:
+    def __init__(self, hamiltonian: wp.operator.OperatorBase) -> None:
         self._hamiltonian = hamiltonian
 
         super().__init__(hamiltonian.time_dependent)
 
     @override
-    def apply(self, psi: State, t: float) -> State:
+    def apply(self, psi: wp.grid.State, t: float) -> wp.grid.State:
         if psi.grid != self._hamiltonian.grid:
             raise wp.BadGridError("Input state has wrong grid.")
 
         if not psi.is_wave_function():
             raise wp.BadStateError("SchroedingerEquation requires a wave function.")
 
-        return State(psi.grid, -1j * self._hamiltonian.apply_to_wave_function(psi.data, t))
+        return wp.grid.State(psi.grid, -1j * self._hamiltonian.apply_to_wave_function(psi.data, t))

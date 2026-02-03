@@ -6,17 +6,15 @@ from scipy.integrate import solve_ivp
 import wavepacket as wp
 import wavepacket.typing as wpt
 from .solverbase import SolverBase
-from ..grid import Grid, State
-from ..expression import ExpressionBase
 
 
 def _inner_solver(t: float, y: wpt.ComplexData,
-                  eq: ExpressionBase, grid: Grid) -> wpt.ComplexData:
+                  eq: wp.expression.ExpressionBase, grid: wp.grid.Grid) -> wpt.ComplexData:
     # 1. Reconstruct a state from the data array y
     if len(y) == grid.size:
-        state = State(grid, np.reshape(y, grid.shape))
+        state = wp.grid.State(grid, np.reshape(y, grid.shape))
     else:
-        state = State(grid, np.reshape(y, grid.operator_shape))
+        state = wp.grid.State(grid, np.reshape(y, grid.operator_shape))
 
     # 2. Insert into the equation expression
     dot_state = eq.apply(state, t)
@@ -50,7 +48,7 @@ class OdeSolver(SolverBase):
     .. [1] https://sourceforge.net/p/wavepacket/cpp/blog/2021/04/convergence-2
     """
 
-    def __init__(self, expr: ExpressionBase, dt: float, **kwargs) -> None:
+    def __init__(self, expr: wp.expression.ExpressionBase, dt: float, **kwargs) -> None:
         super().__init__(dt)
 
         self._expression = expr
@@ -60,7 +58,7 @@ class OdeSolver(SolverBase):
         self._kwargs.setdefault('rtol', 1e-6)
 
     @override
-    def step(self, state: State, t: float) -> State:
+    def step(self, state: wp.grid.State, t: float) -> wp.grid.State:
         t_span = (t, t + self.dt)
         y0 = state.data.ravel()
         args = (self._expression, state.grid)
@@ -70,4 +68,4 @@ class OdeSolver(SolverBase):
             raise wp.ExecutionError("Bad return value from integrating"
                                     f"Status: {solution.status} != 0; Message: {solution.msg}")
 
-        return State(state.grid, np.reshape(solution.y, state.data.shape))
+        return wp.grid.State(state.grid, np.reshape(solution.y, state.data.shape))

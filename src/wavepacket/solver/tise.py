@@ -4,10 +4,8 @@ from typing import Iterator
 import wavepacket as wp
 import wavepacket.typing as wpt
 
-from ..operator.operatorbase import OperatorBase
 
-
-def diagonalize(op: OperatorBase,
+def diagonalize(op: wp.operator.OperatorBase,
                 t: float | None = None) -> Iterator[tuple[float, wpt.ComplexData]]:
     """
     Calculates the eigenstates and -values of an operator.

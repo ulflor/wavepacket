@@ -6,7 +6,6 @@ import numpy as np
 
 import wavepacket as wp
 import wavepacket.typing as wpt
-from ..grid import Grid, State
 
 
 class OperatorBase(ABC):
@@ -33,11 +32,11 @@ class OperatorBase(ABC):
         If the operator is time-dependent or not. Some functionality may not work for time-dependent operators.
     """
 
-    def __init__(self, grid: Grid, time_dependent: bool) -> None:
-        self.grid: Final[Grid] = grid
+    def __init__(self, grid: wp.grid.Grid, time_dependent: bool) -> None:
+        self.grid: Final[wp.grid.Grid] = grid
         self.time_dependent: Final[bool] = time_dependent
 
-    def apply(self, state: State, t: float) -> State:
+    def apply(self, state: wp.grid.State, t: float) -> wp.grid.State:
         """
         Applies the operator onto a wave function or a density operator from the left.
 
@@ -70,9 +69,9 @@ class OperatorBase(ABC):
             raise wp.BadGridError("Grid of state does not match grid of operator.")
 
         if state.is_wave_function():
-            return State(state.grid, self.apply_to_wave_function(state.data, t))
+            return wp.grid.State(state.grid, self.apply_to_wave_function(state.data, t))
         elif state.is_density_operator():
-            return State(state.grid, self.apply_from_left(state.data, t))
+            return wp.grid.State(state.grid, self.apply_from_left(state.data, t))
         else:
             raise wp.BadStateError("Cannot apply the operator to an invalid state.")
 

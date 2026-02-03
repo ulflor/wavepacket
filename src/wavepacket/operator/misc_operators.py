@@ -5,7 +5,6 @@ import wavepacket as wp
 import wavepacket.typing as wpt
 
 from .operatorbase import OperatorBase
-from ..grid import State, trace, orthonormalize
 
 
 class Projection(OperatorBase):
@@ -40,7 +39,7 @@ class Projection(OperatorBase):
     wavepacket.grid.population: if you only want to calculate the population of some states.
     """
 
-    def __init__(self, basis: State | Sequence[State]) -> None:
+    def __init__(self, basis: wp.grid.State | Sequence[wp.grid.State]) -> None:
         if isinstance(basis, wp.grid.State):
             basis = [basis]
 
@@ -51,10 +50,10 @@ class Projection(OperatorBase):
             if not state.is_wave_function():
                 raise wp.BadStateError("Can only project onto wave functions.")
 
-            if trace(state) == 0:
+            if wp.grid.trace(state) == 0:
                 raise wp.BadStateError("Basis functions must not have norm zero.")
 
-        orthonormal_basis = orthonormalize(basis)
+        orthonormal_basis = wp.grid.orthonormalize(basis)
 
         self._ket_nd = np.stack([s.data for s in orthonormal_basis])
         self._bra_nd = np.conj(self._ket_nd)

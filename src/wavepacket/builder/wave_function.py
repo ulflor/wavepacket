@@ -5,12 +5,10 @@ import numpy as np
 import wavepacket as wp
 import wavepacket.typing as wpt
 
-from ..grid import Grid, State
 
-
-def product_wave_function(grid: Grid,
+def product_wave_function(grid: wp.grid.Grid,
                           generators: wpt.Generator | Sequence[wpt.Generator],
-                          normalize: bool = True) -> State:
+                          normalize: bool = True) -> wp.grid.State:
     """
     Builds a product wave function from a set of one-dimensional wave functions.
 
@@ -55,7 +53,7 @@ def product_wave_function(grid: Grid,
 
         result_data *= grid.broadcast(array, dof_index)
 
-    result = State(grid, result_data)
+    result = wp.grid.State(grid, result_data)
     norm = np.sqrt(wp.grid.trace(result))
     if normalize and norm > 0:
         return result / norm
@@ -109,7 +107,7 @@ def random_wave_function(grid: wp.grid.Grid,
     return wp.grid.State(grid, data)
 
 
-def zero_wave_function(grid: Grid) -> State:
+def zero_wave_function(grid: wp.grid.Grid) -> wp.grid.State:
     """
     Returns a wave function whose coefficients are constant zero.
 

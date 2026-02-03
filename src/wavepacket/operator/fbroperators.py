@@ -6,7 +6,6 @@ import wavepacket as wp
 import wavepacket.typing as wpt
 from .operatorbase import OperatorBase
 from ._clipping import clip_real
-from ..grid import Grid
 
 
 class PlaneWaveFbrOperator(OperatorBase):
@@ -40,7 +39,7 @@ class PlaneWaveFbrOperator(OperatorBase):
         If the supplied degree of freedom is not a plane wave expansion.
     """
 
-    def __init__(self, grid: Grid, dof_index: int, generator: wpt.Generator,
+    def __init__(self, grid: wp.grid.Grid, dof_index: int, generator: wpt.Generator,
                  cutoff: float | None = None) -> None:
         if not isinstance(grid.dofs[dof_index], wp.grid.PlaneWaveDof):
             raise wp.InvalidValueError(
@@ -110,7 +109,7 @@ class CartesianKineticEnergy(PlaneWaveFbrOperator):
         plane wave expansion.
     """
 
-    def __init__(self, grid: Grid, dof_index: int, mass: float,
+    def __init__(self, grid: wp.grid.Grid, dof_index: int, mass: float,
                  cutoff: float | None = None) -> None:
         if mass <= 0:
             raise wp.InvalidValueError(f"Particle mass must be positive, but is {mass}")
@@ -148,7 +147,7 @@ class FbrOperator1D(OperatorBase):
         Default is not to truncate.
     """
 
-    def __init__(self, grid: Grid, dof_index: int, generator: wpt.Generator,
+    def __init__(self, grid: wp.grid.Grid, dof_index: int, generator: wpt.Generator,
                  cutoff: float | None = None) -> None:
         dof = grid.dofs[dof_index]
         fbr_values = generator(dof.fbr_points)

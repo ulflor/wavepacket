@@ -6,9 +6,6 @@ import scipy
 
 import wavepacket as wp
 from .solverbase import SolverBase
-from ..grid import State
-from ..expression import ExpressionBase
-from ..operator import OperatorBase
 
 
 class ChebychevSolver(SolverBase):
@@ -48,8 +45,8 @@ class ChebychevSolver(SolverBase):
     to be consistent with these references.
     """
 
-    def __init__(self, expression: ExpressionBase, dt: float,
-                 spectrum: tuple[float, float]) -> None:
+    def __init__(self, expression: wp.expression.ExpressionBase,
+                 dt: float, spectrum: tuple[float, float]) -> None:
         super().__init__(dt)
 
         if spectrum[1] <= spectrum[0]:
@@ -76,7 +73,7 @@ class ChebychevSolver(SolverBase):
         self.order: Final[int] = len(self._coeffs) - 1
 
     @override
-    def step(self, state: State, t: float) -> State:
+    def step(self, state: wp.grid.State, t: float) -> wp.grid.State:
         # Note that we solve a differential equation of the form
         # dX/dt = L[X]
         # with X the density operator or wave function, L[] some linear operator ("expression").
@@ -135,7 +132,7 @@ class RelaxationSolver(SolverBase):
         The order of the expansion.
     """
 
-    def __init__(self, hamiltonian: OperatorBase, dt: float,
+    def __init__(self, hamiltonian: wp.operator.OperatorBase, dt: float,
                  spectrum: tuple[float, float]) -> None:
         super().__init__(dt)
 
@@ -163,7 +160,7 @@ class RelaxationSolver(SolverBase):
         self.order: Final[int] = len(self._coeffs) - 1
 
     @override
-    def step(self, state: State, t: float) -> State:
+    def step(self, state: wp.grid.State, t: float) -> wp.grid.State:
         term_minus2 = state
         term_minus1 = -self._apply_normalized(state)
 
