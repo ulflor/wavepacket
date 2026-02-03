@@ -107,6 +107,6 @@ def test_non_orthogonal_states(grid_1d):
 
     projection1 = wp.operator.Projection(basis)
     projection2 = wp.operator.Projection(orthogonal_basis)
-    input = wp.testing.random_state(grid_1d, 10)
+    input_state = wp.testing.random_state(grid_1d, 10)
 
-    assert_close(projection1.apply(input, 0), projection2.apply(input, 0), 1e-12)
+    assert_close(projection1.apply(input_state, 0), projection2.apply(input_state, 0), 1e-12)

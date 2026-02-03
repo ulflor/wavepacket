@@ -39,7 +39,7 @@ class PlaneWaveFbrOperator(OperatorBase):
     """
 
     def __init__(self, grid: Grid, dof_index: int, generator: wpt.Generator,
-                 cutoff: float | None = None):
+                 cutoff: float | None = None) -> None:
         if not isinstance(grid.dofs[dof_index], wp.grid.PlaneWaveDof):
             raise wp.InvalidValueError(
                 f"PlaneWaveFbrOperator requires a PlaneWaveDof, but got {grid.dofs[dof_index].__class__}")
@@ -105,7 +105,7 @@ class CartesianKineticEnergy(PlaneWaveFbrOperator):
     """
 
     def __init__(self, grid: Grid, dof_index: int, mass: float,
-                 cutoff: float | None = None):
+                 cutoff: float | None = None) -> None:
         if mass <= 0:
             raise wp.InvalidValueError(f"Particle mass must be positive, but is {mass}")
 
@@ -141,7 +141,7 @@ class FbrOperator1D(OperatorBase):
     """
 
     def __init__(self, grid: Grid, dof_index: int, generator: wpt.Generator,
-                 cutoff: float | None = None):
+                 cutoff: float | None = None) -> None:
         dof = grid.dofs[dof_index]
         fbr_values = generator(dof.fbr_points)
 
@@ -206,7 +206,7 @@ class RotationalKineticEnergy(FbrOperator1D):
     """
 
     def __init__(self, grid: wp.grid.Grid, dof_index: int, inertia: float,
-                 cutoff: float | None = None):
+                 cutoff: float | None = None) -> None:
         if inertia <= 0:
             raise wp.InvalidValueError(f"Moment of inertia must be positive, but is {inertia}")
 

@@ -1,7 +1,7 @@
+from collections.abc import Sequence
 import math
 
 import numpy as np
-from typing import Sequence
 
 import wavepacket as wp
 import wavepacket.typing as wpt

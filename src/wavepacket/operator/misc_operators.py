@@ -40,7 +40,7 @@ class Projection(OperatorBase):
     wavepacket.grid.population: if you only want to calculate the population of some states.
     """
 
-    def __init__(self, basis: State | Sequence[State]):
+    def __init__(self, basis: State | Sequence[State]) -> None:
         if isinstance(basis, wp.grid.State):
             basis = [basis]
 
@@ -99,7 +99,7 @@ class Constant(OperatorBase):
         The value that this operator wraps.
     """
 
-    def __init__(self, grid: wp.grid.Grid, value: complex):
+    def __init__(self, grid: wp.grid.Grid, value: complex) -> None:
         self._value = value
         super().__init__(grid)
 

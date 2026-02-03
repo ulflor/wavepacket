@@ -28,7 +28,7 @@ class CommutatorLiouvillian(ExpressionBase):
     the imaginary number.
     """
 
-    def __init__(self, op: OperatorBase):
+    def __init__(self, op: OperatorBase) -> None:
         self._op = op
 
     @property
@@ -68,7 +68,7 @@ class OneSidedLiouvillian(ExpressionBase):
         LEFT = 0
         RIGHT = 1
 
-    def __init__(self, op: OperatorBase, side: Side = Side.LEFT):
+    def __init__(self, op: OperatorBase, side: Side = Side.LEFT) -> None:
         self._op = op
         self._side = side
 

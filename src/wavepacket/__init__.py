@@ -19,7 +19,6 @@ from . import solver
 from . import testing
 from . import typing
 
-
 from .exceptions import (BadFunctionCall, BadGridError, BadStateError, ExecutionError,
                          InvalidValueError)
 from .functions import SinSquare, SoftRectangularFunction

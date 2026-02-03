@@ -18,7 +18,7 @@ class PlaneWaveDof(DofBase):
     In the FBR, derivatives become simple multiplications wih the wave vectors, so
     this grid allows a simple representation of kinetic energy operators.
 
-    The transformation between DVR and FBR uses a FFT, so the performance is ok, even
+    The transformation between DVR and FBR uses an FFT, so the performance is ok, even
     though you might need more grid points than with more suitable expansions.
 
     Be aware that this degree of freedom implicitly uses periodic boundary conditions
@@ -46,7 +46,7 @@ class PlaneWaveDof(DofBase):
     .. [1] https://sourceforge.net/p/wavepacket/cpp/blog/2020/11/convergence-1-equally-space-grids
     """
 
-    def __init__(self, xmin: float, xmax: float, n: int):
+    def __init__(self, xmin: float, xmax: float, n: int) -> None:
         if xmin > xmax:
             raise wp.InvalidValueError("Range should be positive")
 

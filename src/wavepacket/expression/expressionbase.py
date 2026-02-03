@@ -1,5 +1,5 @@
 from abc import ABC, abstractmethod
-from typing import Self, Sequence
+from typing import Self, Iterable
 
 import numpy as np
 
@@ -30,7 +30,7 @@ class ExpressionBase(ABC):
     is on the left-hand side of the equation.
     """
 
-    def __add__(self, other: Self):
+    def __add__(self, other: Self) -> Self:
         return ExpressionSum([self, other])
 
     @property
@@ -80,7 +80,7 @@ class ExpressionSum(ExpressionBase):
 
     Parameters
     ----------
-    expressions : Sequence[wp.operator.ExpressionBase]
+    expressions : Iterable[wp.operator.ExpressionBase]
         The expressions that should be summed up.
 
     Raises
@@ -89,11 +89,11 @@ class ExpressionSum(ExpressionBase):
         if the list of expressions is empty.
     """
 
-    def __init__(self, expressions: Sequence[ExpressionBase]):
+    def __init__(self, expressions: Iterable[ExpressionBase]) -> None:
         if not expressions:
             raise wp.InvalidValueError("ExpressionSum requires an expression.")
 
-        self._expressions = expressions
+        self._expressions = list(expressions)
 
     @property
     def time_dependent(self) -> bool:

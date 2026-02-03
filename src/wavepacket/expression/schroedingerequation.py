@@ -26,7 +26,7 @@ class SchroedingerEquation(ExpressionBase):
     into an expression so that solvers can work with it.
     """
 
-    def __init__(self, hamiltonian: OperatorBase):
+    def __init__(self, hamiltonian: OperatorBase) -> None:
         self._hamiltonian = hamiltonian
 
     @property

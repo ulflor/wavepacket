@@ -12,7 +12,7 @@ class DummyOperator(OperatorBase):
     as far as actually doing something.
     """
 
-    def __init__(self, grid: Grid):
+    def __init__(self, grid: Grid) -> None:
         super().__init__(grid)
 
     @property

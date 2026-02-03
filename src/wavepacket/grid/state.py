@@ -1,6 +1,5 @@
-import numbers
 from dataclasses import dataclass
-import typing
+from typing import Self
 
 import wavepacket as wp
 import wavepacket.typing as wpt
@@ -14,7 +13,7 @@ class State:
 
     A state can be a wave function or a density operator.
     While invalid states can be constructed, they have no use.
-    A state is comprised of three parts:
+    A state is composed of three parts:
 
     1. The grid on which the state is defined.
     2. The expansion coefficients.
@@ -73,42 +72,42 @@ class State:
         """
         return self.data.shape == self.grid.operator_shape
 
-    def __add__(self, other: typing.Self | numbers.Number) -> typing.Self:
+    def __add__(self, other: Self | complex) -> Self:
         if isinstance(other, State):
             self._check_states(other)
             return State(self.grid, self.data + other.data)
         else:
             return State(self.grid, self.data + other)
 
-    def __radd__(self, other: numbers.Number) -> typing.Self:
+    def __radd__(self, other: complex) -> Self:
         return self + other
 
-    def __sub__(self, other: typing.Self | numbers.Number) -> typing.Self:
+    def __sub__(self, other: Self | complex) -> Self:
         if isinstance(other, State):
             self._check_states(other)
             return State(self.grid, self.data - other.data)
         else:
             return State(self.grid, self.data - other)
 
-    def __rsub__(self, other: numbers.Number) -> typing.Self:
+    def __rsub__(self, other: complex) -> Self:
         return State(self.grid, other - self.data)
 
-    def __mul__(self, other: numbers.Number) -> typing.Self:
+    def __mul__(self, other: complex) -> Self:
         return State(self.grid, self.data * other)
 
-    def __rmul__(self, other: numbers.Number) -> typing.Self:
+    def __rmul__(self, other: complex) -> Self:
         return self * other
 
-    def __truediv__(self, other: numbers.Number) -> typing.Self:
+    def __truediv__(self, other: complex) -> Self:
         if other == 0.0:
             raise ZeroDivisionError("State cannot be divided by zero.")
 
         return State(self.grid, self.data / other)
 
-    def __neg__(self) -> typing.Self:
+    def __neg__(self) -> Self:
         return State(self.grid, -self.data)
 
-    def _check_states(self, other: typing.Self) -> None:
+    def _check_states(self, other: Self) -> None:
         if self.grid != other.grid:
             raise wp.BadGridError("Binary operations with states on different grids are not supported.")
 

@@ -1,5 +1,5 @@
 import numpy as np
-from typing import Iterable, Tuple
+from typing import Iterator, Tuple
 
 import wavepacket as wp
 import wavepacket.typing as wpt
@@ -8,7 +8,7 @@ from ..operator.operatorbase import OperatorBase
 
 
 def diagonalize(op: OperatorBase,
-                t: float | None = None) -> Iterable[Tuple[float, wpt.ComplexData]]:
+                t: float | None = None) -> Iterator[Tuple[float, wpt.ComplexData]]:
     """
     Calculates the eigenstates and -values of an operator.
 
@@ -18,7 +18,7 @@ def diagonalize(op: OperatorBase,
     a matrix representation of the operator transforms the calculated eigenstates
     into a :py:class:`wp.grid.State` for easier consumption, and provides a generator
     for looping instead of a matrix with all eigenvalues in one go.
-    This function diagonalises a full, dense operator matrix, so it requires  
+    This function diagonalizes a full, dense operator matrix, so it requires
 
     Typically, you solve the eigenproblem for time-independent operators,
     but you can also calculate instantaneous states and energies by specifying a time value.

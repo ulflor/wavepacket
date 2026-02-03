@@ -1,5 +1,5 @@
 from abc import ABC, abstractmethod
-from typing import Iterable, Tuple
+from typing import Iterator, Tuple
 
 import wavepacket as wp
 from ..grid import State
@@ -34,7 +34,7 @@ class SolverBase(ABC):
         If the timestep is not positive.
     """
 
-    def __init__(self, dt: float):
+    def __init__(self, dt: float) -> None:
         if dt <= 0:
             raise wp.InvalidValueError(f"Require positive timestep, got {dt}")
 
@@ -72,7 +72,7 @@ class SolverBase(ABC):
         raise NotImplementedError()
 
     def propagate(self, state0: State, t0: float,
-                  num_steps: int, include_first: bool = True) -> Iterable[Tuple[float, State]]:
+                  num_steps: int, include_first: bool = True) -> Iterator[Tuple[float, State]]:
         """
         Generator function that yields the propagated wave function at multiple time steps.
 

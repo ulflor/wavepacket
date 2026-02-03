@@ -73,7 +73,7 @@ def direct_product(ket: State, bra: State) -> State:
     return State(ket.grid, np.reshape(rho_matrix, ket.grid.operator_shape))
 
 
-def unit_density(grid) -> wp.grid.State:
+def unit_density(grid: wp.grid.Grid) -> wp.grid.State:
     """
     Returns a unit operator as density operator.
 
@@ -86,7 +86,7 @@ def unit_density(grid) -> wp.grid.State:
     return wp.grid.State(grid, np.reshape(matrix, grid.operator_shape))
 
 
-def zero_density(grid) -> wp.grid.State:
+def zero_density(grid: wp.grid.Grid) -> wp.grid.State:
     """
     Returns a density operator whose coefficients are constant zero.
 

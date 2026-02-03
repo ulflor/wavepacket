@@ -41,7 +41,7 @@ class Gaussian(wpt.Generator):
     """
 
     def __init__(self, x: float = 0.0, p: float = 0.0, *,
-                 rms: float | None = None, fwhm: float | None = None):
+                 rms: float | None = None, fwhm: float | None = None) -> None:
         if rms is not None and rms <= 0:
             raise wp.InvalidValueError(f"RMS width of Gaussian is {rms}, but should be positive.")
 
@@ -81,7 +81,7 @@ class PlaneWave(wpt.Generator):
         The wave vector of the plane wave.
     """
 
-    def __init__(self, k: float):
+    def __init__(self, k: float) -> None:
         self._k = k
 
     def __call__(self, x: wpt.RealData) -> wpt.ComplexData:
@@ -111,7 +111,7 @@ class SphericalHarmonic(wpt.RealGenerator):
         If l is negative or if (-l <= m <= l) does not hold.
     """
 
-    def __init__(self, l: int, m: int):
+    def __init__(self, l: int, m: int) -> None:
         if l < 0:
             raise wp.InvalidValueError(f"Angular momentum must not be negative, but is '{l}'.")
 

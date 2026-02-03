@@ -1,6 +1,6 @@
 from collections.abc import Sequence
 import math
-from typing import overload
+from typing import overload, Iterable
 
 import numpy as np
 
@@ -40,7 +40,7 @@ class Grid:
         If no degrees of freedom are supplied.
     """
 
-    def __init__(self, dofs: Sequence[DofBase] | DofBase):
+    def __init__(self, dofs: Iterable[DofBase] | DofBase) -> None:
         if dofs is None:
             raise wp.InvalidValueError("A grid needs at least one Degree of freedom defined.")
 
@@ -71,11 +71,11 @@ class Grid:
         return self._shape + self._shape
 
     @property
-    def dofs(self) -> Sequence[DofBase]:
+    def dofs(self) -> list[DofBase]:
         """
         The vector of degrees of freedom that make up the grid.
         """
-        return self._dofs
+        return list(self._dofs)
 
     @property
     def size(self) -> int:
@@ -106,10 +106,8 @@ class Grid:
 
     @overload
     def broadcast(self, data: wpt.RealData, index: int) -> wpt.RealData: ...
-
     @overload
     def broadcast(self, data: wpt.ComplexData, index) -> wpt.ComplexData: ...
-
     def broadcast(self, data, index):
         """
         Transforms a 1D array into a more suitable form for scaling.
@@ -136,10 +134,8 @@ class Grid:
 
     @overload
     def operator_broadcast(self, data: wpt.ComplexData, dof_index: int, is_ket: bool = ...) -> wpt.ComplexData: ...
-
     @overload
     def operator_broadcast(self, data: wpt.RealData, dof_index: int, is_ket: bool = ...) -> wpt.RealData: ...
-
     def operator_broadcast(self, data, dof_index, is_ket=True):
         """
         Similar to broadcast, but blows up the array into a form suitable for multiplication with operators.

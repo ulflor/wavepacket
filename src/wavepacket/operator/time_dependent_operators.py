@@ -23,7 +23,7 @@ class TimeDependentOperator(OperatorBase):
         Functions that returns a potentially complex value for a given input time.
     """
 
-    def __init__(self, grid: wp.grid.Grid, func: Callable[[float], complex]):
+    def __init__(self, grid: wp.grid.Grid, func: Callable[[float], complex]) -> None:
         super().__init__(grid)
 
         self._func = func
@@ -70,5 +70,5 @@ class LaserField(TimeDependentOperator):
     """
 
     def __init__(self, grid: wp.grid.Grid, max_field: float, shape: Callable[[float], float],
-                 omega: float, phi: float = 0):
+                 omega: float, phi: float = 0) -> None:
         super().__init__(grid, lambda t: max_field * shape(t) * math.cos(omega * t + phi))

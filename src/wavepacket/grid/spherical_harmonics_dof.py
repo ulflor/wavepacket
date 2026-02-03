@@ -30,7 +30,7 @@ class SphericalHarmonicsDof(DofBase):
         If the magnetic quantum number is too large (i.e., if lmax < abs(m))
     """
 
-    def __init__(self, lmax: int, m: int):
+    def __init__(self, lmax: int, m: int) -> None:
         if lmax < abs(m):
             raise wp.InvalidValueError("Maximum angular momentum too small, grid has size 0.")
 

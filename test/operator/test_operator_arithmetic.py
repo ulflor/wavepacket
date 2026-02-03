@@ -26,6 +26,7 @@ def test_inherit_time_dependence(grid_1d):
     assert not (op_ti * op_ti).time_dependent
     assert (op_ti * op_td).time_dependent
 
+
 def test_apply_sum(grid_1d, monkeypatch):
     op = wp.testing.DummyOperator(grid_1d)
 

@@ -49,7 +49,7 @@ class ChebychevSolver(SolverBase):
     """
 
     def __init__(self, expression: ExpressionBase, dt: float,
-                 spectrum: Tuple[float, float]):
+                 spectrum: Tuple[float, float]) -> None:
         super().__init__(dt)
 
         if spectrum[1] <= spectrum[0]:
@@ -74,7 +74,7 @@ class ChebychevSolver(SolverBase):
                 break
 
     @property
-    def order(self):
+    def order(self) -> int:
         return len(self._coeffs) - 1
 
     def step(self, state: State, t: float) -> State:
@@ -137,7 +137,7 @@ class RelaxationSolver(SolverBase):
     """
 
     def __init__(self, hamiltonian: OperatorBase, dt: float,
-                 spectrum: Tuple[float, float]):
+                 spectrum: Tuple[float, float]) -> None:
         super().__init__(dt)
 
         if spectrum[1] <= spectrum[0]:
@@ -162,7 +162,7 @@ class RelaxationSolver(SolverBase):
                 break
 
     @property
-    def order(self):
+    def order(self) -> int:
         return len(self._coeffs) - 1
 
     def step(self, state: State, t: float) -> State:

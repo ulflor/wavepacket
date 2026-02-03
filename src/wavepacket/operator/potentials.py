@@ -37,11 +37,11 @@ class Potential1D(OperatorBase):
     Creation of a square potential along the grid's second degree of freedom
 
     >>> grid = ...
-    >>> cosPotential = wp.operator.Potential1D(grid, 1, lambda x: x**2)
+    >>> harmonicPotential = wp.operator.Potential1D(grid, 1, lambda x: x**2)
     """
 
     def __init__(self, grid: Grid, dof_index: int, generator: wpt.Generator,
-                 cutoff: float = None):
+                 cutoff: float = None) -> None:
         data = generator(grid.dofs[dof_index].dvr_points).copy()
 
         if cutoff is not None:

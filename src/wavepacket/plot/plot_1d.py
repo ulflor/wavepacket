@@ -27,7 +27,7 @@ class BasePlot1D(ABC):
     """
 
     def __init__(self, state: State,
-                 potential: OperatorBase | None = None, hamiltonian: OperatorBase | None = None):
+                 potential: OperatorBase | None = None, hamiltonian: OperatorBase | None = None) -> None:
         # By default, span the total grid range
         assert len(state.grid.dofs) == 1
         dvr_grid = state.grid.dofs[0].dvr_points
@@ -86,7 +86,7 @@ class BasePlot1D(ABC):
         """
         raise NotImplementedError()
 
-    def _plot(self, axes: plt.Axes, state: State, t: float):
+    def _plot(self, axes: plt.Axes, state: State, t: float) -> None:
         """
         Internal plotting function that actually draws the density on a given Axes.
         """
@@ -140,7 +140,7 @@ class SimplePlot1D(BasePlot1D):
     """
 
     def __init__(self, state: State,
-                 potential: OperatorBase | None = None, hamiltonian: OperatorBase | None = None):
+                 potential: OperatorBase | None = None, hamiltonian: OperatorBase | None = None) -> None:
         self.figure, self._axes = plt.subplots()
 
         super().__init__(state, potential, hamiltonian)
@@ -195,7 +195,7 @@ class StackedPlot1D(BasePlot1D):
     """
 
     def __init__(self, num_plots: int, state: State,
-                 potential: OperatorBase | None = None, hamiltonian: OperatorBase | None = None):
+                 potential: OperatorBase | None = None, hamiltonian: OperatorBase | None = None) -> None:
         # First, create, layout and expose the figure
         self.figure, self._axes = plt.subplots(num_plots, 1, sharex=True)
         self._index = 0

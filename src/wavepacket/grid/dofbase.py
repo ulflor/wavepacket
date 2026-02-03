@@ -20,7 +20,7 @@ class DofBase(ABC):
     some descriptive quantum numbers for the FBR.
 
     Note that the transformation functions are highly flexible, but awkward and error-prone
-    to use, so they should generally be avoided outside of Wavepacket-internal code.
+    to use, so they should generally be avoided outside Wavepacket-internal code.
     In general, you should use convenience functions instead that perform the required
     transformation behind the scenes, such as :py:func:`wavepacket.grid.dvr_density`.
 
@@ -51,7 +51,7 @@ class DofBase(ABC):
                              based on a plane wave expansion.
     """
 
-    def __init__(self, dvr_points: wpt.RealData, fbr_points: wpt.RealData):
+    def __init__(self, dvr_points: wpt.RealData, fbr_points: wpt.RealData) -> None:
         if len(dvr_points) == 0 or len(fbr_points) == 0:
             raise wp.InvalidValueError("Degrees of freedom may not be empty.")
 

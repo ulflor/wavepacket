@@ -1,5 +1,4 @@
 from collections.abc import Sequence
-from typing import Iterable
 
 import numpy as np
 
@@ -19,8 +18,8 @@ def product_wave_function(grid: Grid,
     ----------
     grid : wp.grid.Grid
            The grid on which the product wave function is assembled
-    generators : Sequence[wp.typing.Generator]
-                A list of callables that specifies the wave function
+    generators : wpt.Generator | Sequence[wp.typing.Generator]
+                One or more callables that specifies the wave function
                 along each degree of freedom. The `generators` return
                 the one-dimensional functions in the DVR, i.e., raw function
                 values at the grid points.
@@ -40,7 +39,7 @@ def product_wave_function(grid: Grid,
         If the number of generators does not match the grid dimensions.
     """
     generator_list = generators
-    if not isinstance(generator_list, Iterable):
+    if not isinstance(generator_list, Sequence):
         generator_list = [generators]
 
     if len(generator_list) != len(grid.dofs):
@@ -64,7 +63,9 @@ def product_wave_function(grid: Grid,
         return result
 
 
-def random_wave_function(grid: wp.grid.Grid, generator: np.random.Generator, max_value: float = 1) -> wp.grid.State:
+def random_wave_function(grid: wp.grid.Grid,
+                         generator: np.random.Generator,
+                         max_value: float = 1) -> wp.grid.State:
     """
     Generates a random wave function.
 
@@ -108,7 +109,7 @@ def random_wave_function(grid: wp.grid.Grid, generator: np.random.Generator, max
     return wp.grid.State(grid, data)
 
 
-def zero_wave_function(grid) -> wp.grid.State:
+def zero_wave_function(grid: Grid) -> State:
     """
     Returns a wave function whose coefficients are constant zero.
 

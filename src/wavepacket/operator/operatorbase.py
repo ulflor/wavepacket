@@ -1,6 +1,5 @@
 from abc import ABC, abstractmethod
 from collections.abc import Sequence
-import numbers
 
 import numpy as np
 
@@ -31,11 +30,11 @@ class OperatorBase(ABC):
         If the operator is time-dependent or not. Some functionality may not work for time-dependent operators.
     """
 
-    def __init__(self, grid: Grid):
+    def __init__(self, grid: Grid) -> None:
         self._grid = grid
 
     @property
-    def grid(self):
+    def grid(self) -> Grid:
         """
         Returns the grid on which the operator is defined.
         """
@@ -80,29 +79,29 @@ class OperatorBase(ABC):
         else:
             raise wp.BadStateError("Cannot apply the operator to an invalid state.")
 
-    def __neg__(self):
+    def __neg__(self) -> 'OperatorBase':
         return self * wp.operator.Constant(self._grid, -1)
 
-    def __add__(self, other):
+    def __add__(self, other: 'OperatorBase | complex') -> 'OperatorBase':
         if not isinstance(other, OperatorBase):
             other = wp.operator.Constant(self._grid, other)
         return OperatorSum([self, other])
 
-    def __radd__(self, other: numbers.Number):
+    def __radd__(self, other: complex) -> 'OperatorBase':
         return self + other
 
-    def __sub__(self, other):
+    def __sub__(self, other: 'OperatorBase | complex') -> 'OperatorBase':
         return self + (-1) * other
 
-    def __rsub__(self, other: numbers.Number):
+    def __rsub__(self, other: complex) -> 'OperatorBase':
         return other + (-1) * self
 
-    def __mul__(self, other):
+    def __mul__(self, other: 'OperatorBase | complex') -> 'OperatorBase':
         if not isinstance(other, OperatorBase):
             other = wp.operator.Constant(self._grid, other)
         return OperatorProduct([self, other])
 
-    def __rmul__(self, other: numbers.Number):
+    def __rmul__(self, other: 'OperatorBase | complex') -> 'OperatorBase':
         return self * other
 
     @property
@@ -208,7 +207,7 @@ class OperatorSum(OperatorBase):
         If the operators are defined on different grids.
     """
 
-    def __init__(self, ops: Sequence[OperatorBase]):
+    def __init__(self, ops: Sequence[OperatorBase]) -> None:
         if not ops:
             raise wp.InvalidValueError("OperatorSum needs at least one operator to sum.")
         for op in ops:
@@ -265,7 +264,7 @@ class OperatorProduct(OperatorBase):
         If the operators are defined on different grids.
     """
 
-    def __init__(self, ops: Sequence[OperatorBase]):
+    def __init__(self, ops: Sequence[OperatorBase]) -> None:
         if not ops:
             raise wp.InvalidValueError("OperatorSum needs at least one operator to sum.")
         for op in ops:

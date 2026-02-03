@@ -9,7 +9,7 @@ class SinSquare:
 
     Usually, you use this function to describe a smooth laser pulse
     with a definite start and end point (which a Gaussian does not have).
-    The exact shape is :math:`cos^2(\\pi \\frac{t - t_0}{2 \\Delta}`, and
+    The exact shape is :math:`cos^2(\\pi \\frac{t - t_0}{2 \\Delta})`, and
     zero outside the interval :math:`[t_0-\\Delta, t_0+\\Delta]`.
 
     Parameters
@@ -25,7 +25,7 @@ class SinSquare:
         if the half-width is not positive.
     """
 
-    def __init__(self, t0: float, half_width: float):
+    def __init__(self, t0: float, half_width: float) -> None:
         if half_width <= 0:
             raise InvalidValueError(f"Half width '{half_width}' must be positive.")
 
@@ -64,7 +64,7 @@ class SoftRectangularFunction:
         If the half-width or the border region is not positive.
     """
 
-    def __init__(self, t0: float, half_width: float, border: float | None = None):
+    def __init__(self, t0: float, half_width: float, border: float | None = None) -> None:
         if border is None:
             border = half_width / 10
 
