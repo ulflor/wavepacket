@@ -1,6 +1,6 @@
 from abc import ABC, abstractmethod
 from collections.abc import Sequence
-from typing import override
+from typing import Final, override
 
 import numpy as np
 
@@ -32,14 +32,7 @@ class OperatorBase(ABC):
     """
 
     def __init__(self, grid: Grid) -> None:
-        self._grid = grid
-
-    @property
-    def grid(self) -> Grid:
-        """
-        Returns the grid on which the operator is defined.
-        """
-        return self._grid
+        self.grid: Final[Grid] = grid
 
     def apply(self, state: State, t: float) -> State:
         """
@@ -70,7 +63,7 @@ class OperatorBase(ABC):
             If the state is neither a wave function nor a density operator.
 
         """
-        if state.grid != self._grid:
+        if state.grid != self.grid:
             raise wp.BadGridError("Grid of state does not match grid of operator.")
 
         if state.is_wave_function():
@@ -81,11 +74,11 @@ class OperatorBase(ABC):
             raise wp.BadStateError("Cannot apply the operator to an invalid state.")
 
     def __neg__(self) -> 'OperatorBase':
-        return self * wp.operator.Constant(self._grid, -1)
+        return self * wp.operator.Constant(self.grid, -1)
 
     def __add__(self, other: 'OperatorBase | complex') -> 'OperatorBase':
         if not isinstance(other, OperatorBase):
-            other = wp.operator.Constant(self._grid, other)
+            other = wp.operator.Constant(self.grid, other)
         return OperatorSum([self, other])
 
     def __radd__(self, other: complex) -> 'OperatorBase':
@@ -99,7 +92,7 @@ class OperatorBase(ABC):
 
     def __mul__(self, other: 'OperatorBase | complex') -> 'OperatorBase':
         if not isinstance(other, OperatorBase):
-            other = wp.operator.Constant(self._grid, other)
+            other = wp.operator.Constant(self.grid, other)
         return OperatorProduct([self, other])
 
     def __rmul__(self, other: 'OperatorBase | complex') -> 'OperatorBase':

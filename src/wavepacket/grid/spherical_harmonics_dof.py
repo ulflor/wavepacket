@@ -1,4 +1,4 @@
-from typing import override
+from typing import Final, override
 
 import numpy as np
 
@@ -37,7 +37,7 @@ class SphericalHarmonicsDof(DofBase):
         if lmax < abs(m):
             raise wp.InvalidValueError("Maximum angular momentum too small, grid has size 0.")
 
-        self.m = m
+        self.m: Final[int] = m
 
         dvr_points, weights = _quadrature(lmax, m)
         fbr_points = np.linspace(abs(m), lmax, lmax - abs(m) + 1)

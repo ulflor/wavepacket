@@ -69,23 +69,23 @@ class Projection(OperatorBase):
 
     @override
     def apply_to_wave_function(self, psi: wpt.ComplexData, t: float) -> wpt.ComplexData:
-        tmp = np.reshape(psi, self._grid.size)
+        tmp = np.reshape(psi, self.grid.size)
         coefficients = np.tensordot(self._bra_ravelled, tmp, axes=(1, 0))
         return np.tensordot(self._ket_nd, coefficients, axes=(0, 0))
 
     @override
     def apply_from_left(self, rho: wpt.ComplexData, t: float) -> wpt.ComplexData:
-        matrix_form = np.reshape(rho, (self._grid.size, self._grid.size))
+        matrix_form = np.reshape(rho, (self.grid.size, self.grid.size))
         coefficients = np.tensordot(self._bra_ravelled, matrix_form, (1, 0))
         ket_projection = np.tensordot(self._ket_nd, coefficients, (0, 0))
-        return np.reshape(ket_projection, self._grid.operator_shape)
+        return np.reshape(ket_projection, self.grid.operator_shape)
 
     @override
     def apply_from_right(self, rho: wpt.ComplexData, t: float) -> wpt.ComplexData:
-        matrix_form = np.reshape(rho, (self._grid.size, self._grid.size))
+        matrix_form = np.reshape(rho, (self.grid.size, self.grid.size))
         coefficients = np.tensordot(matrix_form, self._ket_ravelled, (1, 1))
         bra_projection = np.tensordot(coefficients, self._bra_nd, (1, 0))
-        return np.reshape(bra_projection, self._grid.operator_shape)
+        return np.reshape(bra_projection, self.grid.operator_shape)
 
 
 class Constant(OperatorBase):

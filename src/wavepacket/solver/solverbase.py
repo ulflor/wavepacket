@@ -1,5 +1,5 @@
 from abc import ABC, abstractmethod
-from typing import Iterator
+from typing import Final, Iterator
 
 import wavepacket as wp
 from ..grid import State
@@ -38,14 +38,7 @@ class SolverBase(ABC):
         if dt <= 0:
             raise wp.InvalidValueError(f"Require positive timestep, got {dt}")
 
-        self._dt = dt
-
-    @property
-    def dt(self) -> float:
-        """
-        Returns the size of the elementary time step.
-        """
-        return self._dt
+        self.dt: Final[float] = dt
 
     @abstractmethod
     def step(self, state: State, t: float) -> State:
@@ -116,6 +109,6 @@ class SolverBase(ABC):
 
         state = state0
         for step in range(num_steps):
-            t = t0 + step * self._dt
+            t = t0 + step * self.dt
             state = self.step(state, t)
-            yield t + self._dt, state
+            yield t + self.dt, state

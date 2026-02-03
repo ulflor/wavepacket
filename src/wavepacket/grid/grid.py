@@ -1,6 +1,6 @@
 from collections.abc import Sequence
 import math
-from typing import Iterable
+from typing import Final, Iterable
 
 import numpy as np
 
@@ -45,11 +45,11 @@ class Grid:
             raise wp.InvalidValueError("A grid needs at least one Degree of freedom defined.")
 
         if isinstance(dofs, DofBase):
-            self._dofs = [dofs]
-        else:
-            self._dofs = list(dofs)
+            dofs = [dofs]
 
-        self._shape = tuple(dof.size for dof in self._dofs)
+        self.dofs: Final[Sequence] = list(dofs)
+
+        self._shape = tuple(dof.size for dof in self.dofs)
 
     @property
     def shape(self) -> tuple[int, ...]:
@@ -71,18 +71,11 @@ class Grid:
         return self._shape + self._shape
 
     @property
-    def dofs(self) -> list[DofBase]:
-        """
-        The vector of degrees of freedom that make up the grid.
-        """
-        return list(self._dofs)
-
-    @property
     def size(self) -> int:
         """
         The total number of grid points.
         """
-        return math.prod(dof.size for dof in self._dofs)
+        return math.prod(dof.size for dof in self.dofs)
 
     def normalize_index(self, index: int) -> int:
         """
@@ -96,11 +89,11 @@ class Grid:
         and the last N denoting ket indices. Then, the arithmetic becomes cumbersome unless we
         first map the input index onto the range [0,N].
         """
-        if index < -len(self._dofs) or index >= len(self._dofs):
+        if index < -len(self.dofs) or index >= len(self.dofs):
             raise IndexError("Index of degree of freedom out of bounds.")
 
         if index < 0:
-            return index + len(self._dofs)
+            return index + len(self.dofs)
         else:
             return index
 
@@ -124,8 +117,8 @@ class Grid:
         broadcasting rules. This reshaping is done by this function.
         """
         # Note: rather slow, only use for precomputation
-        new_shape = len(self._dofs) * [1]
-        new_shape[index] = self._dofs[index].size
+        new_shape = len(self.dofs) * [1]
+        new_shape[index] = self.dofs[index].size
         return np.reshape(data, new_shape)
 
     def operator_broadcast(self, data: wpt.AnyData, dof_index: int, is_ket: bool = True) -> wpt.AnyData:
@@ -140,11 +133,11 @@ class Grid:
         (1, 4, 1, 1, 1, 1) or (1, 1, 1, 1, 4, 1). The is_ket parameter switches between the
         two variants, we call the first three indices "ket" and the latter three "bra" indices.
         """
-        new_shape = (2 * len(self._dofs)) * [1]
+        new_shape = (2 * len(self.dofs)) * [1]
 
         shape_index = self.normalize_index(dof_index)
         if not is_ket:
-            shape_index += len(self._dofs)
+            shape_index += len(self.dofs)
 
-        new_shape[shape_index] = self._dofs[dof_index].size
+        new_shape[shape_index] = self.dofs[dof_index].size
         return np.reshape(data, new_shape)

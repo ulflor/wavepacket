@@ -1,6 +1,6 @@
 import itertools
 import math
-from typing import override
+from typing import Final, override
 
 import scipy
 
@@ -61,7 +61,7 @@ class ChebychevSolver(SolverBase):
         self._spec_min = spectrum[0]
         self._spec_range = spectrum[1] - spectrum[0]
 
-        self.alpha = self._spec_range * self._dt / 2.0
+        self.alpha: Final[float] = self._spec_range * self.dt / 2.0
 
         self._prefactor = math.e ** (-1j * (spectrum[0] + spectrum[1]) / 2.0 * dt)
         self._coeffs = [scipy.special.j0(self.alpha)]
@@ -150,7 +150,7 @@ class RelaxationSolver(SolverBase):
         self._spec_min = spectrum[0]
         self._spec_range = spectrum[1] - spectrum[0]
 
-        self.alpha = self._spec_range * self._dt / 2.0
+        self.alpha: Final[float] = self._spec_range * self.dt / 2.0
 
         self._prefactor = math.e ** (-(spectrum[0] + spectrum[1]) / 2.0 * dt)
         self._coeffs = [scipy.special.i0(self.alpha)]

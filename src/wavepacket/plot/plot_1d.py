@@ -40,7 +40,7 @@ class BasePlot1D(ABC):
             # We only plot the density, and ignore whatever energy the states have.
             # Set the y ranges accordingly
             self.ylim = [-1e-2 * max_density, 1.01 * max_density]
-            self.conversion_factor = 1
+            self.conversion_factor = 1.0
             self._potential = None
         else:
             self._potential = potential

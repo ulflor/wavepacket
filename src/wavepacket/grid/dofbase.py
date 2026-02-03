@@ -1,8 +1,5 @@
-"""
-Definition of an abstract Degree of Freedom (DOF).
-"""
-
 from abc import abstractmethod, ABC
+from typing import Final
 
 import wavepacket as wp
 import wavepacket.typing as wpt
@@ -36,7 +33,9 @@ class DofBase(ABC):
     Attributes
     ----------
     dvr_points
+        Numpy array that gives the grid points in real space as supplied in the constructor.
     fbr_points
+        Numpy array that gives the grid points of the underlying basis as supplied in the constructor.
     size
 
     Raises
@@ -61,29 +60,15 @@ class DofBase(ABC):
         if dvr_points.size != fbr_points.size:
             raise wp.InvalidValueError("The DVR and FBR grids must have the same size.")
 
-        self._dvr_points = dvr_points
-        self._fbr_points = fbr_points
-
-    @property
-    def dvr_points(self) -> wpt.RealData:
-        """
-        Numpy array that gives the grid points in real space as supplied in the constructor.
-        """
-        return self._dvr_points
-
-    @property
-    def fbr_points(self) -> wpt.RealData:
-        """
-        Numpy array that gives the grid points of the underlying basis as supplied in the constructor.
-        """
-        return self._fbr_points
+        self.dvr_points: Final[wpt.RealData] = dvr_points
+        self.fbr_points: Final[wpt.RealData] = fbr_points
 
     @property
     def size(self) -> int:
         """
         The size of the grid (number of elements of `dvr_points`/`fbr_points`)
         """
-        return self._dvr_points.size
+        return self.dvr_points.size
 
     @abstractmethod
     def to_fbr(self, data: wpt.ComplexData, index: int, is_ket: bool = True) -> wpt.ComplexData:
