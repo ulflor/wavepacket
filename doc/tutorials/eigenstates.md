@@ -8,8 +8,12 @@ kernelspec:
 
 There are a number of use cases where we want to calculate the eigenstates of a Hamiltonian,
 for example, if we start a calculation from an ensemble of low-temperature states.
-
 Here, we show some basic and advanced use cases around energy eigenstates.
+
+Note that there exist other approaches for calculating eigenstates of the Hamiltonian.
+In particular, for few low-energy eigenstates, you can try imaginary-time propagation,
+as detailed in{doc}`relaxation`.
+
 
 ## Basic eigenstate calculation
 
