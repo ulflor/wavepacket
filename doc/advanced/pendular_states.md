@@ -165,4 +165,4 @@ While an increasing magnetic quantum number results in less field-free alignment
 similar for all even values of m.
 The averaged alignment, however, is significantly damped, and smaller due to the lower alignment of odd values of m.
 
-[^ref-paper]: Oritgoso et al. https://dx.doi.org/10.1063/1.478241
+[^ref-paper]: Ortigoso et al. <https://doi.org/10.1063/1.478241>
