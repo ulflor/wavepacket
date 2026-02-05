@@ -1,43 +1,21 @@
-import math
 import numpy as np
-
-import pytest
+from numpy.testing import assert_allclose
 
 import wavepacket as wp
 
 
-def test_reject_invalid_arguments(grid_2d):
+def test_random_wave_function(grid_1d):
     generator = np.random.default_rng(42)
 
-    with pytest.raises(wp.InvalidValueError):
-        wp.builder.random_wave_function(grid_2d, generator, -1.0)
-
-    with pytest.raises(wp.InvalidValueError):
-        wp.builder.random_wave_function(grid_2d, generator, 0.0)
-
-
-def test_random_wave_function():
-    # The grid has small spacing, hence small weight values.
-    # This is intentional to highlight differences between DVR and weighted DVR,
-    # to check that the wave function is returned in the correct representation!
-    grid = wp.grid.Grid([wp.grid.PlaneWaveDof(0, 0.1, 10),
-                         wp.grid.PlaneWaveDof(1, 1.1, 4)])
-    generator = np.random.default_rng(42)
-    max_value = 0.5
-
-    result = wp.builder.random_wave_function(grid, generator, max_value)
-
-    assert result.grid == grid
+    result = wp.builder.random_wave_function(grid_1d, generator)
     assert result.is_wave_function()
-    assert np.all(np.imag(result.data).all() == 0)
 
-    # The actual comparisons are statistical, hence a bit weak
-    max_expected = max_value * math.sqrt(0.1 / 10) * math.sqrt(0.1 / 4)
-    data = np.real(result.data)
+    expected_abs = wp.builder.product_wave_function(grid_1d, lambda x: np.ones(x.shape), normalize=False)
+    assert_allclose(np.abs(result.data), expected_abs.data, rtol=0, atol=1e-12)
 
-    np.testing.assert_array_less(np.abs(data), max_expected)
-    assert np.any(data > max_value / 100)
-    assert np.any(data < -max_value / 100)
+    # proxy check that the arguments to the complex numbers differ
+    distinct_real_vals = set(np.real(result.data).flat)
+    assert len(distinct_real_vals) == result.grid.size
 
 
 def test_random_reproducibility(grid_2d):
