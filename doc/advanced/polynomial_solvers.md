@@ -149,6 +149,8 @@ Both values are not exact numbers, however, just crude rules of thumb.
 However, very large orders of expansion may lead to artefacts.
 For example the values of the Bessel functions may become inaccurate, depending on the implementation details.
 Therefore, we would recommend not increasing alpha beyond something like 100, but that is also not a hard value.
+For example, we encountered a Matlab version around 2010
+that would produce infinite solutions for large orders (200 or 300).
 
 As a side note, the plot also shows that the precision has remarkably little influence on the efficiency.
 Even if we go for embarrassingly large values of 1e-6, the required polynomial orders are reduced only by about 10,
