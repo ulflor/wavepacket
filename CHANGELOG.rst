@@ -5,9 +5,12 @@ ChangeLog
 0.3
 ---
 
-- (#32) added ChebychevSolver including additional documentation
-- (#32) added RelaxationSolver for imaginary-time propagation
-- (#32) added function to normalize a state
+- (#32) added ChebychevSolvers
+  - added a ChebychevSolver for real-time propagation
+  - added RelaxationSolver for imaginary-time propagation
+  - added function to normalize a state
+  - Added various documentation on Chebychev solver use, relaxation,
+    and polynomial solver theory
 
 - (#24) added ExpressionSum and OneSidedLiouvillian
         for more complex expressions
@@ -15,6 +18,11 @@ ChangeLog
 - (#31) added diagonalize() function for operator eigenstates and -energies
 
 - (#11) operator truncation and systematic handling of operator time-dependence
+
+- (#12) Added some documentation on the construction of thermal states
+
+- (#12) Changed the implementation of builder.random_wave_function();
+  it now constructs random numbers exp(i * phi) because these are more useful.
 
 - significantly improved type information, simplified attributes,
   implemented some annotation best practices
