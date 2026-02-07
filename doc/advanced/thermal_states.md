@@ -291,7 +291,7 @@ because they are no longer true eigenstates of the Hamiltonian.
 ### Theory
 
 The derivation is similar in spirit to Method II, but instead of an orthonormal basis,
-we use special random wave functions,
+we use special random wave functions [^random-orig1][^random-orig2],
 
 ```{math}
    |\tilde \psi\rangle = \sum_k \tilde c_k |\psi_k \rangle
@@ -410,7 +410,7 @@ On the other hand, even for 64 random wave functions, we have residual errors on
 
 The implementation demo already shows the good parts of random thermal wave functions.
 You can get reasonable results very cheaply.
-This is also a finding in the literature (see the references in [^random]):
+This is also a finding in the literature. [^random-orig1][^random-orig2] [^random][^random2]
 You get pretty good results already with ensembles of ten or even fewer random wave functions.
 And the results are uniformly ok for very different temperatures.
 
@@ -434,4 +434,11 @@ Once the results do not improve significantly, you stop.
 Adding more functions will not improve the accuracy of your solution significantly,
 only the cost.
 
+[^random-orig1]: U. Manthe and F. Huarte-Larranaga, Chem. Pys. Lett. 349:321 (2001)
+<https://doi.org/10.1016/S0009-2614(01)01207-6>
+[^random-orig2]: D. Gelman and R. Kosloff Chem. Phys. Lett. 381:129 (2003)
+<https://openscholar.huji.ac.il/sites/default/files/ronniekosloff/files/gelman03.pdf>
 [^random]: U. Lorenz and P. Saalfrank, JCP 140:044106 (2014)
+<https://doi.org/10.1063/1.4862739>
+[^random2]: M. Nest and R. Kosloff, JCP 127:134711 (2007)
+<https://openscholar.huji.ac.il/sites/default/files/ronniekosloff/files/jchemphys_127_134711.pdf>
