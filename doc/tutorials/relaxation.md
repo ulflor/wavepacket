@@ -8,17 +8,17 @@ kernelspec:
 
 ## Introduction
 
-In imaginary time, {math}`t \to \imath \tau`, the Schrödinger equation becomes
+In imaginary time, $t \to \imath \tau$, the Schrödinger equation becomes
 
-```{math}
+$$
     \frac{\partial \psi}{\partial \tau} = - \hat H \psi(\tau)
-```
+$$
 
 with the formal solution of the time evolution operator
 
-```{math}
+$$
     \hat U(\tau) = \mathrm{e}^{-\hat H \tau}.
-```
+$$
 
 There are two main applications for such a time evolution:
 
@@ -89,7 +89,7 @@ so you can afford to spend a few more CPU cycles on a converged solution.
 
 Beware that the initial state must have overlap with the ground state!
 This most often fails because the symmetry is incorrect.
-In our harmonic oscillator example, the ground state has even parity, {math}`\psi(x) = \psi(-x)`.
+In our harmonic oscillator example, the ground state has even parity, $\psi(x) = \psi(-x)$.
 Let us check what happens if we choose an initial state with odd parity, for example a sign function:
 
 ```{code-cell}
@@ -184,17 +184,17 @@ convergence carefully.
 The calculation of the density operator for finite temperatures is derived in a roundabout way.
 The Liouville-von-Neumann (LvNe) equation
 
-```{math}
+$$
     \frac{\partial \hat \varrho}{\partial \beta} = - \mathcal{L}(\hat \varrho) = - \hat H \hat \varrho
         \qquad\mathrm{with}\qquad \hat \varrho(\beta = 0) = \hat 1
-```
+$$
 
 can be shown, in analogy to ordinary differential equations and Schrödinger equations, to have the solution
 
-```{math}
+$$
     \hat \varrho (\beta) = \mathrm{e}^{-\beta \mathcal{L}} (\hat \varrho(0))
         = \mathrm{e}^{-\beta \hat H}.
-```
+$$
 
 So we just set up the LvNe, and evolve the unit density in time until the requested inverse temperature.
 The step should be chosen to fit the requested inverse temperature(s) and keep the alpha value

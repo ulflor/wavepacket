@@ -12,25 +12,24 @@ Sometimes, we wish to study systems at finite temperatures.
 To describe such systems, we need either a density operator or an ensemble of wave functions.
 The textbook expression for a thermal state is a density operator
 
-```{math}
+$$
     \hat \varrho_\mathrm{th} = \frac{1}{Z} \ \mathrm{e}^{- \beta \hat H}
     \qquad \mathrm{with} \qquad
      Z = \mathrm{Tr} ( \mathrm{e}^{-\beta \hat H} )
-```
+$$
 
-with the inverse temperature {math}`\beta = 1 / (k_B T)`
+with the inverse temperature $\beta = 1 / (k_B T)$
 in terms of Boltzmann's constant and the system temperature.
 Note that we use atomic units throughout this text.
 
 The thermal state itself is often not terribly interesting,
 but we want to calculate expectation values, typically the response to some perturbation,
 
-```{math}
-:name: eq_response
+$$
     \langle \hat R(t) \rangle = \mathrm{Tr}( \hat R(t) \hat \varrho_\mathrm{th} )
          = \mathrm{Tr}( \hat U^\dagger(t, t_0) \ \hat R \ \hat U(t, t_0) \hat \varrho_\mathrm{th} )
     .
-```
+$$ (eq_response)
 
 To calculate the expectation value, we may have to evolve the density operator
 in time, for example under the influence of a laser field.
@@ -77,32 +76,32 @@ beta_vals_to_calculate = [100, 25, 10]
 Note that the chosen temperatures are high, well above thousand Kelvin.
 They should be understood as examples corresponding to different regimes:
 
-* For beta = 100 ({math}`k_BT` is 1/20th of D_e),
+* For beta = 100 ($k_BT$ is 1/20th of D_e),
   the temperature is on the order of the excitation energy.
-* For beta = 25 ({math}`k_BT` is 1/5th of D_e),
+* For beta = 25 ($k_BT$ is 1/5th of D_e),
   the temperature is larger than the excitation energy, and significant compared to the dissociation energy
-* For beta = 10 ({math}`k_BT` is 1/2 of D_e),
+* For beta = 10 ($k_BT$ is 1/2 of D_e),
   the temperature is on the order of the binding energy
 
 ## Method I: Using the thermal density operator directly
 
 ### Theory
 
-The first approach directly constructs the thermal density operator, {math}`\hat \varrho_\mathrm{th}`.
+The first approach directly constructs the thermal density operator, $\hat \varrho_\mathrm{th}$.
 The exponentiation is difficult, therefore we use a roundabout way also described in {doc}`/tutorials/relaxation`.
 It can be checked that, the initial-value problem
 
-```{math}
+$$
     \frac{\partial \hat \varrho}{\partial t} = - \hat H \hat \varrho(t)
         \qquad \mathrm{with} \quad
         \hat \varrho(0) = \hat 1
-```
+$$
 
 has the solution
 
-```{math}
+$$
     \varrho(t = \beta) = \mathrm{e}^{-\hat H \beta}
-```
+$$
 
 which is exactly our thermal density operator except for the trivially calculated normalization factor.
 The differential equation is solved by the {py:class}`wavepacket.solver.RelaxationSolver`, so we only need to
@@ -165,13 +164,13 @@ That is what the other approaches do.
 To motivate the use of energy eigenstates, let us use the cyclic property
 and the definition of the trace to rewrite the [response expression](#eq_response).
 
-```{math}
-    \langle \hat R(t) \rangle &= \frac{1}{Z} \mathrm{Tr}( \hat R(t) \ \mathrm{e}^{-\hat H \beta} )\\
-    &= \frac{1}{Z} \mathrm{Tr}( \mathrm{e}^{-\hat H \beta/2}
+\begin{align*}
+    \langle \hat R(t) \rangle = \frac{1}{Z} &\mathrm{Tr}( \hat R(t) \ \mathrm{e}^{-\hat H \beta} )\\
+    = \frac{1}{Z} &\mathrm{Tr}( \mathrm{e}^{-\hat H \beta/2}
         \ \hat R(t) \ \mathrm{e}^{-\hat H \beta/2} )\\
-    &= \frac{1}{Z} \sum_k \langle \psi_k | \mathrm{e}^{-\hat H \beta/2} \hat U^\dagger(t, t_0)
+    = \frac{1}{Z} &\sum_k \langle \psi_k | \mathrm{e}^{-\hat H \beta/2} \hat U^\dagger(t, t_0)
         \ \ \hat R \ \ \hat U(t, t_0) \mathrm{e}^{-\hat H \beta/2} | \psi_k \rangle
-```
+\end{align*}
 
 This equation directly suggests an alternative procedure for calculating thermal averages:
 
@@ -196,11 +195,11 @@ Hence, we need a basis where the result converges (exponentially) quickly,
 and one such set are the eigenfunctions of the Hamiltonian.
 We find that
 
-```{math}
+$$
     \mathrm{e}^{-\beta \hat H/2} \psi_k = \mathrm{e}^{-\beta E_k/2} \psi_k.
-```
+$$
 
-For energies {math}`E_k \gg 1/\beta = k_BT`, the exponential term becomes negligible,
+For energies $E_k \gg 1/\beta = k_BT$, the exponential term becomes negligible,
 and the eigenstate does not matter for the result.
 For sufficiently low temperatures, few eigenstates suffice, making this scheme rather efficient.
 A further convenient benefit of energy eigenstates is that the exponential term is a number, and we need no
@@ -242,7 +241,7 @@ for beta in beta_vals_to_calculate:
 If we compare these values to the exact results for the density operator, we see a few trends.
 Even for the lowest temperature, we need to include several excited states;
 with four states we still have a residual error of about 1%.
-For larger temperatures the thermal excitations {math}`k_BT` are similar in magnitude to the binding potential,
+For larger temperatures the thermal excitations $k_BT$ are similar in magnitude to the binding potential,
 and we need many more states for converged results.
 An intuitive explanation is that as soon free or quasi-free states start to contribute,
 there are a lot of them, and they compensate their small weights with sheer numbers.
@@ -259,9 +258,9 @@ and a few test propagations,
 but you should still always monitor the convergence.
 
 The cost scales with the number basis functions that you need.
-As soon as the thermal excitation probability {math}`\exp(-E \beta)` becomes relevant for weakly-bound
+As soon as the thermal excitation probability $\exp(-E \beta)$ becomes relevant for weakly-bound
 states, convergence becomes expensive.
-Hence, this approach is most useful for *low temperatures* with {math}`k_BT` on the order of the
+Hence, this approach is most useful for *low temperatures* with $k_BT$ on the order of the
 smallest excitation energy or less.
 This situation is rather common for molecular vibrations and typical experimental conditions.
 
@@ -293,11 +292,11 @@ because they are no longer true eigenstates of the Hamiltonian.
 The derivation is similar in spirit to Method II, but instead of an orthonormal basis,
 we use special random wave functions [^random-orig1][^random-orig2],
 
-```{math}
+$$
    |\tilde \psi\rangle = \sum_k \tilde c_k |\psi_k \rangle
       \qquad \mathrm{where} \quad E[\tilde c_k \tilde c_l^\ast] = \delta_{kl}
       .
-```
+$$
 
 Note: We use the notation from our own publication[^random], which may be a bit uncommon.
 The tilde denotes random variables and other objects.
@@ -310,20 +309,20 @@ and for practical applications boils down to an ensemble average.
 
 With this setup, the projection operator becomes the normal unit operator under averaging,
 
-```{math}
+$$
     E[ |\tilde \psi \rangle \langle \tilde \psi | ]
         = E[ \sum_{k,l} \tilde c_k \tilde c_l^\ast | \psi_k \rangle\langle \psi_l |]
         = \sum_{k,l} E[\tilde c_k \tilde c_l^\ast] |\psi_k \rangle \langle \psi_l|
         = \sum_k |\psi_k \rangle \langle \psi_k |
-        = \hat 1 
+        = \hat 1
         .
-```
+$$
 
 We now take again our [response expression](#eq_response), split the exponential,
 insert and expand a unit operator, rearrange the scalar products, and finally use the resolution of identity
 to get rid of the trace summation,
 
-```{math}
+\begin{align*}
     \langle \hat R(t) \rangle &= \frac{1}{Z} \ \sum_k \langle \psi_k | \hat R(t)
         \mathrm{e}^{-\hat H \beta/2} \ \hat 1 \  \mathrm{e}^{-\hat H \beta/2}
         | \psi_k \rangle
@@ -334,7 +333,7 @@ to get rid of the trace summation,
         \\
     &= \frac{1}{Z} \ E[ \langle \tilde \psi \mathrm{e}^{-\hat H \beta/2} \hat U^\dagger(t, t_0)
         \ \hat R \  \hat U(t, t_0) \mathrm{e}^{-\hat H \beta/2} |\tilde \psi \rangle ]
-```
+\end{align*}
 
 Similar to the previous discussion, this formula suggests a simple algorithm
 for calculating the response:
@@ -364,9 +363,9 @@ The final bit of theory concerns the construction of the random wave functions.
 A convenient basis is the DVR; that is, we just assign a random coefficient to each grid point.
 This saves additional transformations.
 Then, we only need any scheme that is uncorrelated and normalized,
-{math}`E[\tilde c_k \tilde c_l^\ast] = \delta_{kl}`.
-A simple scheme assigns each coefficient a complex number {math}`\exp(i \tilde \phi)`
-where the phase is drawn uniformly from the interval {math}`\phi \in [-\pi, \pi]`.
+$E[\tilde c_k \tilde c_l^\ast] = \delta_{kl}$.
+A simple scheme assigns each coefficient a complex number $\exp(\imath \tilde \phi)$
+where the phase is drawn uniformly from the interval $\phi \in [-\pi, \pi]$.
 
 ### Implementation
 
@@ -436,9 +435,12 @@ only the cost.
 
 [^random-orig1]: U. Manthe and F. Huarte-Larranaga, Chem. Pys. Lett. 349:321 (2001)
 <https://doi.org/10.1016/S0009-2614(01)01207-6>
+
 [^random-orig2]: D. Gelman and R. Kosloff Chem. Phys. Lett. 381:129 (2003)
 <https://openscholar.huji.ac.il/sites/default/files/ronniekosloff/files/gelman03.pdf>
+
 [^random]: U. Lorenz and P. Saalfrank, JCP 140:044106 (2014)
 <https://doi.org/10.1063/1.4862739>
+
 [^random2]: M. Nest and R. Kosloff, JCP 127:134711 (2007)
 <https://openscholar.huji.ac.il/sites/default/files/ronniekosloff/files/jchemphys_127_134711.pdf>

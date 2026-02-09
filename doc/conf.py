@@ -57,3 +57,9 @@ html_theme = 'sphinx_rtd_theme'
 # Individual calculations take relatively long to finish. The good solution is to keep the demos
 # simple, but this is not always simple to do.
 nb_execution_timeout = 90
+
+# We use $ and $$ in markdown notebooks, because after conversion to raw (.ipynb)
+# Jupyter notebooks, standard Jupyter setups seem to understand that these are
+# equations and render them. There seems to be a (MathJax?) problem at least in some
+# Jupyter setups that does not handle linebreaks unless we use amsmath environments, so we do that.
+myst_enable_extensions = ["dollarmath", "amsmath"]

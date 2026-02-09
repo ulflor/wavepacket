@@ -23,9 +23,9 @@ was introduced by Huisinga et al. [^faber], but we omit this discussion for simp
 
 For a time-independent, closed system, the time evolution operator is defined by
 
-```{math}
+$$
     \psi(t+\Delta t) = \hat U(\Delta t) \psi(t) = \mathrm{e}^{-\imath \hat H \Delta t} \psi(t).
-```
+$$
 
 ```{note}
 This and the following discussion also applies to density operators. Replace all operators by
@@ -39,29 +39,29 @@ Our first problem is that this polynomial series converges only in the interval 
 Translated appropriately, this means that the Hamiltonian must have all eigenvalues in the interval [-1, 1].
 To get there, we first rescale the Hamiltonian,
 
-```{math}
+$$
     \mathrm{e}^{-\imath \hat H \Delta t} = \mathrm{e}^{-\imath (E_{\mathrm{min}} + \Delta E / 2) \Delta t}
         \mathrm{e}^{-\imath \alpha \hat H_\mathrm{norm}}
-```
+$$
 
 where
 
-```{math}
-    \alpha &= \frac{\Delta E \  \Delta t}{2}\\
-    \hat H_\mathrm{norm} &= \frac{2}{\Delta E} (\hat H - E_\mathrm{min} - \frac{\Delta E}{2})
+\begin{eqnarray*}
+    \alpha =& \frac{\Delta E \ \Delta t}{2}\\
+    \hat H_\mathrm{norm} =& \frac{2}{\Delta E} (\hat H - E_\mathrm{min} - \frac{\Delta E}{2})
     .
-```
+\end{eqnarray*}
 
-Here, {math}`E_\mathrm{min}, \Delta E` denote the Hamiltonian's smallest eigenvalue and the spectral range,
+Here, $E_\mathrm{min}, \Delta E$ denote the Hamiltonian's smallest eigenvalue and the spectral range,
 respectively.
 It can be checked that the normalized Hamiltonian has all eigenvalues in the interval [-1, 1].
 
 The first exponent is just a constant factor,
-and we only expand the second exponential with the normalized Hamiltonian and "time" {math}`\alpha` as
+and we only expand the second exponential with the normalized Hamiltonian and "time" $\alpha$ as
 
-```{math}
+$$
     \mathrm{e}^{-\imath \hat H_\mathrm{norm} \alpha} = \sum_{n=0}^N a_n(\alpha) \phi_n(-\imath \hat H_\mathrm{norm}),
-```
+$$
 
 where up to constants, the coefficients "a" are Bessel functions of the first kind and the functions are the
 complex Chebychev polynomials.
@@ -72,23 +72,23 @@ The huge advantage of Chebychev polynomials is the availability of an exact uppe
 We start with two inequalities, see [^abramowitz], equations 22.14.4 and 9.1.62, which readily generalize to
 functions of operators:
 
-```{math}
-    |\phi_n(x)| = |T_n(-\imath x)| &\leq 1 (x \in [-i, i])
+\begin{align*}
+    |\phi_n(x)| =& |T_n(-\imath x)| &\leq 1 (x \in [-\imath, \imath])
         \qquad \rightarrow \qquad \|\phi_n(-\imath \hat H_\mathrm{norm}) \psi\| \leq \|\psi\|\\
-    |J_n(x)| &\leq  \frac{|x/2|^n}{n!}
-```
+    |J_n(x)| \leq& \frac{|x/2|^n}{n!}
+\end{align*}
 
 Now let us assume that we used the first N terms of the expansion and want to know the error when propagating a state.
 We get for a normalized state
 
-```{math}
+\begin{align*}
     \| \mathrm{e}^{-\imath \alpha \hat H_\mathrm{norm}} \psi \ 
-        - \ \sum_{n=0}^N a_n(\alpha) T_n(-\imath \hat H_\mathrm{norm}) \psi \|
-        &= \| \sum_{n=N+1}^\infty a_n(\alpha) T_n(-\imath \hat H_\mathrm{norm} \psi)\|\\
-    &\leq  \sum_{n=N+1}^\infty a_n(\alpha) \|T_n(-\imath \hat H_\mathrm{norm} \psi)\|\\
-    &\leq \sum_{n=N+1}^\infty a_n(\alpha)
-    \leq \sum_{n=N+1}^\infty \frac{(\alpha/2)^n}{n!}
-```
+        - \ \sum_{n=0}^N a_n(\alpha) \phi_n(-\imath \hat H_\mathrm{norm}) \psi \|
+        =& \| \sum_{n=N+1}^\infty a_n(\alpha) \phi_n(-\imath \hat H_\mathrm{norm} \psi)\|\\
+    \leq& \sum_{n=N+1}^\infty a_n(\alpha) \|\phi_n(-\imath \hat H_\mathrm{norm} \psi)\|\\
+    \leq& \sum_{n=N+1}^\infty a_n(\alpha)\\
+    \leq& \sum_{n=N+1}^\infty \frac{(\alpha/2)^n}{n!}
+\end{align*}
 
 We do not care about the exact value of the error, just note two properties of the expression:
 
@@ -111,7 +111,7 @@ the Chebychev polynomials are calculated through a recursion relation, and each 
 evaluation of the Hamiltonian / Liouvillian.
 The order of expansion, that is, the cost, is defined by the Bessel functions dropping below a certain threshold.
 The size of the time step, that is, the gain, however, is proportional to the alpha value, i.e., the
-argument to said Bessel function.
+argument of said Bessel function.
 
 So we can rephrase the question: At which value of alpha do we get most gain per cost?
 Let us plot the behaviour of the Bessel functions for different values of alpha
@@ -129,7 +129,7 @@ ax.set_ylim(1e-12, 1)
 ax.semilogy(n, y);
 ```
 
-We can clearly see that the Bessel functions are significant up to {math}`n \approx \alpha`, then they decay rapidly,
+We can clearly see that the Bessel functions are significant up to $n \approx \alpha$, then they decay rapidly,
 approaching values of 1e-12 within roughly 30 orders.
 No matter our timestep, we always have to include these thirty orders to get a well-converged solution.
 Hence, a good alpha value should definitely not be smaller than about 30.

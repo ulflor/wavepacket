@@ -39,7 +39,7 @@ hamiltonian = wp.operator.CartesianKineticEnergy(grid, dof_index=0, mass=1.0)
 
 For wave functions, we set up an initial wave function,
 and create a Schrödinger equation,
-{math}`\frac{\partial \psi}{\partial t} = -\imath \hat H \psi`,
+$\frac{\partial \psi}{\partial t} = -\imath \hat H \psi$,
 that we then solve.
 The overall dynamics are not spectacular:
 The initial Gaussians only broaden over time.
@@ -66,9 +66,9 @@ for t, psi in solver.propagate(psi_0, t0=0.0, num_steps=5):
 
 For the equivalent density operator description, we have to set up the initial state
 as a density operator. Here, we choose an incoherent summation of the two Gaussians,
-{math}`\hat \rho_0 = \frac{1}{2}(|\psi_L\rangle\langle\psi_L| + |\psi_R\rangle\langle\psi_R|)`.
+$\hat \rho_0 = \frac{1}{2}(|\psi_L\rangle\langle\psi_L| + |\psi_R\rangle\langle\psi_R|)$.
 Also, the equation of motion is now a Liouville von Neumann equation (LvNE),
-{math}`\frac{\partial \rho}{\partial t} = \mathcal{L}(\hat \rho) = [\hat H, \hat \rho]_-`.
+$\frac{\partial \rho}{\partial t} = \mathcal{L}(\hat \rho) = [\hat H, \hat \rho]_-$.
 Note that both the Schrödinger equation and the LvNE contain the same
 Hamiltonian, so we can recycle it.
 
@@ -80,9 +80,9 @@ Note how the small peak at the zero coordinate and the wiggles are gone now.
 This is the effect of the incoherent summation;
 there is no coherence between the left and right Gaussian.
 Had we chosen a coherent summation,
-{math}`\hat \rho_0 = |\psi_0\rangle\langle\psi_0|`,
+$\hat \rho_0 = |\psi_0\rangle\langle\psi_0|$,
 we would have obtained the same result as for the wave function case including
-the interference spike at {math}`x=0`.
+the interference spike at x=0.
 
 ```{code-cell}
 rho_0 = 0.5 * (wp.builder.pure_density(psi_left) + wp.builder.pure_density(psi_right))

@@ -6,7 +6,7 @@ kernelspec:
 
 # Pendular states
 
-The goal of this demo is the partial reproduction of some results of a paper by Oritgoso et al.[^ref-paper]
+The goal of this demo is the partial reproduction of some results of a paper by Ortigoso et al.[^ref-paper]
 Besides discussing pretty cool physics, it aims to demonstrate
 how to extract non-trivial data with minimal fuss and plot it.
 
@@ -15,26 +15,26 @@ how to extract non-trivial data with minimal fuss and plot it.
 If a molecule interacts with a non-resonant laser field, the ground state is shifted in energy.
 We can calculate the shift with standard perturbation theory and cavity-dressed states as
 
-```{math}
+$$
 \Delta E \propto - \sum_n \frac{|\langle \Phi_0 | \hat{\vec{\mu}} \vec E |\Phi_n \rangle|^2}{E_n - E_i - \omega}
     = - \frac{1}{2} \alpha(\omega) E^2 \cos^2 \theta
-```
+$$
 
-in terms of the dipole operator {math}`\mu`, the electric field with strength {math}`E` and frequency {math}`\omega`,
-and where the summation includes all excited states {math}`\Phi_n` with energies {math}`E_n`.
+in terms of the dipole operator $\mu$, the electric field with strength $E$ and frequency $\omega$,
+and where the summation includes all excited states $\Phi_n$ with energies $E_n$.
 Calculating the energy shift is difficult, but that is not our goal here.
-Instead, we absorb all these calculations in a material-specific dynamic polarizability {math}`\alpha(\omega)`.
-Then only a dependency on the angle {math}`\theta` between the effective dipole moment and the laser
+Instead, we absorb all these calculations in a material-specific dynamic polarizability $\alpha(\omega)$.
+Then only a dependency on the angle $\theta$ between the effective dipole moment and the laser
 polarization axis remains.
 
 If we plug this energy shift into the formula of a rigid linear rotor, we arrive at the Hamiltonian
 
-```{math}
+$$
 \hat H = \frac{\hat{L}^2}{2I} - \frac{1}{2} \ \alpha E^2 \cos^2\theta.
-```
+$$
 
 This Hamiltonian describes a linear rotor (first term) trapped in a cosine-shaped potential that draws the
-rotor towards the laser polarization axis ({math}`\alpha > 0`) or away from it ({math}`\alpha < 0`).
+rotor towards the laser polarization axis ($\alpha > 0$) or away from it ($\alpha < 0$).
 In the following, we only consider the former case of a positive polarizability.
 As the final step, we introduce three further manipulations:
 
@@ -42,13 +42,13 @@ As the final step, we introduce three further manipulations:
    to the second term in the Hamiltonian. We will follow the reference and assume a Gaussian shape.
 2. Because only the product of electric field strength and polarizability matters, we replace it by a
    single parameter.
-3. To get rid of the moment of inertia, we rescale the time such that we can set {math}`I=1`.
+3. To get rid of the moment of inertia, we rescale the time such that we can set $I=1$.
 
 With these manipulations, we arrive at the final formulation of a scaled model Hamiltonian
 
-```{math}
+$$
 \hat H = \frac{\hat{L}^2}{2} - \frac{\Delta}{2} \ \cos^2\theta \ \mathrm{e}^{- (t - \delta)^2 / \sigma^2}
-```
+$$
 
 In the following, we will follow ref.[^ref-paper] further by studying the dynamics of this Hamiltonian
 in different parameter regimes.

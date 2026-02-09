@@ -46,11 +46,11 @@ We will discuss this in the next section.
 
 The length of the time step is finally given through the alpha value:
 
-```{math}
+$$
    \alpha = \frac{\Delta t \ \delta E}{2},
-```
+$$
 
-where {math}`\delta E` is the difference between our guessed upper and lower bound of the spectrum
+where $\delta E$ is the difference between our guessed upper and lower bound of the spectrum
 (the "spectral range" of the Hamiltonian/Liouvillian).
 The alpha value should be larger than 40, otherwise the efficiency goes down.
 If it is much larger than say 100, you might run into numerical problems.
@@ -89,9 +89,9 @@ For didactic reasons, we will discuss three items in the following:
 #### How is the spectrum of the Liouvillian related to that of the Hamiltonian?
 
 If the spectrum of the Hamiltonian is inside the interval
-{math}`[E_\mathrm{min}, E_\mathrm{min} + \delta E]`, then the corresponding
-{py:class}`wp.expression.CommutatorLiouvillian` has the spectrum inside {math}`[-\delta E, \delta E]`,
-because the coherence terms with the fastest oscillations {math}`\sim \mathrm{e}^{\pm \imath \delta E t}`
+$[E_\mathrm{min}, E_\mathrm{min} + \delta E]$, then the corresponding
+{py:class}`wp.expression.CommutatorLiouvillian` has the spectrum inside $[-\delta E, \delta E]$,
+because the coherence terms with the fastest oscillations $\sim \mathrm{e}^{\pm \imath \delta E t}$
 occur between the eigenstates with the largest and smallest eigenvalues, respectively.
 
 An important corollary is that a {py:class}`wp.solver.ChebychevSolver`
@@ -127,7 +127,7 @@ The initial state must contain the highest-energy eigenstate as a non-negligible
 but has negligible relevance otherwise.
 The factor of 1.2 is an arbitrary safety margin to compensate that the result may not have been converged yet.
 Thus, we arrive at an estimate of the spectrum of about [0, 280].
-For an alpha value of 40 or more, our time step must be at least {math}`2 \cdot 40 / 280 = 2/7`.
+For an alpha value of 40 or more, our time step must be at least $2 \cdot 40 / 280 = 2/7$.
 Let us evolve a Gaussian wave packet with such values:
 
 ```{code-cell}
@@ -183,7 +183,7 @@ The question is: At what values?
 Here we need some intuition again (or guesswork or plain trial-and-error).
 
 Our Gaussian (x0 = -5, rms = 1) extends maybe three rms up to x=8, where the potential value is
-{math}`8^2/2 = 32 \mathrm{a.u.}`.
+$8^2/2 = 32 \mathrm{a.u.}$.
 Hence, we might truncate at 35 a.u., which is just a little less than the maximum potential of 50 a.u.
 For the kinetic energy, we do the same, which has a much larger effect.
 The system setup changes to

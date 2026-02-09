@@ -78,5 +78,5 @@ inverted_order = sliced_results
 inverted_order.sort(reverse=True)
 
 for energy, state in inverted_order:
-    print(f"E = {energy} a.u., |psi|^2 = {wp.grid.trace(state)}")
+    print(f"E = {energy:.4} a.u., |psi|^2 = {wp.grid.trace(state):.4}")
 ```
