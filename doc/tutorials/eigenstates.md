@@ -34,7 +34,7 @@ hamiltonian = wp.operator.CartesianKineticEnergy(grid, 0, 0.5) + wp.operator.Pot
 
 for energy, state in wp.solver.diagonalize(hamiltonian):
     # placeholder for doing something with the eigenstate
-    print(f"E = {energy} a.u., |psi|^2 = {wp.grid.trace(state)}")
+    print(f"E = {energy:.4} a.u., |psi|^2 = {wp.grid.trace(state):.4}")
 ```
 
 Note that the direct diagonalization does not do fancy tricks.

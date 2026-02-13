@@ -40,7 +40,7 @@ The tricky part is the determination of the spectral bounds.
 If these are too generous, we lose efficiency proportional to the quality of the guess;
 for example, if the Hamiltonian's spectrum fits twice into our guessed interval, computation takes twice as long as
 for a perfect guess.
-If, however, we choose them to tight, that is if the Liouvillian or Hamiltonian has an eigenvalue outside the
+If, however, we choose them too tight, that is if the Liouvillian or Hamiltonian has an eigenvalue outside the
 supplied bounds, the solution usually diverges.
 We will discuss this in the next section.
 
@@ -91,7 +91,7 @@ For didactic reasons, we will discuss three items in the following:
 If the spectrum of the Hamiltonian is inside the interval
 $[E_\mathrm{min}, E_\mathrm{min} + \delta E]$, then the corresponding
 {py:class}`wp.expression.CommutatorLiouvillian` has the spectrum inside $[-\delta E, \delta E]$,
-because the coherence terms with the fastest oscillations $\sim \mathrm{e}^{\pm \imath \delta E t}$
+because the coherence terms with the fastest oscillations $\sim \exp(\pm \imath \delta E t)$
 occur between the eigenstates with the largest and smallest eigenvalues, respectively.
 
 An important corollary is that a {py:class}`wp.solver.ChebychevSolver`
@@ -125,7 +125,7 @@ print(f"Energy guess = {energy_guess:.4}")
 
 The initial state must contain the highest-energy eigenstate as a non-negligible component,
 but has negligible relevance otherwise.
-The factor of 1.2 is an arbitrary safety margin to compensate that the result may not have been converged yet.
+The factor of 1.2 is a guessed safety margin because the result may not have been converged yet.
 Thus, we arrive at an estimate of the spectrum of about [0, 280].
 For an alpha value of 40 or more, our time step must be at least $2 \cdot 40 / 280 = 2/7$.
 Let us evolve a Gaussian wave packet with such values:
@@ -172,8 +172,8 @@ print(f"E = {energy},   dE^2 = {energy2 - energy**2}")
 From this data, it seems safe to assume that the state is well represented
 using only energy eigenstates with energies <= 30 a.u.
 This is *much* less than the estimate of 280 a.u. that we have guessed in the preceding section.
-In other words, 90% of our computing time is wasted on the correct propagation of high-energy eigenstates
-that are irrelevant for our dynamics, but which blow up the calculation if we choose the bounds too small.
+In other words, 90% of our computing time is wasted on the correct propagation of high-energy eigenstates.
+These are irrelevant for our dynamics, but would blow up the calculation if we chose the bounds too small.
 Such an imbalance between the spectrum that the Hamiltonian can support and the spectrum that we actually need
 is unfortunately common.
 
@@ -183,7 +183,7 @@ The question is: At what values?
 Here we need some intuition again (or guesswork or plain trial-and-error).
 
 Our Gaussian (x0 = -5, rms = 1) extends maybe three rms up to x=8, where the potential value is
-$8^2/2 = 32 \mathrm{a.u.}$.
+$8^2/2 = 32 \ \mathrm{a.u.}$.
 Hence, we might truncate at 35 a.u., which is just a little less than the maximum potential of 50 a.u.
 For the kinetic energy, we do the same, which has a much larger effect.
 The system setup changes to

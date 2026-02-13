@@ -6,13 +6,13 @@ kernelspec:
 
 # Pendular states
 
-The goal of this demo is the partial reproduction of some results of a paper by Ortigoso et al.[^ref-paper]
+The goal of this demo is the partial reproduction of some results of a paper by Ortigoso et al.[^ortigoso]
 Besides discussing pretty cool physics, it aims to demonstrate
 how to extract non-trivial data with minimal fuss and plot it.
 
 ## Alignment of molecules, some theory
 
-If a molecule interacts with a non-resonant laser field, the ground state is shifted in energy.
+If a molecule interacts with a non-resonant laser field, the electronic ground state is shifted in energy.
 We can calculate the shift with standard perturbation theory and cavity-dressed states as
 
 $$
@@ -50,7 +50,7 @@ $$
 \hat H = \frac{\hat{L}^2}{2} - \frac{\Delta}{2} \ \cos^2\theta \ \mathrm{e}^{- (t - \delta)^2 / \sigma^2}
 $$
 
-In the following, we will follow ref.[^ref-paper] further by studying the dynamics of this Hamiltonian
+In the following, we will follow ref.[^ortigoso] further by studying the dynamics of this Hamiltonian
 in different parameter regimes.
 
 ## Non-adiabatic alignment
@@ -62,11 +62,11 @@ after which it starts to tumble.
 
 As alignment measure, we usually employ the expectation value of the squared cosine.
 In the dynamics shown below, we can clearly see the out of equilibrium dynamics after the laser pulse at t = 0.15.
-This plot corresponds to the first graph of figure 1 of ref.[^ref-paper].
+This plot corresponds to the first graph of figure 1 of ref.[^ortigoso].
 The stronger the laser field the faster the subsequent dynamics of the rotor.
 
 Note that at certain points in time, the rotor exhibits alignment recurrence even after the laser field has passed.
-This field-free alignment is useful because the molecule is aligned, yet undisturbed by external fields.
+This field-free alignment is used in practice because the molecule is aligned, yet undisturbed by external fields.
 
 ```{code-cell}
 import math
@@ -119,9 +119,9 @@ Encapsulation saves us some noise here, plus it guarantees a homogenous setup.
 ## Adiabatic alignment
 
 If the laser pulse is much longer than the relevant rotational time scales, we are in the adiabatic limit.
-The rotor aligns with the laser pulse when it is turned on and largely regresses to the field-free rotation
-as the laser is turned off.
-This plot corresponds to the third graph of figure 1 of ref[^ref-paper].
+The rotor aligns with the laser pulse when the latter is turned on
+and largely regresses to the field-free state as the laser is turned off.
+This plot corresponds to the third graph of figure 1 of ref[^ortigoso].
 
 ```{code-cell}
 times, expectation_values_100 = calculate_alignment(Delta=100, sigma=5)
@@ -140,7 +140,7 @@ that may perturb molecular dynamics.
 
 Finally, we can also study the alignment of rotationally excited states.
 A new feature in this case is that the magnetic quantum number "m" no longer needs to be zero.
-Let us reproduce figure 3 of ref.[^ref-paper].
+Let us reproduce figure 3 of ref.[^ortigoso].
 
 ```{code-cell}
 data = [calculate_alignment(Delta=400, sigma=0.05, l0=5, m=m) for m in range(6)]
@@ -165,4 +165,4 @@ While an increasing magnetic quantum number results in less field-free alignment
 similar for all even values of m.
 The averaged alignment, however, is significantly damped, and smaller due to the lower alignment of odd values of m.
 
-[^ref-paper]: Ortigoso et al. <https://doi.org/10.1063/1.478241>
+[^ortigoso]: Ortigoso et al. <https://doi.org/10.1063/1.478241>

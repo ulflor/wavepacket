@@ -74,7 +74,7 @@ Hamiltonian, so we can recycle it.
 
 Besides these unavoidable changes, the interface works the same
 as for the wave function case.
-{py:func}`wavepacket.grid.dvr_density` in particular works for both types of states.
+{py:func}`wavepacket.grid.dvr_density` and many other functions work for both types of states.
 
 Note how the small peak at the zero coordinate and the wiggles are gone now.
 This is the effect of the incoherent summation;

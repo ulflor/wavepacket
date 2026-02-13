@@ -25,7 +25,7 @@ There are two main applications for such a time evolution:
 1. If you apply this time evolution operator to some wave function, the norm decays.
    The decay is faster for high-energy contributions, so that after sufficient propagation time,
    the wave function is dominated by the ground state.
-   Hence, imaginary-time propagation is a quick and easy way to get the ground state of a system
+   Hence, imaginary-time propagation is an easy way to get the ground state of a system
    (and also some excited states).
 2. The time evolution operator has the shape of a density operator for the system at finite temperature.
    Hence, you can use imaginary-time propagation to prepare a system at a finite temperature.
@@ -104,7 +104,7 @@ If the wave function has or acquires even the smallest asymmetry, for example th
 you will eventually converge to the ground state, albeit slowly.
 
 However, you can exploit this behavior in a different scenario.
-The convergence time is given by the smallest excitation energy,
+The time required for convergence is given by the smallest excitation energy,
 because that state's contribution decays second-slowest after the ground-state contribution.
 In some systems, this excitation energy is small, leading to rather slow convergence.
 A prototypical example is the double-well potential, where low-energy states always come in pairs with small energy
@@ -215,6 +215,7 @@ for step in range(5):
 
 Because imaginary-time propagation only makes sense for a particular Liouvillian, you supply again
 the Hamiltonian directly, not some Liouvillian.
+
 Side note: because this Liouvillian has the same spectrum as the Hamiltonian, we can use the
 same RelaxationSolver for density operators and wave functions, in contrast to the real-time ChebychevSolver.
 
