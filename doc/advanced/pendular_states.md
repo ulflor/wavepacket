@@ -82,7 +82,7 @@ def calculate_alignment(Delta, sigma, l0=0, m=0):
     delay = 3 * sigma
 
    # tiny optimization: smaller grids are faster
-    thetaDof = wp.grid.SphericalHarmonicsDof(25+l0, m)
+    thetaDof = wp.grid.SphericalHarmonicsDof(15+l0, m)
     grid = wp.grid.Grid(thetaDof)
 
     psi0 = wp.builder.product_wave_function(grid, wp.SphericalHarmonic(l0, m))
@@ -151,6 +151,7 @@ data = [calculate_alignment(Delta=400, sigma=0.05, l0=5, m=m) for m in range(6)]
 times = data[0][0]
 results = [vals for (t, vals) in data]
 
+# factor of 2 because positive and negative m yield the same result
 average = results[0]
 for m in range(1,6):
     average = average + 2 * results[m]
