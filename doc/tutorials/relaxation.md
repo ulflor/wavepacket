@@ -6,6 +6,9 @@ kernelspec:
 
 # Ground-state relaxation and finite temperatures
 
+This web page can be downloaded as notebook: {nb-download}`relaxation.ipynb` (Jupyter)
+or {download}`relaxation.md` (Markdown)
+
 ## Introduction
 
 In imaginary time, $t \to \imath \tau$, the Schrödinger equation becomes

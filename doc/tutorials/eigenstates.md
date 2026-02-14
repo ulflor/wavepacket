@@ -6,6 +6,9 @@ kernelspec:
 
 # Calculating eigenstates and -energies of operators
 
+This web page can be downloaded as notebook: {nb-download}`eigenstates.ipynb` (Jupyter)
+or {download}`eigenstates.md` (Markdown)
+
 There are a number of use cases where we want to calculate the eigenstates of a Hamiltonian,
 for example, if we start a calculation from an ensemble of low-temperature states.
 Here, we show some basic and advanced use cases around energy eigenstates.

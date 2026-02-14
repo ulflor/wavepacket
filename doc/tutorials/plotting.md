@@ -8,6 +8,9 @@ kernelspec:
 
 This tutorial teaches some basics about plotting quantum states in Wavepacket.
 
+This web page can be downloaded as notebook: {nb-download}`plotting.ipynb` (Jupyter)
+or {download}`plotting.md` (Markdown)
+
 ## Basics of plotting with Matplotlib
 
 The standard for plotting under Python is Matplotlib, see `https://matplotlib.org` for the full documentation.

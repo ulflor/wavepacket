@@ -6,6 +6,9 @@ kernelspec:
 
 # Pendular states
 
+This web page can be downloaded as notebook: {nb-download}`pendular_states.ipynb` (Jupyter)
+or {download}`pendular_states.md` (Markdown)
+
 The goal of this demo is the partial reproduction of some results of a paper by Ortigoso et al.[^ortigoso]
 Besides discussing pretty cool physics, it aims to demonstrate
 how to extract non-trivial data with minimal fuss and plot it.

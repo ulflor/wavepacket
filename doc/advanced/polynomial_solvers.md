@@ -6,6 +6,9 @@ kernelspec:
 
 # Background theory: Polynomial solvers
 
+This web page can be downloaded as notebook: {nb-download}`polynomial_solvers.ipynb` (Jupyter)
+or {download}`polynomial_solvers.md` (Markdown)
+
 The usage of the most common Chebychev solver is documented in {doc}`/tutorials/chebychev_solvers`,
 see there on the practical aspects.
 Here, we want to give some more theoretical details on the subject for those inclined to dig deeper.

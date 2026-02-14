@@ -6,6 +6,10 @@ kernelspec:
 
 # Using Chebychev solvers
 
+This web page can be downloaded as notebook: {nb-download}`chebychev_solvers.ipynb` (Jupyter)
+or {download}`chebychev_solvers.md` (Markdown)
+
+
 ```{note}
 This tutorial focuses on the *usage* of the {py:class}`wavepacket.solver.ChebychevSolver`.
 If you want to know more about the theory, see {doc}`/advanced/polynomial_solvers` or the original paper

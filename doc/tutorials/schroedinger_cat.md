@@ -8,6 +8,9 @@ kernelspec:
 
 # Schrödinger cat states
 
+This web page can be downloaded as notebook: {nb-download}`schroedinger_cat.ipynb` (Jupyter)
+or {download}`schroedinger_cat.md` (Markdown)
+
 This tutorial demonstrates one of the core features of Wavepacket:
 Switching between wave functions and density operators with minimal overhead
 

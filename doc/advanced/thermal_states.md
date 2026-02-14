@@ -6,6 +6,9 @@ kernelspec:
 
 # Representing states at finite temperature
 
+This web page can be downloaded as notebook: {nb-download}`thermal_states.ipynb` (Jupyter)
+or {download}`thermal_states.md` (Markdown)
+
 ## Introduction
 
 Sometimes, we wish to study systems at finite temperatures.
