@@ -4,54 +4,77 @@ kernelspec:
     name: python3
 ---
 
-(tutorial-schroedinger-cat)=
-
-# Schrödinger cat states
+# Getting started
 
 This web page can be downloaded as notebook: {nb-download}`schroedinger_cat.ipynb` (Jupyter)
 or {download}`schroedinger_cat.md` (Markdown)
 
-This tutorial demonstrates one of the core features of Wavepacket:
-Switching between wave functions and density operators with minimal overhead
-
-We consider a simple free particle as a coherent or incoherent sum of two Gaussians.
-This shows the main features without too much detracting physics.
+This tutorial demonstrates the basic setup of a Wavepacket calculation,
+and of the core features: Switching between wave functions and density operators with minimal overhead
 
 ## General setup
 
-We start with a few convenience imports and shortcuts
+For this tutorial, we only consider a one-dimensional free particle.
+More complex setups are possible, see other tutorials and advanced demos.
+
+As general setup, we need to do two things:
+
+1. Set up a grid / basis expansion for your system.
+   A (multidimensional) "grid" is the direct product of one-dimensional grids,
+   called "degrees of freedom" (DOF) in Wavepacket.
+   Note that Wavepacket uses exclusively the DVR / pseudo-spectral method,
+   see {doc}`/representations` or the wiki[^wiki-dvr] for details.
+2. Given a grid, define relevant operators.
+   Here, we only need a Hamiltonian, but in other settings, you might also want to
+   calculate expectation values of other operators etc.
+
+```{code-cell}
+import wavepacket as wp
+
+# 1. One-dimensional grid with a plane wave expansion DOF == equally-spaced grid
+dof = wp.grid.PlaneWaveDof(-20, 20, 128)
+grid = wp.grid.Grid(dof)
+
+# 2. The Hamiltonian consists of only the kinetic energy p^2/2m.
+hamiltonian = wp.operator.CartesianKineticEnergy(grid, 0, mass=1.0)
+```
+
+A few notes about the code so far:
+
+- Wavepacket makes heavy use of immutable objects.
+  Every object in Wavepacket is defined on construction and should not be modified later.
+  This pattern avoids unintended, surprising side effects from modifying objects used already elsewhere.
+  Note, though, that the Python interpreter does not always enforce this immutability,
+  only IDEs or static checkers will complain.
+- For multidimensional grids, just supply a list of DOFs instead of a single DOF,
+  e.g., `wp.grid.Grid([dof, dof])`.
+  This pattern is often repeated in other places where one or multiple objects can be supplied.
+- We tried to keep the interface consistent where possible.
+  For example, all operators take the grid as first parameter, followed (where it makes sense) by the index
+  of the dimension along which the operator acts, followed by other parameters.
+
+Operators themselves are sometimes used directly, for example when diagonalizing an operator or
+propagating in imaginary time.
+Usually, however, you wrap them into an Expression to specify which equation of motion you want to solve.
+
+## Evolving wave functions in time
+
+Let us first evolve some wave packet in time.
+To produce non-trivial dynamics, we prepare a "Schrödinger cat state" with two Gaussians,
+$\psi = 1/\sqrt{2} (\psi_L + \psi_R)$.
+
+For the wave packet setup, we need to:
+
+- set up the initial state to propagate.
+- define the (Schrödinger) equation of motion to solve
+- set up a solver to do the time evolution.
+
+Of course, once we propagate our state in time, we want to do something with the result.
+Here, we just plot the density.
 
 ```{code-cell}
 import math
 
-import matplotlib.pyplot as plt
-import numpy as np
-import wavepacket as wp
-```
-
-Both descriptions, wave function and density operator, share the grid, and
-the operator structure, so we only need to set it up once.
-
-```{code-cell}
-degree_of_freedom = wp.grid.PlaneWaveDof(-15, 15, 128)
-grid = wp.grid.Grid(degree_of_freedom)
-hamiltonian = wp.operator.CartesianKineticEnergy(grid, dof_index=0, mass=1.0)
-```
-
-## Wave functions
-
-For wave functions, we set up an initial wave function,
-and create a Schrödinger equation,
-$\frac{\partial \psi}{\partial t} = -\imath \hat H \psi$,
-that we then solve.
-The overall dynamics are not spectacular:
-The initial Gaussians only broaden over time.
-
-In the plots, note the small peak in the density around the zero coordinate,
-and some wiggles as soon as the two wave functions come into contact with each other.
-Both features arise from the coherent addition of the two wave functions
-
-```{code-cell}
 rms = math.sqrt(0.5)
 psi_left = wp.builder.product_wave_function(grid, wp.Gaussian(-3, rms=rms))
 psi_right = wp.builder.product_wave_function(grid, wp.Gaussian(3, rms=rms))
@@ -65,27 +88,51 @@ for t, psi in solver.propagate(psi_0, t0=0.0, num_steps=5):
     plotter.plot(psi, t)
 ```
 
-## Density operators
+As can be seen, as soon as the Gaussians encounter each other, we get typical oscillations.
+This is easily understood because any observable, such as the density at a given point,
+is calculated as
 
-For the equivalent density operator description, we have to set up the initial state
-as a density operator. Here, we choose an incoherent summation of the two Gaussians,
-$\hat \rho_0 = \frac{1}{2}(|\psi_L\rangle\langle\psi_L| + |\psi_R\rangle\langle\psi_R|)$.
-Also, the equation of motion is now a Liouville von Neumann equation (LvNE),
-$\frac{\partial \rho}{\partial t} = \mathcal{L}(\hat \rho) = [\hat H, \hat \rho]_-$.
-Note that both the Schrödinger equation and the LvNE contain the same
-Hamiltonian, so we can recycle it.
+\begin{align*}
+    \langle \hat O \rangle =& \langle \psi | \hat O | \psi \rangle
+        = \langle \psi_L + \psi_R | \hat O | \psi_L + \psi_R \rangle \\
+    =& \langle \psi_L | \hat O | \psi_R \rangle + \langle \psi_R | \hat O | \psi_R \rangle
+        + 2 \Re \langle \psi_L | \hat O | \psi_R \rangle
+    ,
+\end{align*}
 
-Besides these unavoidable changes, the interface works the same
-as for the wave function case.
-{py:func}`wavepacket.grid.dvr_density` and many other functions work for both types of states.
+where the last term causes the interferences,
+and distinguishes quantum mechanics from simple ensemble averaging.
 
-Note how the small peak at the zero coordinate and the wiggles are gone now.
-This is the effect of the incoherent summation;
-there is no coherence between the left and right Gaussian.
-Had we chosen a coherent summation,
-$\hat \rho_0 = |\psi_0\rangle\langle\psi_0|$,
-we would have obtained the same result as for the wave function case including
-the interference spike at x=0.
+The result of constructing a wave function or of a propagation is always a {py:class}`wavepacket.grid.State` object.
+These objects hide the difference between wave functions and density operators.
+You should rarely ever need to deal with the internals of this class,
+because almost all Wavepacket functionality takes or outputs a state.
+
+As a side effect, Wavepacket abstracts away difference between wave functions and density operators.
+As one example, Wavepacket does not offer a function to calculate the norm, because the L2-norm for
+wave functions is a different quantity than the trace norm for density operators,
+which is highly confusing (at least it confused me repeatedly).
+As an abstraction, Wavepacket only offers a function to calculate the *trace*,
+which has the same definition for both types of states.
+
+Here, we used a simple ODE solver that employs a slow but robust Runge-Kutta procedure by default.
+Again, solvers have a consistent interface that takes the expression as first parameters,
+followed by the time step and all other parameters.
+
+Instead of plotting, you might wish for more advanced processing.
+See {doc}`/advanced/pendular_states` for a more elaborate example.
+
+## Evolving density operators in time
+
+One of the strengths of Wavepacket is the minimum overhead switch to a density operator formalism.
+We use almost the same setup as the wave function case except for two changes:
+Our initial state is a density operator, not a wave function.
+And we set up a Liouville von Neumann equation (LvNe);
+for a closed system, this is just the commutator Liouvillian.
+
+To contrast density operator dynamics with wave function dynamics, we set up an
+*incoherent* sum of the left and right Gaussians,
+$\hat \rho = 1/2 (|\psi_L\rangle\langle\psi_L| + |\psi_R\rangle\langle\psi_R|)$.
 
 ```{code-cell}
 rho_0 = 0.5 * (wp.builder.pure_density(psi_left) + wp.builder.pure_density(psi_right))
@@ -97,3 +144,24 @@ plotter = wp.plot.StackedPlot1D(6, rho_0)
 for t, rho in solver.propagate(rho_0, t0=0.0, num_steps=5):
     plotter.plot(rho, t)
 ```
+
+Now we see no interference terms anymore, because we only get the ensemble average,
+
+$$
+    \langle \hat O \rangle = \mathrm{Tr} (\hat O \hat \varrho)
+        = \frac{1}{2} ( \langle \psi_L|\hat O |\psi_L \rangle + \langle \psi_R| \hat O |\psi_R\rangle)
+    .
+$$
+
+If we choose the direct product of the initial wave function (*coherent* summation), we recover
+the oscillations, of course.
+
+```{code-cell}
+rho_0 = wp.builder.pure_density(psi_0)
+plotter = wp.plot.StackedPlot1D(6, rho_0)
+for t, rho in solver.propagate(rho_0, t0=0.0, num_steps=5):
+    plotter.plot(rho, t)
+```
+
+[^wiki-dvr]: See the explanation of the DVR method in the
+[Wavepacket wiki](https://sourceforge.net/p/wavepacket/wiki/Numerics.DVR>).

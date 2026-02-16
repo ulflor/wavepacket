@@ -3,7 +3,8 @@ Wavepacket documentation
 
 Wavepacket allows you to easily set up and simulate smaller quantum
 systems. It is particularly well suited for small molecule molecular dynamics
-or for teaching.
+or for teaching. See :doc:`tutorials/schroedinger_cat` for an introduction into
+the code.
 
 The current Python package is the offspring of a longer history of
 development, there is also a maintained Matlab implementation and a
@@ -20,10 +21,13 @@ Features
 - Most functions accept wave functions as well as density operators,
   allowing you to move between closed and open quantum systems with
   few code changes.
-- You can easily define complex setups: Want to use an ensemble of
-  random thermal wave functions? Can be easily done.
+- You can easily define complex setups:
+
+  Want to use an ensemble of random thermal wave functions?
+  Can be easily done (see :doc:`/advanced/thermal_states`).
+
   Summing over all magnetic quantum numbers m for a given initial
-  angular momentum? No problem.
+  angular momentum? No problem (see :doc:`/advanced/pendular_states`).
 
 
 Bugs / Requests
@@ -36,7 +40,6 @@ free to use the `issue tracker <https://github.com/ulflor/wavepacket/features>`_
 .. toctree::
     :caption: General
 
-    getting-started
     architecture
     representations
     license
