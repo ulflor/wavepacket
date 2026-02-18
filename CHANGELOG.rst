@@ -24,6 +24,9 @@ ChangeLog
 - (#12) Changed the implementation of builder.random_wave_function();
   it now constructs random numbers exp(i * phi) because these are more useful.
 
+- (#13) Tutorials and demos also can be downloaded as Jupyter notebooks
+  and mostly render fine as notebooks.
+
 - significantly improved type information, simplified attributes,
   implemented some annotation best practices
 
