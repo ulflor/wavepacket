@@ -81,8 +81,8 @@ import wavepacket as wp
 def calculate_alignment(Delta, sigma, l0=0, m=0):
     delay = 3 * sigma
 
-   # tiny optimization: smaller grids are faster
-    thetaDof = wp.grid.SphericalHarmonicsDof(15+l0, m)
+    # tiny optimization: smaller grids are faster
+    thetaDof = wp.grid.SphericalHarmonicsDof(25+l0, m)
     grid = wp.grid.Grid(thetaDof)
 
     psi0 = wp.builder.product_wave_function(grid, wp.SphericalHarmonic(l0, m))
