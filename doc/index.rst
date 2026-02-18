@@ -39,6 +39,7 @@ free to use the `issue tracker <https://github.com/ulflor/wavepacket/features>`_
 
 .. toctree::
     :caption: General
+    :hidden:
 
     architecture
     representations
@@ -46,6 +47,7 @@ free to use the `issue tracker <https://github.com/ulflor/wavepacket/features>`_
 
 .. toctree::
     :caption: Introductory tutorials
+    :hidden:
 
     tutorials/schroedinger_cat
     tutorials/eigenstates
@@ -55,6 +57,7 @@ free to use the `issue tracker <https://github.com/ulflor/wavepacket/features>`_
 
 .. toctree::
     :caption: Advanced usage and theory
+    :hidden:
 
     advanced/pendular_states
     advanced/thermal_states
@@ -67,7 +70,8 @@ free to use the `issue tracker <https://github.com/ulflor/wavepacket/features>`_
     Wavepacket wiki <https://sourceforge.net/p/wavepacket/wiki>
 
 .. toctree::
-   :caption: API
-   :maxdepth: 4
+    :caption: API
+    :maxdepth: 4
+    :hidden:
 
-   autoapi/index
+    autoapi/index

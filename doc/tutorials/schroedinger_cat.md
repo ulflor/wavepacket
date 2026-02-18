@@ -48,8 +48,9 @@ A few notes about the code so far:
   only IDEs or static checkers will complain.
 - For multidimensional grids, just supply a list of DOFs instead of a single DOF,
   e.g., `wp.grid.Grid([dof, dof])`.
-  This pattern is often repeated in other places where one or multiple objects can be supplied.
-- We tried to keep the interface consistent where possible.
+  We use this pattern of applying either a single object or a list of objects
+  extensively where one or multiple objects can be supplied.
+- We tried to keep the interfaces consistent where possible.
   For example, all operators take the grid as first parameter, followed (where it makes sense) by the index
   of the dimension along which the operator acts, followed by other parameters.
 
@@ -60,7 +61,7 @@ Usually, however, you wrap them into an Expression to specify which equation of 
 ## Evolving wave functions in time
 
 Let us first evolve some wave packet in time.
-To produce non-trivial dynamics, we prepare a "Schrödinger cat state" with two Gaussians,
+To produce non-trivial dynamics, we prepare a "Schrödinger cat state" with two interfering Gaussians,
 $\psi = 1/\sqrt{2} (\psi_L + \psi_R)$.
 
 For the wave packet setup, we need to:
@@ -104,15 +105,16 @@ where the last term causes the interferences,
 and distinguishes quantum mechanics from simple ensemble averaging.
 
 The result of constructing a wave function or of a propagation is always a {py:class}`wavepacket.grid.State` object.
-These objects hide the difference between wave functions and density operators.
+These objects hide the difference between wave functions and density operators,
+and they are bound to a specific grid.
 You should rarely ever need to deal with the internals of this class,
 because almost all Wavepacket functionality takes or outputs a state.
 
-As a side effect, Wavepacket abstracts away difference between wave functions and density operators.
+Wavepacket tries to abstract away differences between wave functions and density operators.
 As one example, Wavepacket does not offer a function to calculate the norm, because the L2-norm for
 wave functions is a different quantity than the trace norm for density operators,
 which is highly confusing (at least it confused me repeatedly).
-As an abstraction, Wavepacket only offers a function to calculate the *trace*,
+Wavepacket therefore offers a function to calculate the *trace*,
 which has the same definition for both types of states.
 
 Here, we used a simple ODE solver that employs a slow but robust Runge-Kutta procedure by default.
