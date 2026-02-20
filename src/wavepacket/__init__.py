@@ -2,7 +2,7 @@
 A package for the propagation of quantum-mechanical wave functions.
 """
 
-__version__ = "0.3.0"
+__version__ = "0.4.0"
 
 __all__ = ['__version__', 'log', 'BadFunctionCall', 'BadGridError', 'BadStateError',
            'ExecutionError', 'InvalidValueError',
