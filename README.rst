@@ -1,3 +1,5 @@
+.. Be aware that this document also doubles as index.html on the documentation page.
+
 Description
 -----------
 
