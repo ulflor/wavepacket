@@ -1,5 +1,5 @@
 """
-A package for the propagation of quantum-mechanical wave functions.
+A package for solving Schroedinger and Liouville von Neumann equations.
 """
 
 __version__ = "0.4.0"
