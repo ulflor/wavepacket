@@ -235,7 +235,7 @@ def population(state: wp.grid.State, target: wp.grid.State) -> float:
     the two states. The target state is normalized before the calculation.
     This operation can be thought of as a shortcut for creating a
     :py:class:`wp.operator.Projection` with the target and calculating
-    the :py:func:`wp.operator.expectation_value` of the input state.
+    the :py:func:`wp.expectation_value` of the input state.
 
     Parameters
     ----------

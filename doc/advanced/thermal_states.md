@@ -121,10 +121,10 @@ for beta in beta_vals_to_calculate:
 
     unit_density = wp.builder.unit_density(grid)
     rho = solver.step(unit_density, 0)
-    Z = wp.grid.trace(rho)
+    Z = wp.trace(rho)
 
-    thermal_state = wp.grid.normalize(rho) # or you divide by Z
-    energy = wp.operator.expectation_value(hamiltonian, thermal_state).real
+    thermal_state = wp.normalize(rho) # or you divide by Z
+    energy = wp.expectation_value(hamiltonian, thermal_state).real
     
     print(f"beta = {beta}: Z = {Z:.4}   energy = {energy:.4}")
 ```
@@ -220,7 +220,7 @@ then we can calculate the expectation values of the response operator.
 In practice, the partition sum can be trivially obtained from intermediate results.
 
 ```{code-cell}
-energies_and_states = [val for val in wp.solver.diagonalize(hamiltonian)]
+energies_and_states = [val for val in wp.diagonalize(hamiltonian)]
 
 for beta in beta_vals_to_calculate:
     print("++++++++++++++++++++++++++++++++++++++++++++++++++++++")
@@ -235,8 +235,8 @@ for beta in beta_vals_to_calculate:
         for energy, psi in ensemble:
             relaxed_state = np.exp(-energy * beta / 2.0) * psi
             
-            Z += wp.grid.trace(relaxed_state)
-            response += wp.operator.expectation_value(hamiltonian, relaxed_state).real
+            Z += wp.trace(relaxed_state)
+            response += wp.expectation_value(hamiltonian, relaxed_state).real
             
         print (f"N={num_states}:   Z = {Z:.4}    E = {response / Z:.4}") 
 ```
@@ -396,8 +396,8 @@ for beta in beta_vals_to_calculate:
             psi_0 = wp.builder.random_wave_function(grid, rng)
             relaxed_state = solver.step(psi_0, 0)
 
-            Z += wp.grid.trace(relaxed_state) / num_states
-            response += wp.operator.expectation_value(hamiltonian, relaxed_state).real / num_states
+            Z += wp.trace(relaxed_state) / num_states
+            response += wp.expectation_value(hamiltonian, relaxed_state).real / num_states
 
         print (f"N={num_states}:    Z = {Z:.4}    E = {response / Z:.4}")
 ```

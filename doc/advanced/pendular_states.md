@@ -96,7 +96,7 @@ def calculate_alignment(Delta, sigma, l0=0, m=0):
     equation = wp.expression.SchroedingerEquation(hamiltonian)
     solver = wp.solver.OdeSolver(equation, dt=sigma / 50)
 
-    results = [(t, wp.operator.expectation_value(cos2, psi))
+    results = [(t, wp.expectation_value(cos2, psi))
                for (t, psi) in solver.propagate(psi0, 0, 500)]
     times = np.array([t for (t, _) in results])
     expectation_values = np.array([abs(val) for (_, val) in results])

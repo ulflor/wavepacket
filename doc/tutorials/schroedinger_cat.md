@@ -84,9 +84,9 @@ psi_0 = math.sqrt(0.5) * (psi_left + psi_right)
 schroedinger_eq = wp.expression.SchroedingerEquation(hamiltonian)
 solver = wp.solver.OdeSolver(schroedinger_eq, dt=math.pi/5)
 
-plotter = wp.plot.StackedPlot1D(6, psi_0)
+plot_1d = wp.plot.StackedPlot1D(6, psi_0)
 for t, psi in solver.propagate(psi_0, t0=0.0, num_steps=5):
-    plotter.plot(psi, t)
+    plot_1d.plot(psi, t)
 ```
 
 As can be seen, as soon as the Gaussians encounter each other, we get typical oscillations.
@@ -142,9 +142,9 @@ rho_0 = 0.5 * (wp.builder.pure_density(psi_left) + wp.builder.pure_density(psi_r
 liouvillian = wp.expression.CommutatorLiouvillian(hamiltonian)
 solver = wp.solver.OdeSolver(liouvillian, dt=math.pi/5)
 
-plotter = wp.plot.StackedPlot1D(6, rho_0)
+plot_1d = wp.plot.StackedPlot1D(6, rho_0)
 for t, rho in solver.propagate(rho_0, t0=0.0, num_steps=5):
-    plotter.plot(rho, t)
+    plot_1d.plot(rho, t)
 ```
 
 Now we see no interference terms anymore, because we only get the ensemble average,
@@ -160,9 +160,9 @@ the oscillations, of course.
 
 ```{code-cell}
 rho_0 = wp.builder.pure_density(psi_0)
-plotter = wp.plot.StackedPlot1D(6, rho_0)
+plot_1d = wp.plot.StackedPlot1D(6, rho_0)
 for t, rho in solver.propagate(rho_0, t0=0.0, num_steps=5):
-    plotter.plot(rho, t)
+    plot_1d.plot(rho, t)
 ```
 
 [^wiki-dvr]: See the explanation of the DVR method in the

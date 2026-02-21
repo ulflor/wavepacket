@@ -9,6 +9,7 @@ __all__ = ['__version__', 'log', 'BadFunctionCall', 'BadGridError', 'BadStateErr
            'SinSquare', 'SoftRectangularFunction',
            'Gaussian', 'PlaneWave', 'SphericalHarmonic',
            'builder', 'expression', 'grid', 'operator', 'solver', 'testing', 'typing',
+           'dvr_density', 'fbr_density', 'normalize', 'orthonormalize', 'population', 'trace',
            'diagonalize', 'expectation_value']
 
 # order matters, because subpackages depend on each other at times.

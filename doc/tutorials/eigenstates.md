@@ -35,9 +35,9 @@ def razavy_potential(dvr_points):
 grid = wp.grid.Grid(wp.grid.PlaneWaveDof(-7, 7, 128))
 hamiltonian = wp.operator.CartesianKineticEnergy(grid, 0, 0.5) + wp.operator.Potential1D(grid, 0, razavy_potential)
 
-for energy, state in wp.solver.diagonalize(hamiltonian):
+for energy, state in wp.diagonalize(hamiltonian):
     # placeholder for doing something with the eigenstate
-    print(f"E = {energy:.4} a.u., |psi|^2 = {wp.grid.trace(state):.4}")
+    print(f"E = {energy:.4} a.u., |psi|^2 = {wp.trace(state):.4}")
 ```
 
 Note that the direct diagonalization does not do fancy tricks.
@@ -59,7 +59,7 @@ This is slightly inefficient if you do not need all states,
 but the wasted effort is much smaller than the effort for the eigenvalue calculation in the first place.
 
 ```{code-cell}
-results = list(wp.solver.diagonalize(hamiltonian))
+results = list(wp.diagonalize(hamiltonian))
 len(results)
 ```
 
@@ -81,5 +81,5 @@ inverted_order = sliced_results
 inverted_order.sort(reverse=True)
 
 for energy, state in inverted_order:
-    print(f"E = {energy:.4} a.u., |psi|^2 = {wp.grid.trace(state):.4}")
+    print(f"E = {energy:.4} a.u., |psi|^2 = {wp.trace(state):.4}")
 ```

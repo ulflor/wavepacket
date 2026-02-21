@@ -73,11 +73,11 @@ Note, though, that the result needs to be normalized before further use!
 ```{code-cell}
 def relax(solver, psi0):
     for t, psi in solver.propagate(psi0, t0=0, num_steps=5):
-        psi_normalized = wp.grid.normalize(psi)
+        psi_normalized = wp.normalize(psi)
 
-        energy = wp.operator.expectation_value(hamiltonian, psi_normalized).real
-        energy2 = wp.operator.expectation_value(hamiltonian*hamiltonian, psi_normalized).real
-        print(f"t = {t}:  E = {energy},   dE^2 = {energy2 - energy**2:.4}, |psi|^2 = {wp.grid.trace(psi):.4}")
+        energy = wp.expectation_value(hamiltonian, psi_normalized).real
+        energy2 = wp.expectation_value(hamiltonian*hamiltonian, psi_normalized).real
+        print(f"t = {t}:  E = {energy},   dE^2 = {energy2 - energy**2:.4}, |psi|^2 = {wp.trace(psi):.4}")
     return psi
 
 # to demonstrate convergence, let us take a Gaussian that is too wide (rms=1 would be exact)
@@ -134,8 +134,8 @@ Let us write the code before a discussion:
 
 ```{code-cell}
 def print_data(state, n, step):
-    energy = wp.operator.expectation_value(hamiltonian, state).real
-    energy2 = wp.operator.expectation_value(hamiltonian*hamiltonian, state).real
+    energy = wp.expectation_value(hamiltonian, state).real
+    energy2 = wp.expectation_value(hamiltonian*hamiltonian, state).real
     print(f"step {step}: E_{n} = {energy},   dE^2 = {energy2 - energy**2:.4}")
 
 def relax_v2(solver, found_states):
@@ -144,7 +144,7 @@ def relax_v2(solver, found_states):
 
     for step in range(5):
         psi = solver.step(psi, 0)
-        psi = wp.grid.orthonormalize(found_states + [psi])[-1]
+        psi = wp.orthonormalize(found_states + [psi])[-1]
         print_data(psi, len(found_states), step+1)
 
     print("----------------------")
@@ -211,9 +211,7 @@ rho =  wp.builder.unit_density(grid)
 
 for step in range(5):
     rho = solver.step(rho, 0)
-
-    Z = wp.grid.trace(rho)
-    print(f"beta = {delta_beta * (step+1)},  Z = {wp.grid.trace(rho):.4}")
+    print(f"beta = {delta_beta * (step+1)},  Z = {wp.trace(rho):.4}")
 ```
 
 Because imaginary-time propagation only makes sense for a particular Liouvillian, you supply again

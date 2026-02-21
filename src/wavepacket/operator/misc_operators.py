@@ -17,7 +17,7 @@ class Projection(OperatorBase):
     which the operator projects.
 
     The basis functions need not be orthogonal, they are orthonormalized
-    using :func:`wp.grid.orthonormalize`.
+    using :func:`wp.orthonormalize`.
 
     Parameters
     ----------

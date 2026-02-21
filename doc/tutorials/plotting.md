@@ -129,7 +129,7 @@ def plot_in_fbr(psi):
     global figure, axes
     
     fbr_grid = psi.grid.dofs[0].fbr_points
-    fbr_density = wp.grid.fbr_density(psi)
+    fbr_density = wp.fbr_density(psi)
     axes.plot(fbr_grid, fbr_density, 'k-')
     
     # Magic numbers; basically guesswork to make the plot cover only the interesting area.

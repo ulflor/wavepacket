@@ -120,9 +120,9 @@ import math
 psi = wp.builder.unit_wave_function(grid)
 for iteration in range(10):
     psi = equation.apply(psi, t=0)
-    psi = wp.grid.normalize(psi)
+    psi = wp.normalize(psi)
 
-energy_guess = wp.operator.expectation_value(hamiltonian, psi).real
+energy_guess = wp.expectation_value(hamiltonian, psi).real
 energy_guess = 1.2 * energy_guess
 print(f"Energy guess = {energy_guess:.4}")
 ```
@@ -140,10 +140,7 @@ x_op = wp.operator.Potential1D(grid, 0, lambda x: x)
 solver = wp.solver.ChebychevSolver(equation, math.pi/10, (0, energy_guess))
 
 for t, psi in solver.propagate(psi0, t0=0.0, num_steps=10):
-    trace = wp.grid.trace(psi)
-    x = wp.operator.expectation_value(x_op, psi).real
-
-    print(f"t = {t:.4}, trace = {trace:.4}, <x> = {x:.4}")
+    wp.log(t, psi)
 ```
 
 We can also check what happens if we get the spectrum wrong. Let us say we cut at 200 a.u.:
@@ -152,12 +149,13 @@ We can also check what happens if we get the spectrum wrong. Let us say we cut a
 bad_solver = wp.solver.ChebychevSolver(equation, math.pi/10, (0, 200))
 
 for t, psi in bad_solver.propagate(psi0, t0=0.0, num_steps=10):
-    trace = wp.grid.trace(psi)
-    print(f"t = {t:.4}, trace = {trace:.4}")
+    wp.log(t, psi)
 ```
 
-The footprint of our wrong spectrum is readily apparent if we monitor the trace.
+The footprint of our wrong spectrum is most apparent in the trace.
 So that is something you should always do in practice.
+The expectation values become fixed,
+because the wave function is dominated by the constantly diverging components.
 
 #### Are there better ways to increase the efficiency of the solver?
 
@@ -167,8 +165,8 @@ To motivate this approach, let us print the average and standard deviation of th
 
 ```{code-cell}
 psi0 = wp.builder.product_wave_function(grid, wp.Gaussian(-5, 0, rms=1))
-energy = wp.operator.expectation_value(hamiltonian, psi0).real
-energy2 = wp.operator.expectation_value(hamiltonian*hamiltonian, psi0).real
+energy = wp.expectation_value(hamiltonian, psi0).real
+energy2 = wp.expectation_value(hamiltonian*hamiltonian, psi0).real
 
 print(f"E = {energy},   dE^2 = {energy2 - energy**2}")
 ```
@@ -201,16 +199,13 @@ truncated_equation = wp.expression.SchroedingerEquation(truncated_hamiltonian)
 
 We do not know nor care about the exact spectrum of this Hamiltonian,
 but we know that it cannot be larger than 35 + 35 = 70, which is one fourth of the original Hamiltonian.
-This allows us to increase the time step by a factor of 4.
+This allows us to increase the time step by a factor of 4 for the same computing resources.
 
 ```{code-cell}
 solver = wp.solver.ChebychevSolver(truncated_equation, 4 * math.pi/10, (0, 70))
 
 for t, psi in solver.propagate(psi0, t0=0.0, num_steps=10):
-    trace = wp.grid.trace(psi)
-    x = wp.operator.expectation_value(x_op, psi).real
-
-    print(f"t = {t:.4}, trace = {trace:.4}, <x> = {x:.4}")
+    wp.log(t, psi)
 ```
 
 [^ChebychevReal]: H. Tal Ezer and R. Kosloff, J. Chem. Phys. 81:3967 (1986)
