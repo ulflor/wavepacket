@@ -5,6 +5,7 @@ ChangeLog
 0.4
 ---
 
+- (#52) added unit_wave_function() to generate a wave function consisting of ones
 
 0.3
 ---
