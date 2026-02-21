@@ -22,8 +22,9 @@ from . import solver
 from . import plot
 from . import testing
 
+from ._utilities import log
+
 from .exceptions import (BadFunctionCall, BadGridError, BadStateError, ExecutionError,
                          InvalidValueError)
 from .functions import SinSquare, SoftRectangularFunction
 from .generators import Gaussian, PlaneWave, SphericalHarmonic
-from .logging import log

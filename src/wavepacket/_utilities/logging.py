@@ -1,10 +1,9 @@
 import math
 
-from .grid import State, trace
-from .operator import Potential1D, expectation_value
+import wavepacket as wp
 
 
-def log(t: float, state: State, precision: int = 6) -> None:
+def log(t: float, state: wp.grid.State, precision: int = 6) -> None:
     """
     Prints some data about the state for inspection.
 
@@ -21,13 +20,13 @@ def log(t: float, state: State, precision: int = 6) -> None:
     precision : int, default=6
         How many decimal places should be printed.
     """
-    print(f"\n\nt = {float(t):.{precision}},     trace = {trace(state):.{precision}}\n")
+    print(f"\n\nt = {float(t):.{precision}},     trace = {wp.grid.trace(state):.{precision}}\n")
 
     for index, dof in enumerate(state.grid.dofs):
-        x = Potential1D(state.grid, 0, lambda dvr_grid: dvr_grid)
+        x = wp.operator.Potential1D(state.grid, 0, lambda dvr_grid: dvr_grid)
 
-        x_avg = expectation_value(x, state).real
-        x2_avg = expectation_value(x * x, state).real
+        x_avg = wp.operator.expectation_value(x, state).real
+        x2_avg = wp.operator.expectation_value(x * x, state).real
 
         # In exotic cases, the error dx**2 can become negative, so we trade
         # correctness for robustness here by taking its absolute value.
