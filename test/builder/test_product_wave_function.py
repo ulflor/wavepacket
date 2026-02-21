@@ -33,7 +33,7 @@ def test_build_product_state(grid_2d):
 
     scaling = normalized_result.data.flat[0] / expected_data.flat[0]
     assert_allclose(normalized_result.data, expected_data * scaling, atol=1e-14, rtol=0)
-    assert_allclose(wp.grid.trace(normalized_result), 1.0, atol=1e-12, rtol=0)
+    assert_allclose(wp.trace(normalized_result), 1.0, atol=1e-12, rtol=0)
 
 
 def test_handle_zero_norm_gracefully(grid_2d):

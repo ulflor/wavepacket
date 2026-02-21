@@ -54,7 +54,7 @@ class State:
 
     States are input to and output from most operations
 
-    >>> wp.grid.trace(psi)
+    >>> wp.trace(psi)
     1.0
     """
     grid: Grid

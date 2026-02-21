@@ -5,11 +5,9 @@ import numpy as np
 
 import wavepacket as wp
 import wavepacket.typing as wpt
-from .grid import Grid
-from .state import State
 
 
-def _take_diagonal(data: wpt.ComplexData, grid: Grid) -> wpt.RealData:
+def _take_diagonal(data: wpt.ComplexData, grid: wp.grid.Grid) -> wpt.RealData:
     # note: the diagonal should be real and positive but for numerical issues
     matrix_form = np.reshape(data, (grid.size, grid.size))
     diagonal = np.abs(np.diag(matrix_form))
@@ -20,7 +18,7 @@ def _normalize(u: wpt.ComplexData) -> wpt.ComplexData:
     return u / math.sqrt(np.abs(u ** 2).sum())
 
 
-def dvr_density(state: State) -> wpt.RealData:
+def dvr_density(state: wp.grid.State) -> wpt.RealData:
     """
     Returns the density of the input state at the DVR grid points.
 
@@ -64,7 +62,7 @@ def dvr_density(state: State) -> wpt.RealData:
         raise wp.BadStateError("Input is not a valid state.")
 
 
-def fbr_density(state: State) -> wpt.RealData:
+def fbr_density(state: wp.grid.State) -> wpt.RealData:
     """
     Returns the FBR density of the input state at the FBR grid points.
 
@@ -75,7 +73,7 @@ def fbr_density(state: State) -> wpt.RealData:
 
     Note that this function returns the FBR density, i.e., the coefficients
     or diagonal when expanding the wave function or density operator in the
-    underlying grid's basis.
+    underlying grid's basis, respectively.
 
     Parameters
     ----------
@@ -112,7 +110,7 @@ def fbr_density(state: State) -> wpt.RealData:
         raise wp.BadStateError("Input is not a valid state.")
 
 
-def trace(state: State) -> float:
+def trace(state: wp.grid.State) -> float:
     """
     Returns the trace of the supplied input state.
 
@@ -144,7 +142,7 @@ def trace(state: State) -> float:
         raise wp.BadStateError("Input is not a valid state.")
 
 
-def normalize(state: State) -> State:
+def normalize(state: wp.grid.State) -> wp.grid.State:
     """
     Normalizes the input state.
 
@@ -173,7 +171,7 @@ def normalize(state: State) -> State:
         raise wp.BadStateError("Input is not a valid state.")
 
 
-def orthonormalize(states: Sequence[State]) -> list[State]:
+def orthonormalize(states: Sequence[wp.grid.State]) -> list[wp.grid.State]:
     """
     Orthogonalizes and normalizes a set of linearly independent wave functions.
 
@@ -226,10 +224,10 @@ def orthonormalize(states: Sequence[State]) -> list[State]:
             a = a - overlap * b
         result.append(_normalize(a))
 
-    return [State(grid, v) for v in result]
+    return [wp.grid.State(grid, v) for v in result]
 
 
-def population(state: State, target: State) -> float:
+def population(state: wp.grid.State, target: wp.grid.State) -> float:
     """
     Calculates how much a target state is populated in a given state.
 
@@ -266,7 +264,7 @@ def population(state: State, target: State) -> float:
     if target.grid != state.grid:
         raise wp.BadGridError("Target wave function must be the same grid as the state to project.")
 
-    target_trace = wp.grid.trace(target)
+    target_trace = trace(target)
     if state.is_wave_function():
         coefficient = (np.conj(target.data) * state.data).sum()
         return coefficient ** 2 / target_trace

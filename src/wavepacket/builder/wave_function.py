@@ -55,7 +55,7 @@ def product_wave_function(grid: wp.grid.Grid,
         result_data *= grid.broadcast(array, dof_index)
 
     result = wp.grid.State(grid, result_data)
-    norm = np.sqrt(wp.grid.trace(result))
+    norm = np.sqrt(wp.trace(result))
     if normalize and norm > 0:
         return result / norm
     else:

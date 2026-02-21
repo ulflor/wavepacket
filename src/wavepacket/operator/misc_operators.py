@@ -50,10 +50,10 @@ class Projection(OperatorBase):
             if not state.is_wave_function():
                 raise wp.BadStateError("Can only project onto wave functions.")
 
-            if wp.grid.trace(state) == 0:
+            if wp.trace(state) == 0:
                 raise wp.BadStateError("Basis functions must not have norm zero.")
 
-        orthonormal_basis = wp.grid.orthonormalize(basis)
+        orthonormal_basis = wp.orthonormalize(basis)
 
         self._ket_nd = np.stack([s.data for s in orthonormal_basis])
         self._bra_nd = np.conj(self._ket_nd)

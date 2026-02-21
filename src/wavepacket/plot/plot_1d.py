@@ -33,7 +33,7 @@ class BasePlot1D(ABC):
         xrange = dvr_grid.max() - dvr_grid.min()
         self.xlim = (dvr_grid.min() - 1e-2 * xrange, dvr_grid.max() + 1e-2 * xrange)
 
-        max_density = wp.grid.dvr_density(state).max()
+        max_density = wp.dvr_density(state).max()
         if potential is None:
             # We only plot the density, and ignore whatever energy the states have.
             # Set the y ranges accordingly
@@ -53,7 +53,7 @@ class BasePlot1D(ABC):
             potential_values = potential.apply(wp.builder.unit_wave_function(state.grid), 0).data
             min_potential = potential_values.min()
             max_potential = potential_values.max()
-            energy = abs(wp.operator.expectation_value(self._hamiltonian, state))
+            energy = abs(wp.expectation_value(self._hamiltonian, state))
 
             self.ylim = (min_potential, max(max_potential, energy + 0.5 * (max_potential - min_potential)))
             self.conversion_factor = (self.ylim[1] - energy) / max_density
@@ -97,11 +97,11 @@ class BasePlot1D(ABC):
 
         if self._potential is None:
             # Just plot the wave function
-            axes.plot(dvr_grid, wp.grid.dvr_density(state), 'b-')
+            axes.plot(dvr_grid, wp.dvr_density(state), 'b-')
         else:
             potential_values = self._potential.apply(wp.builder.unit_wave_function(state.grid), 0).data
-            energy = abs(wp.operator.expectation_value(self._hamiltonian, state, t) * np.ones(dvr_grid.shape))
-            density = wp.grid.dvr_density(state)
+            energy = abs(wp.expectation_value(self._hamiltonian, state, t) * np.ones(dvr_grid.shape))
+            density = wp.dvr_density(state)
 
             axes.plot(dvr_grid, potential_values, 'b-')
             axes.plot(dvr_grid, energy, 'r-')

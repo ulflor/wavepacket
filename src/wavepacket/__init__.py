@@ -1,5 +1,5 @@
 """
-A package for solving Schroedinger and Liouville von Neumann equations.
+A package for solving Schrödinger and Liouville von Neumann equations.
 """
 
 __version__ = "0.4.0"
@@ -8,7 +8,8 @@ __all__ = ['__version__', 'log', 'BadFunctionCall', 'BadGridError', 'BadStateErr
            'ExecutionError', 'InvalidValueError',
            'SinSquare', 'SoftRectangularFunction',
            'Gaussian', 'PlaneWave', 'SphericalHarmonic',
-           'builder', 'expression', 'grid', 'operator', 'solver', 'testing', 'typing']
+           'builder', 'expression', 'grid', 'operator', 'solver', 'testing', 'typing',
+           'diagonalize', 'expectation_value']
 
 # order matters, because subpackages depend on each other at times.
 # Though that should only matter for typing, so we could choose an alphabetic order again
@@ -22,9 +23,10 @@ from . import solver
 from . import plot
 from . import testing
 
-from ._utilities import log
-
 from .exceptions import (BadFunctionCall, BadGridError, BadStateError, ExecutionError,
                          InvalidValueError)
 from .functions import SinSquare, SoftRectangularFunction
 from .generators import Gaussian, PlaneWave, SphericalHarmonic
+from .logging import log
+from .state_utilities import dvr_density, fbr_density, normalize, orthonormalize, population, trace
+from .operator_utils import diagonalize, expectation_value

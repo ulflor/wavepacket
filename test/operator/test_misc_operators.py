@@ -1,4 +1,3 @@
-import math
 from typing import Tuple
 
 import numpy as np
@@ -17,7 +16,7 @@ def orthogonal_states(grid: wp.grid.Grid) -> Tuple[wp.grid.State, wp.grid.State]
     s1 = wp.grid.State(grid, lower_half)
     s2 = wp.grid.State(grid, 1 - lower_half)
 
-    return s1 / math.sqrt(wp.grid.trace(s1)), s2 / math.sqrt(wp.grid.trace(s2))
+    return wp.normalize(s1), wp.normalize(s2)
 
 
 def test_invalid_projection_inputs(grid_1d):
@@ -78,7 +77,7 @@ def test_project_density_operator(grid_1d):
 
 def test_project_states_onto_subspace(grid_2d):
     states = [wp.testing.random_state(grid_2d, seed) for seed in range(4)]
-    states = wp.grid.orthonormalize(states)
+    states = wp.orthonormalize(states)
 
     subspace = states[1:]
     projection = wp.operator.Projection(subspace)
@@ -103,7 +102,7 @@ def test_project_states_onto_subspace(grid_2d):
 
 def test_non_orthogonal_states(grid_1d):
     basis = [wp.testing.random_state(grid_1d, seed) for seed in range(4)]
-    orthogonal_basis = wp.grid.orthonormalize(basis)
+    orthogonal_basis = wp.orthonormalize(basis)
 
     projection1 = wp.operator.Projection(basis)
     projection2 = wp.operator.Projection(orthogonal_basis)

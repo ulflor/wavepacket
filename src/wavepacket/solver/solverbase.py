@@ -98,7 +98,7 @@ class SolverBase(ABC):
         >>> solver = ...
         >>> psi0 = ...
         >>> for time, psi in solver.propagate(psi0, t0, 5):
-        >>>    print(f't = {time}, trace = {wp.grid.trace(psi)}')
+        >>>    print(f't = {time}, trace = {wp.trace(psi)}')
         """
         if num_steps < 0:
             raise wp.InvalidValueError("Cannot propagate for negative number of steps.")
