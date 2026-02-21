@@ -61,7 +61,7 @@ def test_cutoff(grid_1d):
     cutoff = 5
     raw_potential = wp.operator.Potential1D(grid_1d, 0, dummy_func)
     cut_potential = wp.operator.Potential1D(grid_1d, 0, dummy_func, cutoff)
-    psi = wp.builder.zero_wave_function(grid_1d) + 1
+    psi = wp.builder.unit_wave_function(grid_1d)
 
     raw_potential_values = raw_potential.apply(psi, 0.0).data
     cut_potential_values = cut_potential.apply(psi, 0.0).data

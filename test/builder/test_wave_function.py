@@ -2,6 +2,7 @@ import numpy as np
 from numpy.testing import assert_allclose
 
 import wavepacket as wp
+from wavepacket.testing import assert_close
 
 
 def test_random_wave_function(grid_1d):
@@ -31,6 +32,13 @@ def test_random_reproducibility(grid_2d):
     assert np.all(psi.data == same_psi.data)
     assert np.all(psi.data != next_psi.data)
     assert np.all(psi.data != other_psi.data)
+
+
+def test_unit_wave_function(grid_2d):
+    psi = wp.builder.unit_wave_function(grid_2d)
+    zero = wp.builder.zero_wave_function(grid_2d)
+
+    assert_close(zero + 1, psi)
 
 
 def test_zero_wave_function(grid_2d):

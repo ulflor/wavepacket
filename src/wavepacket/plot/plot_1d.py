@@ -50,7 +50,7 @@ class BasePlot1D(ABC):
             # We choose the y-range such that
             # a) the whole potential fits into the plot
             # b) the density also fits into the plot and is at least half as large as the plot
-            potential_values = potential.apply(wp.builder.zero_wave_function(state.grid) + 1, 0).data
+            potential_values = potential.apply(wp.builder.unit_wave_function(state.grid), 0).data
             min_potential = potential_values.min()
             max_potential = potential_values.max()
             energy = abs(wp.operator.expectation_value(self._hamiltonian, state))
@@ -99,7 +99,7 @@ class BasePlot1D(ABC):
             # Just plot the wave function
             axes.plot(dvr_grid, wp.grid.dvr_density(state), 'b-')
         else:
-            potential_values = self._potential.apply(wp.builder.zero_wave_function(state.grid) + 1, 0).data
+            potential_values = self._potential.apply(wp.builder.unit_wave_function(state.grid), 0).data
             energy = abs(wp.operator.expectation_value(self._hamiltonian, state, t) * np.ones(dvr_grid.shape))
             density = wp.grid.dvr_density(state)
 

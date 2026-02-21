@@ -117,10 +117,10 @@ The implementation is straight forward:
 ```{code-cell}
 import math
 
-psi = wp.builder.zero_wave_function(grid) + 1
+psi = wp.builder.unit_wave_function(grid)
 for iteration in range(10):
     psi = equation.apply(psi, t=0)
-    psi = psi / math.sqrt(wp.grid.trace(psi))
+    psi = wp.grid.normalize(psi)
 
 energy_guess = wp.operator.expectation_value(hamiltonian, psi).real
 energy_guess = 1.2 * energy_guess
