@@ -93,7 +93,7 @@ This weighted DVR is the default representation in Wavepacket.
 Unless explicitly noted otherwise, all wave functions are expected and returned
 in this representation. If you need the wave function, for example for plotting
 the DVR density, you should explicitly transform it with available helper
-functions, for example :py:func:`wavepacket.grid.dvr_density`.
+functions, for example :py:func:`wavepacket.dvr_density`.
 
 Multidimensional grids
 ----------------------

@@ -59,7 +59,7 @@ solver = wp.solver.RelaxationSolver(hamiltonian, 1.5, (0, 70))
 
 In contrast to the real-time evolution, however, we always apply the Hamiltonian from the left,
 also for density operators.
-Hence, the solver expects the Hamiltonian directly, not a Schrödinger equation or Liouvillian.
+Hence, the solver takes the Hamiltonian as argument, not a Schrödinger equation or Liouvillian.
 
 Because of the exponential dynamics, most details of the initial state are irrelevant,
 as long as it has *some* overlap with the true ground state.

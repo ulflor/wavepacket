@@ -26,8 +26,8 @@ figure, axes = plt.subplots()
 axes.plot([1, 2, 3], [1, 2, 3]);
 ```
 
-A figure is a widget on which things can be drawn and can contain one or more axes, which are the actual plotting
-areas.
+A figure is a widget on which things can be drawn.
+It can contain one or more axes, which are the actual plotting areas.
 
 What happens if you execute this code?
 
@@ -45,7 +45,8 @@ What happens if you execute this code?
       After the pause is over, the plot window stops being updated.
     * Depending on your Python installation, you may get no plot, but a warning about a non-interactive backend.
       So you need to install an interactive backend.
-    * What should work most of the time is a GTK-based backend.
+
+      What should work most of the time is a GTK-based backend.
       Install PyGObject with `pip install PyGObject`. Matplotlib may already use it as default then.
       If not, set the environment variable, `export MPLBACKEND=GTK3Agg`. Now you should finally get a plot display.
 * Other environments, such as PyCharm of VSCode plugins, or MacOS may have their own particular behavior.
@@ -147,8 +148,10 @@ def plot_in_fbr(psi):
 plot_in_fbr(psi_0)
 ```
 
-Of course, you can go ahead and plot further states, we only skip this here because this code is executed in a Notebook.
-Outside of notebooks, you could recycle the figure and use, e.g., `plt.pause(1)`, to make a crude animation.
+Of course, you can go ahead and plot further states,
+we only skip this here because this code is executed in a Notebook.
+Outside of notebooks, you could recycle the figure and use,
+e.g., `plt.pause(1)`, to make a crude animation.
 
 For more complex examples of data plotting, see for example {doc}`/advanced/pendular_states`.
 
@@ -166,7 +169,7 @@ therefore you do not even need an interactive backend.
 
 As mentioned before, you can create crude animations outside of Jupyter notebooks by calling `plt.pause(1)`.
 This shows the plot and blocks the execution of the Python script for one second.
-The `matplot.animation` package offers orhter approaches that we will skip here.
+The `matplot.animation` package offers other approaches that we will skip here.
 At some point, however, showing the animation is not enough,
 you want to save it for further processing or demonstration.
 

@@ -26,7 +26,7 @@ As general setup, we need to do two things:
    see {doc}`/representations` or the wiki[^wiki-dvr] for details.
 2. Given a grid, define relevant operators.
    Here, we only need a Hamiltonian, but in other settings, you might also want to
-   calculate expectation values of other operators etc.
+   calculate expectation values of other operators, for example.
 
 ```{code-cell}
 import wavepacket as wp
@@ -61,14 +61,15 @@ Usually, however, you wrap them into an Expression to specify which equation of 
 ## Evolving wave functions in time
 
 Let us first evolve some wave packet in time.
-To produce non-trivial dynamics, we prepare a "Schrödinger cat state" with two interfering Gaussians,
+To produce non-trivial dynamics, we prepare a "Schrödinger cat state"
+with two interfering Gaussian wave packets,
 $\psi = 1/\sqrt{2} (\psi_L + \psi_R)$.
 
-For the wave packet setup, we need to:
+For the wave function setup, we need to:
 
-- set up the initial state to propagate.
+- set up the initial wave function
 - define the (Schrödinger) equation of motion to solve
-- set up a solver to do the time evolution.
+- set up a solver for the time evolution.
 
 Of course, once we propagate our state in time, we want to do something with the result.
 Here, we just plot the density.
@@ -89,7 +90,7 @@ for t, psi in solver.propagate(psi_0, t0=0.0, num_steps=5):
     plot_1d.plot(psi, t)
 ```
 
-As can be seen, as soon as the Gaussians encounter each other, we get typical oscillations.
+As can be seen, as soon as the wave packets encounter each other, we get typical oscillations.
 This is easily understood because any observable, such as the density at a given point,
 is calculated as
 
@@ -104,13 +105,14 @@ is calculated as
 where the last term causes the interferences,
 and distinguishes quantum mechanics from simple ensemble averaging.
 
-The result of constructing a wave function or of a propagation is always a {py:class}`wavepacket.grid.State` object.
+The result of constructing a wave function or of a propagation is a {py:class}`wavepacket.grid.State` object.
 These objects hide the difference between wave functions and density operators,
 and they are bound to a specific grid.
 You should rarely ever need to deal with the internals of this class,
 because almost all Wavepacket functionality takes or outputs a state.
 
-Wavepacket tries to abstract away differences between wave functions and density operators.
+Wavepacket tries to abstract away differences between wave functions and density operators
+where possible.
 As one example, Wavepacket does not offer a function to calculate the norm, because the L2-norm for
 wave functions is a different quantity than the trace norm for density operators,
 which is highly confusing (at least it confused me repeatedly).
@@ -121,19 +123,19 @@ Here, we used a simple ODE solver that employs a slow but robust Runge-Kutta pro
 Again, solvers have a consistent interface that takes the expression as first parameters,
 followed by the time step and all other parameters.
 
-Instead of plotting, you might wish for more advanced processing.
+Instead of just plotting the result, you might wish for more advanced processing.
 See {doc}`/advanced/pendular_states` for a more elaborate example.
 
 ## Evolving density operators in time
 
 One of the strengths of Wavepacket is the minimum overhead switch to a density operator formalism.
-We use almost the same setup as the wave function case except for two changes:
+We use almost the same setup as for wave functions case except for two changes:
 Our initial state is a density operator, not a wave function.
 And we set up a Liouville von Neumann equation (LvNe);
-for a closed system, this is just the commutator Liouvillian.
+for a closed system, this is just the commutator with the Hamiltonian.
 
 To contrast density operator dynamics with wave function dynamics, we set up an
-*incoherent* sum of the left and right Gaussians,
+*incoherent* sum of the left and right Gaussian wave packets,
 $\hat \rho = 1/2 (|\psi_L\rangle\langle\psi_L| + |\psi_R\rangle\langle\psi_R|)$.
 
 ```{code-cell}

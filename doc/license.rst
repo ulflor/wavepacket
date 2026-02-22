@@ -8,8 +8,8 @@ all license conditions should be automatically fulfilled.
 To further simplify the use and adaption,
 all Wavepacket documentation in this directory is licensed under the even more permissive `CC0 license`_,
 essentially an attempt to formalise public domain as a legal document.
-We appreciate a citation, however, although you are not obliged to do so.
 
+We appreciate a citation, although you are not obliged to do so.
 If you want to reference Wavepacket in a publication, you can cite the `canonical Wavepacket paper`_.
 
 .. _MIT license: https://github.com/ulflor/wavepacket/blob/main/LICENSE

@@ -15,13 +15,12 @@ Here, we show some basic and advanced use cases around energy eigenstates.
 
 Note that there exist other approaches for calculating eigenstates of the Hamiltonian.
 In particular, for few low-energy eigenstates, you can try imaginary-time propagation,
-as detailed in{doc}`relaxation`.
-
+as detailed in {doc}`relaxation`.
 
 ## Basic eigenstate calculation
 
 As example system, we choose a modified double-well potential (Razavy potential).
-Diagonalization is done with :py:func:`wp.solver.diagonalize`,
+Diagonalizing the Hamiltonian is done with :py:func:`wp.diagonalize`,
 which yields the eigenstates and -energies sorted by the latter.
 
 ```{code-cell}
@@ -47,8 +46,9 @@ It is therefore rather robust, but not terribly efficient.
 
 Computation times of such standard solvers scale with the third power of the number of grid points,
 memory with the square of the number of grid points.
-At a size of 8 bytes per data point, you need approximately 1 GB of memory for 10,000 grid points (100x100 grid),
-with several minutes of effort required for the diagonalization.
+At a size of 16 bytes per complex value,
+you need maybe 1 GB of memory for 10,000 grid points (100x100 grid), also for work storage,
+and several minutes of computation time.
 This is about the maximum size that you can reasonably use this procedure for.
 
 ## Advanced usage: Largest and smallest eigenstates
