@@ -64,6 +64,6 @@ Two other modules stand apart from this hierarchy:
 * :py:mod:`wavepacket.testing` contains some test helpers,
   for example :py:func:`wavepacket.testing.assert_close` to compare two states with each other.
 * The top-level package offers the exception classes and general utility functions,
-  such as py:func:`wavepacket.trace` or :py:func:`wavepacket.expectation_value`.
+  such as :py:func:`wavepacket.trace` or :py:func:`wavepacket.expectation_value`.
 
 With these concepts in mind, most functionality should be readily explorable.
