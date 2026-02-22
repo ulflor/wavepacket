@@ -77,8 +77,8 @@ Here, we just plot the density.
 import math
 
 rms = math.sqrt(0.5)
-psi_left = wp.builder.product_wave_function(grid, wp.Gaussian(-3, rms=rms))
-psi_right = wp.builder.product_wave_function(grid, wp.Gaussian(3, rms=rms))
+psi_left = wp.builder.product_wave_function(grid, wp.special.Gaussian(-3, rms=rms))
+psi_right = wp.builder.product_wave_function(grid, wp.special.Gaussian(3, rms=rms))
 psi_0 = math.sqrt(0.5) * (psi_left + psi_right)
 
 schroedinger_eq = wp.expression.SchroedingerEquation(hamiltonian)

@@ -53,7 +53,7 @@ class SphericalHarmonicsDof(DofBase):
         super().__init__(dvr_points, fbr_points)
         self._sqrt_weights = np.sqrt(weights)
 
-        harmonics = np.stack([wp.SphericalHarmonic(L, m)(dvr_points) for L in range(abs(m), lmax + 1)], 1)
+        harmonics = np.stack([wp.special.SphericalHarmonic(L, m)(dvr_points) for L in range(abs(m), lmax + 1)], 1)
         self._fbr2weighted = self.from_dvr(harmonics, 0)
 
     def to_fbr(self, data: wpt.ComplexData, index: int, is_ket: bool = True) -> wpt.ComplexData:
@@ -165,7 +165,7 @@ def _quadrature(lmax: int, m: int) -> tuple[wpt.RealData, wpt.RealData]:
     # First, we want to include the weight function (1-x^2)^m in the integrand, so we need to remove those again.
     # Second, there are some constant factors missing. To ge those, we simply demand that
     # \int |Y_mm(theta, phi)|^2 sin(theta) dtheta dphi = sum_k w_k * Y_mm(theta_k, 0) == 1
-    y_mm = wp.SphericalHarmonic(m, m)(points)
+    y_mm = wp.special.SphericalHarmonic(m, m)(points)
     weights /= (1 - np.cos(points) ** 2) ** m
     weights /= np.sum(weights * y_mm ** 2)
 

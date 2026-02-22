@@ -29,8 +29,8 @@ def test_expectation_value():
     grid = wp.grid.Grid([wp.grid.PlaneWaveDof(-10, 10, 256), wp.grid.PlaneWaveDof(1, 2, 3)])
     op = wp.operator.Potential1D(grid, 0, lambda x: x)
 
-    psi_left = wp.builder.product_wave_function(grid, [wp.Gaussian(-3, fwhm=2.0), lambda x: x])
-    psi_right = wp.builder.product_wave_function(grid, [wp.Gaussian(4, fwhm=2.0), lambda x: x])
+    psi_left = wp.builder.product_wave_function(grid, [wp.special.Gaussian(-3, fwhm=2.0), lambda x: x])
+    psi_right = wp.builder.product_wave_function(grid, [wp.special.Gaussian(4, fwhm=2.0), lambda x: x])
     rho = 0.5 * wp.builder.pure_density(psi_left) + 0.5 * wp.builder.pure_density(psi_right)
 
     assert_allclose(wp.expectation_value(op, psi_left), -3, atol=1e-2)

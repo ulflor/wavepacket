@@ -135,8 +135,7 @@ For an alpha value of 40 or more, our time step must be at least $2 \cdot 40 / 2
 Let us evolve a Gaussian wave packet with such values:
 
 ```{code-cell}
-psi0 = wp.builder.product_wave_function(grid, wp.Gaussian(-5, 0, rms=1))
-x_op = wp.operator.Potential1D(grid, 0, lambda x: x)
+psi0 = wp.builder.product_wave_function(grid, wp.special.Gaussian(-5, 0, rms=1))
 solver = wp.solver.ChebychevSolver(equation, math.pi/10, (0, energy_guess))
 
 for t, psi in solver.propagate(psi0, t0=0.0, num_steps=10):
@@ -164,7 +163,7 @@ However, we may just as well *define* the spectral bounds by truncating the oper
 To motivate this approach, let us print the average and standard deviation of the initial state's energy:
 
 ```{code-cell}
-psi0 = wp.builder.product_wave_function(grid, wp.Gaussian(-5, 0, rms=1))
+psi0 = wp.builder.product_wave_function(grid, wp.special.Gaussian(-5, 0, rms=1))
 energy = wp.expectation_value(hamiltonian, psi0).real
 energy2 = wp.expectation_value(hamiltonian*hamiltonian, psi0).real
 

@@ -170,7 +170,7 @@ import math
 import wavepacket as wp
 
 grid = wp.grid.Grid(wp.grid.PlaneWaveDof(-10, 10, 128))
-psi0 = wp.builder.product_wave_function(grid, wp.Gaussian(-5, 0, rms=1))
+psi0 = wp.builder.product_wave_function(grid, wp.special.Gaussian(-5, 0, rms=1))
 
 kinetic = wp.operator.CartesianKineticEnergy(grid, 0, mass=1, cutoff=35)
 potential = wp.operator.Potential1D(grid, 0, lambda x: 0.5 * x ** 2, cutoff=35)

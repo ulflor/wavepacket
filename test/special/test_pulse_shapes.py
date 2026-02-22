@@ -8,14 +8,14 @@ from numpy.testing import assert_allclose
 
 def test_sin_square_errors():
     with pytest.raises(wp.InvalidValueError):
-        wp.SinSquare(5.0, -1)
+        wp.special.SinSquare(5.0, -1)
 
     with pytest.raises(wp.InvalidValueError):
-        wp.SinSquare(3.0, 0.0)
+        wp.special.SinSquare(3.0, 0.0)
 
 
 def test_sin_square_values():
-    functor = wp.SinSquare(5.0, 2.0)
+    functor = wp.special.SinSquare(5.0, 2.0)
 
     assert functor(2.9) == 0
     assert_allclose(functor(4), math.sqrt(0.5), rtol=0, atol=1e-12)
@@ -26,23 +26,23 @@ def test_sin_square_values():
 
 def test_soft_rectangular_errors():
     with pytest.raises(wp.InvalidValueError):
-        wp.SoftRectangularFunction(5.0, -1.0, 1.0)
+        wp.special.SoftRectangularFunction(5.0, -1.0, 1.0)
 
     with pytest.raises(wp.InvalidValueError):
-        wp.SoftRectangularFunction(5.0, 0.0, 1.0)
+        wp.special.SoftRectangularFunction(5.0, 0.0, 1.0)
 
     with pytest.raises(wp.InvalidValueError):
-        wp.SoftRectangularFunction(5.0, 1.0, -1.0)
+        wp.special.SoftRectangularFunction(5.0, 1.0, -1.0)
 
     with pytest.raises(wp.InvalidValueError):
-        wp.SoftRectangularFunction(5.0, 1.0, 0.0)
+        wp.special.SoftRectangularFunction(5.0, 1.0, 0.0)
 
     with pytest.raises(wp.InvalidValueError):
-        wp.SoftRectangularFunction(5.0, 0.0)
+        wp.special.SoftRectangularFunction(5.0, 0.0)
 
 
 def test_soft_rectangular_values():
-    functor = wp.SoftRectangularFunction(5.0, 2.0, 1.0)
+    functor = wp.special.SoftRectangularFunction(5.0, 2.0, 1.0)
 
     assert functor(1.9) == 0.0
     assert functor(2) == 0.0

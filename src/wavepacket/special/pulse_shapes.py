@@ -1,6 +1,6 @@
 import math
 
-from .exceptions import InvalidValueError
+import wavepacket as wp
 
 
 class SinSquare:
@@ -27,7 +27,7 @@ class SinSquare:
 
     def __init__(self, t0: float, half_width: float) -> None:
         if half_width <= 0:
-            raise InvalidValueError(f"Half width '{half_width}' must be positive.")
+            raise wp.InvalidValueError(f"Half width '{half_width}' must be positive.")
 
         self._t0 = t0
         self._half_width = half_width
@@ -69,7 +69,7 @@ class SoftRectangularFunction:
             border = half_width / 10
 
         if half_width <= 0 or border <= 0:
-            raise InvalidValueError(f"Half-width '{half_width}' and soft border '{border}'must be positive")
+            raise wp.InvalidValueError(f"Half-width '{half_width}' and soft border '{border}'must be positive")
 
         self._scale = math.pi / (2 * border)
         self._min = t0 - half_width - border

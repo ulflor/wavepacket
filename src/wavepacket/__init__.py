@@ -6,9 +6,7 @@ __version__ = "0.4.0"
 
 __all__ = ['__version__', 'log', 'BadFunctionCall', 'BadGridError', 'BadStateError',
            'ExecutionError', 'InvalidValueError',
-           'SinSquare', 'SoftRectangularFunction',
-           'Gaussian', 'PlaneWave', 'SphericalHarmonic',
-           'builder', 'expression', 'grid', 'operator', 'solver', 'testing', 'typing',
+           'builder', 'expression', 'grid', 'operator', 'solver', 'special', 'testing', 'typing',
            'dvr_density', 'fbr_density', 'normalize', 'orthonormalize', 'population', 'trace',
            'diagonalize', 'expectation_value']
 
@@ -22,12 +20,11 @@ from . import operator
 from . import expression
 from . import solver
 from . import plot
+from . import special
 from . import testing
 
 from .exceptions import (BadFunctionCall, BadGridError, BadStateError, ExecutionError,
                          InvalidValueError)
-from .functions import SinSquare, SoftRectangularFunction
-from .generators import Gaussian, PlaneWave, SphericalHarmonic
 from .logging import log
 from .state_utilities import dvr_density, fbr_density, normalize, orthonormalize, population, trace
 from .operator_utils import diagonalize, expectation_value

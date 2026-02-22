@@ -66,8 +66,8 @@ grid = wp.grid.Grid(wp.grid.PlaneWaveDof(-10, 10, 128))
 kinetic = wp.operator.CartesianKineticEnergy(grid, 0, mass=1)
 potential = wp.operator.Potential1D(grid, 0, lambda x: 0.5 * x ** 2)
 
-psi_0 = (wp.builder.product_wave_function(grid, wp.Gaussian(-3, 0, rms=1))
-        - wp.builder.product_wave_function(grid, wp.Gaussian(3, 0, rms=1)))
+psi_0 = (wp.builder.product_wave_function(grid, wp.special.Gaussian(-3, 0, rms=1))
+        - wp.builder.product_wave_function(grid, wp.special.Gaussian(3, 0, rms=1)))
 
 equation = wp.expression.SchroedingerEquation(kinetic + potential)
 solver = wp.solver.OdeSolver(equation, dt=0.5) 

@@ -57,8 +57,8 @@ def test_density_operator_dvr_density(grid_2d):
 def test_wave_function_fbr_density():
     grid = wp.grid.Grid([wp.grid.SphericalHarmonicsDof(10, 2),
                          wp.grid.SphericalHarmonicsDof(12, 5)])
-    psi = 2j * wp.builder.product_wave_function(grid, [wp.SphericalHarmonic(5, 2),
-                                                       wp.SphericalHarmonic(7, 5)])
+    psi = 2j * wp.builder.product_wave_function(grid, [wp.special.SphericalHarmonic(5, 2),
+                                                       wp.special.SphericalHarmonic(7, 5)])
 
     density = wp.fbr_density(psi)
     expected = np.zeros(grid.shape)

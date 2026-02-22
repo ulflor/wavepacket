@@ -81,7 +81,7 @@ def relax(solver, psi0):
     return psi
 
 # to demonstrate convergence, let us take a Gaussian that is too wide (rms=1 would be exact)
-psi0 = wp.builder.product_wave_function(grid, wp.Gaussian(rms=2))
+psi0 = wp.builder.product_wave_function(grid, wp.special.Gaussian(rms=2))
 relax(solver, psi0);
 ```
 
@@ -139,7 +139,7 @@ def print_data(state, n, step):
     print(f"step {step}: E_{n} = {energy},   dE^2 = {energy2 - energy**2:.4}")
 
 def relax_v2(solver, found_states):
-    psi = wp.builder.product_wave_function(grid, wp.Gaussian(x=1, rms=2))
+    psi = wp.builder.product_wave_function(grid, wp.special.Gaussian(x=1, rms=2))
     print_data(psi, len(found_states), 0)
 
     for step in range(5):

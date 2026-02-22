@@ -35,7 +35,7 @@ def test_apply_to_wave_function(op, grid):
     assert isinstance(dof, wp.grid.PlaneWaveDof)
     k = dof.fbr_points[4]
 
-    psi = wp.builder.product_wave_function(grid, [dummy_func, wp.PlaneWave(k), dummy_func])
+    psi = wp.builder.product_wave_function(grid, [dummy_func, wp.special.PlaneWave(k), dummy_func])
 
     expected = dummy_func(k) * psi.data
     got = op.apply_to_wave_function(psi.data, 0.0)

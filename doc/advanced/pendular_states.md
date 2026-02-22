@@ -85,7 +85,7 @@ def calculate_alignment(Delta, sigma, l0=0, m=0):
     thetaDof = wp.grid.SphericalHarmonicsDof(25+l0, m)
     grid = wp.grid.Grid(thetaDof)
 
-    psi0 = wp.builder.product_wave_function(grid, wp.SphericalHarmonic(l0, m))
+    psi0 = wp.builder.product_wave_function(grid, wp.special.SphericalHarmonic(l0, m))
 
     kinetic = wp.operator.RotationalKineticEnergy(grid, 0, 0.5)
     cos2 = wp.operator.Potential1D(grid, 0, lambda theta: np.cos(theta)**2)

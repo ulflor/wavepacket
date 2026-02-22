@@ -33,7 +33,7 @@ def test_reject_bad_constructor_args(grid):
 
 def test_apply_to_wave_function(grid, op):
     k = 3 * 2 * math.pi / 10.0
-    psi = wp.builder.product_wave_function(grid, [wp.PlaneWave(k), dummy_func])
+    psi = wp.builder.product_wave_function(grid, [wp.special.PlaneWave(k), dummy_func])
 
     result = op.apply_to_wave_function(psi.data, 0.0)
     assert_allclose(result, psi.data * k, atol=1e-12, rtol=0)
