@@ -5,6 +5,13 @@ ChangeLog
 0.4
 ---
 
+Breaking changes:
+
+- (#44) Moved functionality around: all utility functions are in the main namespace,
+    all callables in a new "special" namespace.
+
+Minor changes:
+
 - (#52) added unit_wave_function() to generate a wave function consisting of ones
 
 0.3
@@ -17,8 +24,7 @@ ChangeLog
   - Added various documentation on Chebychev solver use, relaxation,
     and polynomial solver theory
 
-- (#24) added ExpressionSum and OneSidedLiouvillian
-        for more complex expressions
+- (#24) added ExpressionSum and OneSidedLiouvillian for more complex expressions
 
 - (#31) added diagonalize() function for operator eigenstates and -energies
 
