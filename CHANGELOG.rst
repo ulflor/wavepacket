@@ -14,6 +14,9 @@ Minor changes:
 
 - (#52) added unit_wave_function() to generate a wave function consisting of ones
 
+- (#43) copied some user input arrays to avoid accidental side effects
+
+
 0.3
 ---
 
