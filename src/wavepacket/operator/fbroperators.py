@@ -50,7 +50,7 @@ class PlaneWaveFbrOperator(OperatorBase):
         self._bra_index = self._ket_index + len(grid.dofs)
 
         # shifting the data here allows us to skip the fftshift() on the input data in apply*()
-        data = generator(grid.dofs[dof_index].fbr_points)
+        data = generator(grid.dofs[dof_index].fbr_points).copy()
 
         if cutoff is not None:
             data = clip_real(data, -cutoff, cutoff)
@@ -147,7 +147,7 @@ class FbrOperator1D(OperatorBase):
     def __init__(self, grid: wp.grid.Grid, dof_index: int, generator: wpt.Generator,
                  cutoff: float | None = None) -> None:
         dof = grid.dofs[dof_index]
-        fbr_values = generator(dof.fbr_points)
+        fbr_values = generator(dof.fbr_points).copy()
 
         if cutoff is not None:
             fbr_values = clip_real(fbr_values, -cutoff, cutoff)

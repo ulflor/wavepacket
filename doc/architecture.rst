@@ -17,11 +17,18 @@ To get there, the code ended up with a few common concepts.
   of the corresponding density operator (trace) norm. This has been extremely confusing
   when switching between the two objects, so Wavepacket does not offer a `norm()`
   function, it offers :py:func:`wavepacket.trace` instead,
-* Classes in Wavepacket are usually immutable after creation.
+* Classes in Wavepacket are immutable after creation.
   This allows you to recycle objects without side effects; for example,
   when you have set up a Hamiltonian for the field-free case, you can trivially use it
   also sum it with the laser interaction to get the Hamiltonian  for the system with a laser field.
   All classes and packages follow a strict hierarchy as described in the subsequent section.
+
+  The Python interpreter does not always guarantee this immutability,
+  and we did not cover every potential pitfall. Avoid breaking this guarantee, however,
+  because doing so can corrupt object consistency (and therefore results) in
+  subtle ways. In particular, if you create a :py:class:`wavepacket.grid.State`
+  directly from a numpy array (very advanced use case), dispose the array and
+  do not modify it afterwards.
 
 
 Packages
