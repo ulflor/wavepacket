@@ -74,14 +74,14 @@ equation = wp.expression.SchroedingerEquation(kinetic + potential)
 solver = wp.solver.OdeSolver(equation, dt=0.5) 
 ```
 
-## Wavepacket plotting helpers
+## Wavepacket 1D plotting helpers
 
 Wavepacket offers utility classes to make plotting of states easier.
 These classes are opinionated and may not be as flexible and configurable as you need them.
 Their sole purpose is a useful visualisation of the dynamics with minimal setup.
 If they do not fulfill your needs, you might want to write your own plotting code, as discussed in the next section.
 
-As of version 0.2, there are two available helper classes: {py:class}`wp.plot.SimplePlot1D` just draws one plot,
+Since version 0.2, there are two available helper classes: {py:class}`wp.plot.SimplePlot1D` just draws one plot,
 while {py:class}`wp.plot.StackedPlot1D` stacks multiple plots on top of each other.
 Otherwise, both classes behave similar; they plot the potential and the state's density
 offset by the energy of the state.
@@ -108,6 +108,24 @@ and the same for the x-axis.
 
 For `SimplePlot1D`, you do not supply the number of plots, otherwise the behavior is similar.
 We will use them further below to demonstrate animations from plots.
+
+## 2D plotting helpers
+
+Since version 0.4, there are also opinionated helper classes for 2D plots.
+
+```{code-cell}
+grid_2d = wp.grid.Grid([wp.grid.PlaneWaveDof(-10, 10, 128),
+                        wp.grid.PlaneWaveDof(0, 10, 64)])
+
+potential_2d = (wp.operator.Potential1D(grid_2d, 0, lambda x: 0.5 * x ** 2)
+                + wp.operator.Potential1D(grid_2d, 1, lambda x: 0.25 * x ** 2))
+
+psi_2d = wp.builder.product_wave_function(grid_2d, [wp.special.Gaussian(-3, 0, rms=1),
+                                                   wp.special.Gaussian(4, 0, rms=1)])
+
+plot = wp.plot.ContourPlot2D(psi_2d, potential_2d)
+plot.plot(psi_2d, 0)
+```
 
 ## Manual plotting
 

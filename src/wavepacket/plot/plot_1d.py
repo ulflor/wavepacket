@@ -90,8 +90,8 @@ class BasePlot1D(ABC):
         Internal plotting function that actually draws the density on a given Axes.
         """
         axes.clear()
-        axes.set_xlim(self.xlim[0], self.xlim[1])
-        axes.set_ylim(self.ylim[0], self.ylim[1])
+        axes.set_xlim(*self.xlim)
+        axes.set_ylim(*self.ylim)
 
         dvr_grid = state.grid.dofs[0].dvr_points
 
