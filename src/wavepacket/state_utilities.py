@@ -214,7 +214,7 @@ def orthonormalize(states: Sequence[wp.grid.State]) -> list[wp.grid.State]:
         if trace(state) == 0:
             raise wp.BadStateError("Cannot orthonormalize state with norm zero.")
 
-    result: wpt.ComplexData = []
+    result: list[wpt.ComplexData] = []
     for state in states:
         a = state.data
         state.data.sum()
