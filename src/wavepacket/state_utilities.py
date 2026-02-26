@@ -18,7 +18,7 @@ def _normalize(u: wpt.ComplexData) -> wpt.ComplexData:
     return u / math.sqrt(np.abs(u ** 2).sum())
 
 
-def dvr_density(state: wp.grid.State) -> wpt.RealData:
+def dvr_density(state: wp.grid.State, dof_index: int | None = None) -> wpt.RealData:
     """
     Returns the density of the input state at the DVR grid points.
 
@@ -27,10 +27,18 @@ def dvr_density(state: wp.grid.State) -> wpt.RealData:
     dead end: useful for plotting and inspection, but not for
     further computations.
 
+    Note that this function returns the density in DVR, that is, the raw
+    density values without grid weights or such. These are not useful
+    for computations, but can be plotted or otherwise inspected.
+
     Parameters
     ----------
     state : wp.grid.State
         The state (wave function or density operator) whose density should be computed.
+
+    dof_index: int|None, default=None
+        If set, return the reduced density, i.e., the density integrated over all degrees of freedom
+        except the one with the given index.
 
     Returns
     -------
@@ -41,7 +49,32 @@ def dvr_density(state: wp.grid.State) -> wpt.RealData:
     ------
     wp.BadStateError
         If the supplied state is neither a wave function nor a density operator.
+
+    IndexError
+        If the dof_index is out of range.
     """
+    if dof_index is not None:
+        dof_index = state.grid.normalize_index(dof_index)
+
+        # We need to sum in weighted DVR first, then transform to DVR
+        if state.is_wave_function():
+            weighted_density = np.abs(state.data * state.data)
+        elif state.is_density_operator():
+            weighted_density = _take_diagonal(state.data, state.grid)
+        else:
+            raise wp.BadStateError("Input is not a valid state.")
+
+        weighted_density = weighted_density.swapaxes(0, dof_index)
+        indices_to_sum = tuple(range(1, len(state.grid.dofs)))
+        reduced_density = weighted_density.sum(indices_to_sum)
+
+        # Here, we exploit that the weights are real values,
+        # and that the density transforms like twice a wave function.
+        tmp = state.grid.dofs[dof_index].to_dvr(reduced_density, 0)
+        return state.grid.dofs[dof_index].to_dvr(tmp, 0)
+
+    # The normal path just transforms the state to DVR, then
+    # calculates the density from the state
     if state.is_wave_function():
         data = state.data
         for index, dof in enumerate(state.grid.dofs):
@@ -62,7 +95,7 @@ def dvr_density(state: wp.grid.State) -> wpt.RealData:
         raise wp.BadStateError("Input is not a valid state.")
 
 
-def fbr_density(state: wp.grid.State) -> wpt.RealData:
+def fbr_density(state: wp.grid.State, dof_index: int|None = None) -> wpt.RealData:
     """
     Returns the FBR density of the input state at the FBR grid points.
 
@@ -80,6 +113,10 @@ def fbr_density(state: wp.grid.State) -> wpt.RealData:
     state : wp.grid.State
         The state (wave function or density operator) whose FBR density should be computed.
 
+    dof_index: int | None, default=None
+        If set, return the reduced density, i.e., the density integrated over all degrees of freedom
+        except the one with the given index.
+
     Returns
     -------
     wpt.RealData
@@ -89,13 +126,16 @@ def fbr_density(state: wp.grid.State) -> wpt.RealData:
     ------
     wp.BadStateError
         If the supplied state is neither a wave function nor a density operator.
+
+    IndexError
+        If the dof_index is out of range.
     """
     if state.is_wave_function():
         data = state.data
         for index, dof in enumerate(state.grid.dofs):
             data = dof.to_fbr(data, index)
 
-        return np.abs(data * data)
+        density = np.abs(data * data)
     elif state.is_density_operator():
         data = state.data
         grid = state.grid
@@ -105,9 +145,19 @@ def fbr_density(state: wp.grid.State) -> wpt.RealData:
             data = dof.to_fbr(data, index)
             data = dof.to_fbr(data, index + len(grid.dofs), is_ket=False)
 
-        return _take_diagonal(data, grid)
+        density = _take_diagonal(data, grid)
     else:
         raise wp.BadStateError("Input is not a valid state.")
+
+    if dof_index is None:
+        return density
+    else:
+        dof_index = state.grid.normalize_index(dof_index)
+
+        # The FBR does not contain weights, so we can sum directly
+        density = density.swapaxes(0, dof_index)
+        indices_to_sum = tuple(range(1, len(state.grid.dofs)))
+        return density.sum(indices_to_sum)
 
 
 def trace(state: wp.grid.State) -> float:

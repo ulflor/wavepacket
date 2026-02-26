@@ -31,6 +31,12 @@ def test_reject_invalid_states(grid_2d):
     with pytest.raises(wp.BadStateError):
         wp.population(invalid_state, good_state)
 
+    with pytest.raises(IndexError):
+        wp.dvr_density(good_state, -3)
+
+    with pytest.raises(IndexError):
+        wp.fbr_density(good_state, 2)
+
 
 def test_wave_function_dvr_density():
     grid = wp.grid.Grid([wp.grid.PlaneWaveDof(5, 6, 3),
@@ -74,6 +80,24 @@ def test_density_operator_fbr_density(grid_2d):
     density_from_rho = wp.fbr_density(rho)
 
     assert_allclose(density_from_psi, density_from_rho, rtol=0, atol=1e-12)
+
+
+def test_reduced_dvr_and_fbr_density(grid_2d):
+    grid_x = wp.grid.Grid(grid_2d.dofs[0])
+    grid_y = wp.grid.Grid(grid_2d.dofs[1])
+
+    gauss_x = wp.special.Gaussian(5, rms=3)
+    gauss_y = wp.special.Gaussian(10, rms=4)
+
+    psi_x = wp.builder.product_wave_function(grid_x, gauss_x)
+    psi_y = wp.builder.product_wave_function(grid_y, gauss_y)
+    psi_2d = wp.builder.product_wave_function(grid_2d, [gauss_x, gauss_y])
+
+    assert_allclose(wp.dvr_density(psi_x), wp.dvr_density(psi_2d, 0), atol=1e-12, rtol=0)
+    assert_allclose(wp.dvr_density(psi_y), wp.dvr_density(psi_2d, 1), atol=1e-12, rtol=0)
+
+    assert_allclose(wp.fbr_density(psi_x), wp.fbr_density(psi_2d, 0), atol=1e-12, rtol=0)
+    assert_allclose(wp.fbr_density(psi_y), wp.fbr_density(psi_2d, 1), atol=1e-12, rtol=0)
 
 
 def test_trace():
