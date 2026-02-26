@@ -2,6 +2,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 import wavepacket as wp
+from ._utilities import get_potential_values
 
 
 class ContourPlot2D:
@@ -24,11 +25,12 @@ class ContourPlot2D:
         self.contours = np.linspace(0, max_density, 15)
 
         if potential is None:
-            self._potvals = None
+            self._potential = None
         else:
-            pot_state = potential.apply(wp.builder.unit_wave_function(state.grid), 0)
-            self._potvals = np.real(pot_state.data)
-            self.potential_contours = np.linspace(self._potvals.min(), self._potvals.max(), 15)
+            self._potential = potential
+            potential_values = get_potential_values(potential, 0)
+            self.potential_contours = np.linspace(potential_values.min(),
+                                                  potential_values.max(), 15)
 
     def plot(self, state: wp.grid.State, t: float) -> plt.Axes:
         self._axes.clear()
@@ -39,12 +41,15 @@ class ContourPlot2D:
         y = state.grid.dofs[1].dvr_points
         z = wp.dvr_density(state)
 
-        if self._potvals is not None:
-            self._axes.contour(x, y, self._potvals.T, levels=self.potential_contours,
-                               colors='k', linewidths=0.5, linestyles='--')
+        if self._potential is not None:
+            potential_values = get_potential_values(self._potential, t)
+            self._axes.contour(x, y, potential_values.T,
+                               levels=self.potential_contours, colors='k',
+                               linewidths=0.5, linestyles='--')
 
-        self._axes.contour(x, y, z.T, levels=self.contours,
-                            colors='b', linewidths=1, linestyles='-')
+        self._axes.contour(x, y, z.T,
+                           levels=self.contours, colors='b',
+                           linewidths=1, linestyles='-')
 
         self._axes.set_xlabel("x [a.u.]")
         self._axes.set_ylabel("y [a.u.]")
