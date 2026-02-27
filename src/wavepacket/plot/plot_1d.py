@@ -19,9 +19,9 @@ class BasePlot1D(ABC):
     Attributes
     ----------
     xlim: tuple[float, float]
-        The range of the x-axis [min, max]
+        The range (min, max) of the x-axis
     ylim: tuple[float, float]
-        The range of the y-axis of the plot [min, max]
+        The range (min, max) of the y-axis of the plot
     conversion_factor: float
         The factor that converts from the density to energy units. Constant 1 if no potential is plotted.
     """
@@ -65,10 +65,8 @@ class BasePlot1D(ABC):
         Plots a state, possibly together with the potential.
 
         If a potential was supplied, it is also plotted, and the density shifted by the
-        energy given as expectation value of the Hamiltonian.
-
-        Each call to plot populates a new plot (axes); if no more axes are left,
-        the last one is overwritten.
+        energy given as expectation value of the Hamiltonian. If the supplied potential
+        is time-dependent, it is plotted at the given time.
 
         Parameters
         ----------
@@ -76,7 +74,6 @@ class BasePlot1D(ABC):
             The state whose density is plotted.
         t: float
             The time at which the state applies.
-            The time is plotted in the upper right corner.
 
         Returns
         -------
