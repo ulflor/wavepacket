@@ -177,3 +177,76 @@ class ContourPlot2D(BaseContourPlot2D):
         self._ax_right.yaxis.set_label_position('right')
 
         return self._axes
+
+
+class StackedContourPlot2D(BaseContourPlot2D):
+    """
+    Draws multiple contour plots in one figure.
+
+    This plot class is mainly useful for static Jupyter notebooks and similar applications.
+    You specify a number of contour plots, and after ech plot() command, you jump to the
+    next plot. Similar to :py:class:`wavepacket.plot.StackedContourPlot2D`, but we
+    lay out the contour plots in a table pattern, not a single row.
+
+    See the base class :py:class:`wavepacket.plot.BaseContourPlot2D` for settable attributes.
+
+    Parameters
+    ----------
+    num_rows: int
+        How many rows of plots are laid out in the figure.
+    num_cols: int
+        How many columns of plots are laid out in the figure.
+    state: wavepacket.grid.State
+        A reference state from which plot settings are derived (e.g., good contour lines)
+    potential: wavepacket.operator.OperatorBase | None, default=None
+        You can optionally supply a potential, then the potential is also plotted with
+        contour lines.
+
+    Attributes
+    ----------
+    figure: matplotlib.figure.Figure
+        The handle to the figure on which we draw the plots.
+    """
+    def __init__(self, num_rows: int, num_cols: int,
+                 state: wp.grid.State, potential: wp.operator.OperatorBase | None = None):
+        super().__init__(state, potential)
+
+        self.figure = plt.figure(figsize=(8, 8), layout='none')
+        self._shape = (num_rows, num_cols)
+        self._index = 0
+
+        self._axes = []
+        for row in range(num_rows):
+            for col in range(num_cols):
+                ax = self.figure.add_axes((0.07 + col*0.3, 0.67 - row * 0.3, 0.27, 0.27))
+                self._axes.append(ax)
+
+    def plot(self, state: wp.grid.State, t: float) -> plt.Axes:
+        axes = self._axes[self._index]
+        super()._contour(axes, state, t)
+
+        axes.text(0.05 * self.xlim[0] + 0.95 * self.xlim[1], 0.05 * self.ylim[0] + 0.95 * self.ylim[1],
+                  f"t = {t:.4g} a.u.", weight="heavy",
+                  horizontalalignment="right", verticalalignment="top")
+
+        if self._cur_col() != 0:
+            axes.set_yticks([])
+        else:
+            axes.set_ylabel('y (a.u.)')
+
+        if self._cur_row() != self._shape[0] - 1:
+            axes.set_xticks([])
+        else:
+            axes.set_xlabel('x (a.u.)')
+
+        self._index += 1
+        if self._index >= len(self._axes):
+            self._index = len(self._axes) - 1
+
+        return axes
+
+    def _cur_col(self) -> int:
+        return self._index % self._shape[1]
+
+    def _cur_row(self) -> int:
+        return self._index // self._shape[0]
