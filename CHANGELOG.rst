@@ -10,12 +10,18 @@ Breaking changes:
 - (#44) Moved functionality around: all utility functions are in the main namespace,
     all callables in a new "special" namespace.
 
+Major changes:
+
+- (#37) Added contour plots for two-dimensional systems.
+
 Minor changes:
 
 - (#52) added unit_wave_function() to generate a wave function consisting of ones
-
 - (#43) copied some user input arrays to avoid accidental side effects
-
+- (#37) When calculating the density, you can optionally calculate the reduced
+  density along some degree of freedom.
+- (#37) When plotting data, the potentials are evaluated at the time of plotting.
+  This may be interesting for time-dependent potentials.
 
 0.3
 ---
