@@ -112,20 +112,43 @@ We will use them further below to demonstrate animations from plots.
 ## 2D plotting helpers
 
 Since version 0.4, there are also opinionated helper classes for 2D plots.
+These helpers create regular and stacked contour plots.
+Let us demonstrate the stacked plot for a two-dimensional harmonic oscillator example...
 
 ```{code-cell}
-grid_2d = wp.grid.Grid([wp.grid.PlaneWaveDof(-10, 10, 128),
-                        wp.grid.PlaneWaveDof(0, 10, 64)])
+import math
 
-potential_2d = (wp.operator.Potential1D(grid_2d, 0, lambda x: 0.5 * x ** 2)
-                + wp.operator.Potential1D(grid_2d, 1, lambda x: 0.25 * x ** 2))
+dof = wp.grid.PlaneWaveDof(-15, 15, 128)
+grid_2d = wp.grid.Grid([dof, dof])
 
-psi_2d = wp.builder.product_wave_function(grid_2d, [wp.special.Gaussian(-3, 0, rms=1),
-                                                   wp.special.Gaussian(4, 0, rms=1)])
+kinetic_2d = (wp.operator.CartesianKineticEnergy(grid_2d, 0, mass=1.0, cutoff=35)
+             + wp.operator.CartesianKineticEnergy(grid_2d, 1, mass=1.0, cutoff=35))
+potential_2d = (wp.operator.Potential1D(grid_2d, 0, lambda x: 0.5 * x ** 2, cutoff=35)
+               + wp.operator.Potential1D(grid_2d, 1, lambda x: 0.25 * x ** 2, cutoff=35))
 
-plot = wp.plot.ContourPlot2D(psi_2d, potential_2d)
-plot.plot(psi_2d, 0)
+equation_2d = wp.expression.SchroedingerEquation(kinetic_2d + potential_2d)
+
+psi0_2d = wp.builder.product_wave_function(grid_2d, [wp.special.Gaussian(-5, 0, rms=1),
+                                                     wp.special.Gaussian(-5, -5, rms=1)])
+
+solver_2d = wp.solver.ChebychevSolver(equation_2d, math.pi/5, (0, 140))
+plot = wp.plot.StackedContourPlot2D(3, 3, psi0_2d, potential_2d)
+for t, psi in solver_2d.propagate(psi0_2d, 0, 8):
+    plot.plot(psi, t)
 ```
+
+Note that the strange form of the potential comes from truncation,
+which we can also check to be reasonable along the way.
+
+The regular contour plot adds margins to show the reduced densities.
+
+```{code-cell}
+plot_regular = wp.plot.ContourPlot2D(psi0_2d, potential_2d)
+plot_regular.plot(psi0_2d, t)
+```
+
+Similar to the one-dimensional plots, some limited customization is possible.
+See the class documentation for details.
 
 ## Manual plotting
 
