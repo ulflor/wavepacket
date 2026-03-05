@@ -29,6 +29,7 @@ Wavepacket documentation
     advanced/pendular_states
     advanced/thermal_states
     advanced/polynomial_solvers
+    advanced/plane_wave_grid
 
 .. toctree::
     :caption: Other links
