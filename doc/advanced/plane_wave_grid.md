@@ -9,8 +9,7 @@ kernelspec:
 This web page can be downloaded as notebook: {nb-download}`plane_wave_grid.ipynb` (Jupyter)
 or {download}`plane_wave_grid.md` (Markdown)
 
-When running a calculation, you always need to ensure that the grid is sufficient
-to contain your wave function.
+When setting up a grid, you need to ensure that it can adequately represent the wave functions.
 Failure to do so leads to inaccurate results or artifacts.
 In this document, we want to dig a bit deeper, what happens when you choose an
 inappropriate equally-spaced grid,
@@ -19,36 +18,32 @@ as encapsulated in {py:class}`wavepacket.grid.PlaneWaveDof`.
 In particular, we want to answer the questions:
 
 * What happens if the grid extension is too small for your dynamics?
-* What happens if you choose too few grid points?
 * How can you get away with less extension and fewer grid points?
+* What happens if you choose too few grid points?
 
 ## Short recap: Equally-spaced grids and DVR
 
 An equally-spaced grid is determined by three parameters:
-The start of the grid, $x_0$, the length $L$, and the number of points $N$.
-The grid points are, well, equally-spaced $x_l = x_0 + l \Delta x$
-with spacing $\Delta x = L/N$ and $l \in {0, ... N-1}$.
+The start of the grid $x_0$, the length $L$, and the number of points $N$.
+The grid points are at $x_l = x_0 + l \Delta x$
+with spacing $\Delta x = L/N$ and $l = 0, ... N-1$.
 This equally-spaced grid has a complementary,
-equally-spaced grid in Fourier-space with grid points $k_m$ in the interval $[-K, K]$
-($K = \pi / \Delta x$).
-There are minor differences for even and odd values of $N$,
-which are not important for our discussion, though,
-so we will trade some accuracy for brevity.
+equally-spaced grid in Fourier space with grid points $k_m$ in the interval
+$[- \pi/\Delta x, \pi/Delta x]$.
+The exact grid points are different for even and odd values of $N$,
+but these minor details are not relevant for the subsequent discussion.
 
 The usage of this grid within the DVR approximation rests on three pillars:
 
 1. Any wave function can be expanded in plane waves $\propto \exp(-\imath k_m x)$.
-   This forms the finite basis representation (FBR).
-2. The FBR contains the same information as if you know the wave function only at
+   This expansion is the finite basis representation (FBR).
+2. The FBR contains the same information as if the wave function is given only at
    the grid points $x_l$ (discrete variable approximation, DVR). 
-   This is known as the Nyquist theorem in signal processing.
-3. If you have a local operator like a potential, applying it to the wave function in
-   FBR is the same as multiplying the potential values at each grid point,
-   $(\hat V \psi)_l \approx V_l \psi_l$ (DVR approximation).
-   This is exact if the result $\hat V \psi$ is band-limited in $[-K, K]$.
-
-Side note: In theory, you can have an operator where the whole DVR approximation breaks down.
-In practice, we have never observed such a construct in the wild, so we ignore that case.
+   This theorem is known as the Nyquist theorem in signal processing.
+3. Local operators such as potentials can be applied
+   by multiplying the potential values at each grid point,
+   $[\hat V \psi](x_l) \approx V(x_l) \psi(x_l)$.
+   This DVR approximation is exact if the result $\hat V \psi$ is band-limited in $[-K, K]$.
 
 ## Effect of too small grid
 
@@ -75,10 +70,9 @@ for t, psi in solver.propagate(psi0, 0, 3):
    plotter.plot(psi, t)
 ```
 
-The initial state is a Gaussian with some positive momentum.
-As expected, it initially broadens and moves with positive velocity.
-However, as soon as it reaches the grid boundaries,
-we can see it entering the grid again thanks to the periodic boundary conditions.
+The initial Gaussian broadens and moves with positive velocity.
+As soon as it reaches the grid boundaries,
+it enters the grid from the opposite side due to the periodic boundary conditions.
 Also, in the last plot, the Gaussian has broadened so much
 that the right side (roughly corresponding to the components with the larger momentum)
 overtakes and interferes with the left side
@@ -86,9 +80,9 @@ overtakes and interferes with the left side
 This results in an interference pattern,
 and these oscillations are also typical artifacts if the grid is chosen too small.
 
-In practice, you often encounter another pattern.
-As an example, let us dissociate an OH radical.
-To trigger the problem before the wave packet spreads, we give the molecule strong initial kick.
+In practice, you often encounter reflection as another typical effect.
+For demonstration, let us dissociate an OH radical.
+We give the molecule strong initial kick as a crude simulation of dissociation.
 
 ```{code-cell}
 import numpy as np
@@ -117,28 +111,25 @@ for t, psi in solver.propagate(psi0, 0.0, 2):
     plotter.plot(psi, t)
 ```
 
-What we see here is an initial wave packet with enough energy to dissociate.
-As this wave packet reaches the end of the grid,
-it suddenly feels the influence of the Coulomb barrier at small internuclear distances.
-So, wave packet does not reenter the grid from the left,
-but is reflected by the rather large barrier here.
+As the quasi-free wave packet reaches the end of the grid,
+it is reflected by the Coulomb barrier from the next periodic cell.
 The effect is again an interference between the outgoing and reflected parts of the
 wave packet, which shows up as rapid oscillations.
 
-A problem that you may sometimes encounter is that your grid is *always too small.
+A problem that you may sometimes encounter is that your grid is *always* too small.
 Take the Morse oscillator example with a laser-driven dissociation of a molecule.
-The dissociation may take some time, so you may need to propagate for large times.
-But in these large times, the parts of your wave packet that dissociated first
-may reach the boundary of your grid,
-no matter how large you choose it.
-In such a case, you want to use absorbing boundary conditions.
+The laser may be turned on for some time, and the simulation time must be longer than
+the laser pulse plus typical dissociation times.
+But during that simulation, the parts of the wave packet that dissociated first
+may reach the boundary of the grid, no matter how large it is chosen.
+In such a case, you probably want to use absorbing boundary conditions.
 
 ## Absorbing boundary conditions
 
-These conditions typically taking the form of negative imaginary potentials (NIPs) [^NipKosloff] [^NipRiss],
-and although they can be used with any basis, they are usually needed for
-problems like the molecular dissociation, for which one typically uses
-an equally-spaced grid.
+These conditions typically taking the form of negative imaginary potentials (NIPs) [^NipKosloff] [^NipRiss].
+They can be used with any basis, but are usually needed for
+problems like the molecular dissociation, for which a plane wave expansion /
+equally-spaced grid is most natural.
 
 NIPs absorb the wave packet at the locations where they are nonzero,
 before the wave packet reaches the grid boundaries.
@@ -151,12 +142,10 @@ There are, however, two major drawbacks:
   A consequence is that you should choose the NIP to be as small and smooth as possible,
   and you may need to converge this as well.
 * With the NIP term, the Hamiltonian is no longer self-adjoint.
-  This has serious consequences, because some propagation schemes may no longer work.
-  In particular, the expansion in Chebychev polynomials is only correct for a self-adjoint operator,
-  otherwise you loose all the guarantees (error bounds) that this expansion offers.
+  Some efficient solvers like the ChebychevSolver only work for self-adjoint Hamiltonians.
   The workaround here is to move the NIP out of the Hamiltonian,
   and absorb the wave packet after every propagation step.
-  This is currently not implemented conveniently, though.
+  As of 0.4, this is currently not implemented conveniently, though.
 
 Let us demonstrate the first point by adding a steep NIP to the Morse oscillator example:
 
@@ -187,11 +176,11 @@ for the shoulder to travel from 8 a.u. to the end of the grid at 12 a.u.
 For a constant potential, the absorption of the density is roughly 
 $A = exp(-2 * V_0 * t)$ (the factor two comes because the absorption acts on the wavefunction
 but the density is the square of the wavefunction).
-If we want to absorb 99% of the density (A = 0.01), and plugging in t=100,
-we get a value of V_0 approximately 0.025 a.u..
+If we aim to absorb 99% of the density (A = 0.01),
+plugging in t=100 yields a value of V_0 approximately 0.025 a.u.
 In practice, we might want to use a smooth turn-on (e.g., harmonic potential) that is zero at r = 8 a.u,
-and about the intended value at r = 10 a.u..
-Our final potential is then $V(x) = - \imath * 0.025 / 4.0 * (x - 8)^2 (x > 8)$.
+and about the intended value at r = 10 a.u.
+Our final potential is then $V(x) = - \imath * 0.025 / 4.0 * (x - 8)^2 \Theta(x - 8)$.
 
 Let us plug this calculation into the Morse oscillator example from before:
 
@@ -218,23 +207,23 @@ we would have used this estimate as a starting point to tune the NIP parameters.
 
 We have only scratched the surface of absorbing boundary conditions here,
 you can dig a lot deeper, e.g. [^NipRiss] [^NipRissNoreflect].
-As usual, you need to balance the gain and the time investment, though.
+As usual, you should balance the gain against the invested time, though.
 
 ## Effect of too few grid points
 
-To qualitatively understand the effect of too few points for a given grid extent,
-we point out two observations:
+To quickly understand the effect of too few points for a given grid extent,
+we start with two observations:
 
 * The FBR is also an equally-spaced grid in momentum space.
-  The extend of this grid is proportional by the inverse grid spacing / the number of grid points.
+  The extent of this grid is proportional to the inverse grid spacing / the number of grid points.
 * The transformation between the DVR and the FBR is a unitary Fourier transformation.
 
-What this means is that we can swap DVR and FBR, turn the discussion around,
-and ask instead what happens if the grid range in FBR is too small.
-The answer, elaborated before, is that we have implicit periodic boundary conditions,
+So instead of starting from zero, we transform our wave function into the FBR.
+Then we can wonder what happens if the equally-spaced FBR grid is too small for the wave function?.
+The answer, elaborated before, is that we have implicit periodic boundary conditions *also in FBR*,
 and our wave packet re-enters from the other side of the grid.
 
-Let us study this effect for the simple example of a (Gaussian) wave packet sliding down a linear ramp:
+Let us study this effect for a Gaussian wave packet sliding down a linear ramp:
 
 ```{code-cell}
 dof = wp.grid.PlaneWaveDof(-20, 20, 128)
@@ -255,7 +244,7 @@ for t, psi in solver.propagate(psi0, 0.0, 3):
 
 Initially, the wave packed moves down the linear ramp as we would expect.
 However, well before the end of the grid,
-something happens, and our wave packet moves upwards again.
+something strange happens that makes the wave packet move up the ramp again.
 
 What happens can be easily spotted if we plot the corresponding densities in FBR.
 This is currently not natively supported in Wavepacket,
@@ -277,22 +266,27 @@ for t, psi in solver.propagate(psi0, 0.0, 3):
     index += 1
 ```
 
-As predicted, we see the Gaussian wave packet picking up momentum
-until our FBR grid runs out of grid points,
-then the wave packet enters from the other side corresponding to negative momenta.
+As predicted, the Gaussian wave packet gains momentum until it no longer
+fits inside the FBR grid.
+As soon as it reaches the boundary, then the wave packet enters from the other side,
+which corresponds to negative momenta.
+this causes unexpected interferences while the wave packet traverses the grid boundary,
+then the wave packet uses the negative momentum to ascend the ramp again.
 
 ## Conclusion
 
-Checking the convergence of an equally-spaced grid does not require sophistication;
-eyeballing is usually good enough.
 If the grid extent is too small, you notice effects of periodic boundary conditions;
-the wave packets are either reflected at the grid boundaries or re-enter the grid
+wave packets are either reflected at the grid boundaries or enter the grid
 from the other side.
-If you cannot afford a large enough grid, you can work around most problems with
-a negative imaginary potential.
-Having too few grid points for a given extent causes the same effects in Fourier space.
+If you cannot afford a large enough grid to avoid these periodic boundaries,
+you can work around most problems with a negative imaginary potential.
+Having too few grid points causes the same effects in Fourier space.
 These are easily spotted by monitoring the wave packet dynamics in the FBR.
-Consequently, you should always monitor the wave packet dynamics in the DVR *and* the FBR.
+
+Checking the convergence of an equally-spaced grid does not require sophisticated techniques;
+eyeballing is usually good enough.
+You should always monitor the wave packet dynamics in the DVR *and* the FBR.
+
 
 [^NipKosloff]: R. Kosloff and D. Kosloff, J. Comp. Phys. 63:363 (1986)
 <https://openscholar.huji.ac.il/sites/default/files/ronniekosloff/files/k38.pdf>
