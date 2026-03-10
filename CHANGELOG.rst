@@ -13,6 +13,8 @@ Breaking changes:
 Major changes:
 
 - (#37) Added contour plots for two-dimensional systems.
+- (#35) Added documentation on the convergence of equally-spaced grids
+  and absorbing boundary conditions
 
 Minor changes:
 
@@ -22,6 +24,10 @@ Minor changes:
   density along some degree of freedom.
 - (#37) When plotting data, the potentials are evaluated at the time of plotting.
   This may be interesting for time-dependent potentials.
+
+Bug fixes:
+- (#35) 1D plots calculated abs(energy) instead of real(energy),
+  and did not treat unnormalized wave functions correctly.
 
 0.3
 ---
