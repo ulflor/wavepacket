@@ -67,7 +67,7 @@ psi0 = wp.builder.product_wave_function(
 solver = wp.solver.OdeSolver(expression, 4)
 plotter = wp.plot.StackedPlot1D(4, psi0)
 for t, psi in solver.propagate(psi0, 0, 3):
-   plotter.plot(psi, t)
+   plotter.plot(t, psi)
 ```
 
 The initial Gaussian broadens and moves with positive velocity.
@@ -108,7 +108,7 @@ psi0 = wp.builder.product_wave_function(grid, shape)
 solver = wp.solver.OdeSolver(equation, dt=250)
 plotter = wp.plot.StackedPlot1D(3, psi0, potential, kinetic+potential)
 for t, psi in solver.propagate(psi0, 0.0, 2):
-    plotter.plot(psi, t)
+    plotter.plot(t, psi)
 ```
 
 As the quasi-free wave packet reaches the end of the grid,
@@ -162,7 +162,7 @@ equation = wp.expression.SchroedingerEquation(kinetic + potential + bad_nip)
 solver = wp.solver.OdeSolver(equation, dt=150)
 plotter = wp.plot.StackedPlot1D(3, psi0, potential, kinetic + potential)
 for t, psi in solver.propagate(psi0, 0.0, 2):
-    plotter.plot(psi, t)
+    plotter.plot(t, psi)
 ```
 
 Our wave function is reflected at the start of the NIP around 8 a.u as predicted.
@@ -197,7 +197,7 @@ equation = wp.expression.SchroedingerEquation(kinetic + potential + nip)
 solver = wp.solver.OdeSolver(equation, dt=150)
 plotter = wp.plot.StackedPlot1D(5, psi0, potential, kinetic + potential)
 for t, psi in solver.propagate(psi0, 0.0, 4):
-    plotter.plot(psi, t)
+    plotter.plot(t, psi)
 ```
 
 While the calculation may not have been the most sophisticated approach,
@@ -239,7 +239,7 @@ psi0 = wp.builder.product_wave_function(grid, shape)
 solver = wp.solver.OdeSolver(equation, 2.5)
 plotter = wp.plot.StackedPlot1D(4, psi0, potential)
 for t, psi in solver.propagate(psi0, 0.0, 3):
-    plotter.plot(psi, t)
+    plotter.plot(t, psi)
 ```
 
 Initially, the wave packed moves down the linear ramp as we would expect.

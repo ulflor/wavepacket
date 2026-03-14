@@ -97,7 +97,7 @@ stacked_plot = wp.plot.StackedPlot1D(6, psi_0, potential=potential, hamiltonian=
 stacked_plot.conversion_factor /= 2
 
 for t, psi in solver.propagate(psi_0, t0=0.0, num_steps=5):
-    stacked_plot.plot(psi, t)
+    stacked_plot.plot(t, psi)
 
 # stacked_plot.figure.show() or similar is needed outside of Jupyter notebooks
 ```
@@ -134,7 +134,7 @@ psi0_2d = wp.builder.product_wave_function(grid_2d, [wp.special.Gaussian(-5, 0, 
 solver_2d = wp.solver.ChebychevSolver(equation_2d, math.pi/5, (0, 140))
 plot = wp.plot.StackedContourPlot2D(3, 3, psi0_2d, potential_2d)
 for t, psi in solver_2d.propagate(psi0_2d, 0, 8):
-    plot.plot(psi, t)
+    plot.plot(t, psi)
 ```
 
 Note that the strange form of the potential comes from truncation,
@@ -144,7 +144,7 @@ The regular contour plot adds margins to show the reduced densities.
 
 ```{code-cell}
 plot_regular = wp.plot.ContourPlot2D(psi0_2d, potential_2d)
-plot_regular.plot(psi0_2d, t)
+plot_regular.plot(t, psi0_2d)
 ```
 
 Similar to the one-dimensional plots, some limited customization is possible.
@@ -227,7 +227,7 @@ writer = HTMLWriter(fps=3, embed_frames=True)
 
 with writer.saving(simple_plot.figure, "harmonic_oscillator.html", dpi=200): 
     for t, psi in solver.propagate(psi_0, t0=0.0, num_steps=10):
-        simple_plot.plot(psi, t)
+        simple_plot.plot(t, psi)
         writer.grab_frame()
 ```
 

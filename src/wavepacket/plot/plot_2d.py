@@ -51,7 +51,7 @@ class BaseContourPlot2D(ABC):
                                                   potential_values.max(), 15)
 
     @abstractmethod
-    def plot(self, state: wp.grid.State, t: float) -> plt.Axes:
+    def plot(self, t: float, state: wp.grid.State) -> plt.Axes:
         """
         Draws the contour plot and returns the axis of the contour plot.
 
@@ -61,10 +61,10 @@ class BaseContourPlot2D(ABC):
 
         Parameters
         ----------
-        state: wp.grid.State
-            The state whose density is plotted.
         t: float
             The time at which the state applies.
+        state: wp.grid.State
+            The state whose density is plotted.
 
         Returns
         -------
@@ -74,7 +74,7 @@ class BaseContourPlot2D(ABC):
         """
         raise NotImplementedError("Abstract base method should not be called")
 
-    def _contour(self, axes: plt.Axes, state: wp.grid.State, t: float) -> None:
+    def _contour(self, axes: plt.Axes, t: float, state: wp.grid.State) -> None:
         """
         Internal plotting function that actually draws the contours on a given Axes.
         """
@@ -143,9 +143,9 @@ class ContourPlot2D(BaseContourPlot2D):
         self.max_marginals = (wp.dvr_density(state, 0).max(),
                               wp.dvr_density(state, 1).max())
 
-    def plot(self, state: wp.grid.State, t: float) -> plt.Axes:
+    def plot(self, t: float, state: wp.grid.State) -> plt.Axes:
         # Plot the 2D contour plot
-        self._contour(self._axes, state, t)
+        self._contour(self._axes, t, state)
 
         # Plot the reduced density along x
         self._ax_bottom.clear()
@@ -221,9 +221,9 @@ class StackedContourPlot2D(BaseContourPlot2D):
                 ax = self.figure.add_axes((0.07 + col*0.3, 0.67 - row * 0.3, 0.27, 0.27))
                 self._axes.append(ax)
 
-    def plot(self, state: wp.grid.State, t: float) -> plt.Axes:
+    def plot(self, t: float, state: wp.grid.State) -> plt.Axes:
         axes = self._axes[self._index]
-        super()._contour(axes, state, t)
+        super()._contour(axes, t, state)
 
         axes.text(0.05 * self.xlim[0] + 0.95 * self.xlim[1], 0.05 * self.ylim[0] + 0.95 * self.ylim[1],
                   f"t = {t:.4g} a.u.", weight="heavy",

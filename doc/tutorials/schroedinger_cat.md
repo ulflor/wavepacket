@@ -87,7 +87,7 @@ solver = wp.solver.OdeSolver(schroedinger_eq, dt=math.pi/5)
 
 plot_1d = wp.plot.StackedPlot1D(6, psi_0)
 for t, psi in solver.propagate(psi_0, t0=0.0, num_steps=5):
-    plot_1d.plot(psi, t)
+    plot_1d.plot(t, psi)
 ```
 
 As can be seen, as soon as the wave packets encounter each other, we get typical oscillations.
@@ -146,7 +146,7 @@ solver = wp.solver.OdeSolver(liouvillian, dt=math.pi/5)
 
 plot_1d = wp.plot.StackedPlot1D(6, rho_0)
 for t, rho in solver.propagate(rho_0, t0=0.0, num_steps=5):
-    plot_1d.plot(rho, t)
+    plot_1d.plot(t, rho)
 ```
 
 Now we see no interference terms anymore, because we only get the ensemble average,
@@ -164,7 +164,7 @@ the oscillations, of course.
 rho_0 = wp.builder.pure_density(psi_0)
 plot_1d = wp.plot.StackedPlot1D(6, rho_0)
 for t, rho in solver.propagate(rho_0, t0=0.0, num_steps=5):
-    plot_1d.plot(rho, t)
+    plot_1d.plot(t, rho)
 ```
 
 [^wiki-dvr]: See the explanation of the DVR method in the

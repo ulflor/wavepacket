@@ -60,7 +60,7 @@ class BasePlot1D(ABC):
             self.conversion_factor = (self.ylim[1] - energy) / max_density
 
     @abstractmethod
-    def plot(self, state: wp.grid.State, t: float) -> plt.Axes:
+    def plot(self, t: float, state: wp.grid.State) -> plt.Axes:
         """
         Plots a state, possibly together with the potential.
 
@@ -70,10 +70,10 @@ class BasePlot1D(ABC):
 
         Parameters
         ----------
-        state: wp.grid.State
-            The state whose density is plotted.
         t: float
             The time at which the state applies.
+        state: wp.grid.State
+            The state whose density is plotted.
 
         Returns
         -------
@@ -83,7 +83,7 @@ class BasePlot1D(ABC):
         """
         raise NotImplementedError()
 
-    def _plot(self, axes: plt.Axes, state: wp.grid.State, t: float) -> None:
+    def _plot(self, axes: plt.Axes, t: float, state: wp.grid.State) -> None:
         """
         Internal plotting function that actually draws the density on a given Axes.
         """
@@ -144,8 +144,8 @@ class SimplePlot1D(BasePlot1D):
 
         super().__init__(state, potential, hamiltonian)
 
-    def plot(self, state: wp.grid.State, t: float) -> plt.Axes:
-        super()._plot(self._axes, state, t)
+    def plot(self, t: float, state: wp.grid.State) -> plt.Axes:
+        super()._plot(self._axes, t, state)
 
         self._axes.set_xlabel("x [a.u.]")
         self._axes.set_title(f"t = {t:.4g} a.u.")
@@ -208,11 +208,11 @@ class StackedPlot1D(BasePlot1D):
 
         super().__init__(state, potential, hamiltonian)
 
-    def plot(self, state: wp.grid.State, t: float) -> plt.Axes:
+    def plot(self, t: float, state: wp.grid.State) -> plt.Axes:
         axes: plt.Axes = self._axes.flat[self._index]
         self._index = min(self._index + 1, self._axes.size)
 
-        super()._plot(axes, state, t)
+        super()._plot(axes, t, state)
 
         axes.text(0.05 * self.xlim[0] + 0.95 * self.xlim[1], 0.05 * self.ylim[0] + 0.95 * self.ylim[1],
                   f"t = {t:.4g} a.u.", weight="heavy",
