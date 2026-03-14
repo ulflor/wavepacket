@@ -1,4 +1,5 @@
 import math
+from typing import overload
 
 import numpy as np
 import scipy
@@ -60,7 +61,11 @@ class Gaussian(wpt.Generator):
         else:
             self._rms = fwhm / np.sqrt(8 * np.log(2))
 
-    def __call__(self, x: wpt.RealData) -> wpt.ComplexData:
+    @overload
+    def __call__(self, x: float) -> complex: ...
+    @overload
+    def __call__(self, x: wpt.RealData) -> wpt.ComplexData: ...
+    def __call__(self, x):
         shifted = x - self._x
         arg = - shifted ** 2 / (2 * self._rms ** 2) + 1j * self._p * shifted
         return np.exp(arg)

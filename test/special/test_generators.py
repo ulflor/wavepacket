@@ -44,6 +44,16 @@ def test_gaussian():
     assert_allclose(vals, vals2, atol=1e-12, rtol=0)
 
 
+def test_gaussian_with_float_input():
+    point = np.ones(1)
+    generator = wp.special.Gaussian(x=5, fwhm=4.0)
+
+    array = generator(point)
+    value = generator(1.0)
+
+    assert array[0] == value
+
+
 def test_spherical_harmonic_rejects_invalid_values():
     with pytest.raises(wp.InvalidValueError):
         wp.special.SphericalHarmonic(-1, 0)
