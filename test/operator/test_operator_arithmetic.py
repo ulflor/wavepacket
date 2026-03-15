@@ -5,7 +5,39 @@ import wavepacket as wp
 from wavepacket.testing import assert_close
 
 
-def test_reject_invalid_arguments(grid_1d, grid_2d):
+def test_reject_invalid_types(grid_1d):
+    op = wp.operator.CartesianKineticEnergy(grid_1d, 0, 1.0)
+
+    # these should be fine
+    op + op
+    op + 1
+    op + 1.0
+    op + 1j
+
+    # these should throw so that we fail early, before we use the operator
+    with pytest.raises(TypeError):
+        op + 'test'
+
+    # same for subtraction
+    op - op
+    op - 1
+    op - 1.0
+    op - 1j
+
+    with pytest.raises(TypeError):
+        op - 'test'
+
+    # same for multiplication
+    op * op
+    op * 1
+    op * 1.0
+    op * 1j
+
+    with pytest.raises(TypeError):
+        op * 'test'
+
+
+def test_reject_different_grids(grid_1d, grid_2d):
     op1 = wp.operator.CartesianKineticEnergy(grid_1d, 0, 1.0)
     op2 = wp.operator.CartesianKineticEnergy(grid_2d, 0, 1.0)
 

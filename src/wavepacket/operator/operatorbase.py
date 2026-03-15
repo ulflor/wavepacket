@@ -1,5 +1,6 @@
 from abc import ABC, abstractmethod
 from collections.abc import Sequence
+import numbers
 from typing import Final
 
 import numpy as np
@@ -79,9 +80,13 @@ class OperatorBase(ABC):
         return self * wp.operator.Constant(self.grid, -1)
 
     def __add__(self, other: 'OperatorBase | complex') -> 'OperatorBase':
-        if not isinstance(other, OperatorBase):
-            other = wp.operator.Constant(self.grid, other)
-        return OperatorSum([self, other])
+        if isinstance(other, OperatorBase):
+            return OperatorSum([self, other])
+        elif isinstance(other, numbers.Number):
+            wrapper = wp.operator.Constant(self.grid, other)
+            return OperatorSum([self, wrapper])
+        else:
+            raise TypeError(f"Summation requires operators or numbers. Got {other}")
 
     def __radd__(self, other: complex) -> 'OperatorBase':
         return self + other
@@ -93,9 +98,13 @@ class OperatorBase(ABC):
         return other + (-1) * self
 
     def __mul__(self, other: 'OperatorBase | complex') -> 'OperatorBase':
-        if not isinstance(other, OperatorBase):
-            other = wp.operator.Constant(self.grid, other)
-        return OperatorProduct([self, other])
+        if isinstance(other, OperatorBase):
+            return OperatorProduct([self, other])
+        elif isinstance(other, numbers.Number):
+            wrapper = wp.operator.Constant(self.grid, other)
+            return OperatorProduct([self, wrapper])
+        else:
+            raise TypeError(f"Multiplication requires operators or numbers. Got {other}")
 
     def __rmul__(self, other: 'OperatorBase | complex') -> 'OperatorBase':
         return self * other
