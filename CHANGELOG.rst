@@ -9,6 +9,8 @@ Breaking changes:
 
 - (#44) Moved functionality around: all utility functions are in the main namespace,
     all callables in a new "special" namespace.
+- (#55) Swapped arguments for plotting functions to be consistent with how
+    solver.propagate() returns them
 
 Major changes:
 
@@ -24,6 +26,8 @@ Minor changes:
   density along some degree of freedom.
 - (#37) When plotting data, the potentials are evaluated at the time of plotting.
   This may be interesting for time-dependent potentials.
+- (#55) Gaussian accepts floats, not only arrays, and can be used for pulse shapes
+- (#55) Comprehensible error message when adding an incorrect object to an operator
 
 Bug fixes:
 - (#35) 1D plots calculated abs(energy) instead of real(energy),
