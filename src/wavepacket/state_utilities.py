@@ -317,7 +317,7 @@ def population(state: wp.grid.State, target: wp.grid.State) -> float:
     target_trace = trace(target)
     if state.is_wave_function():
         coefficient = (np.conj(target.data) * state.data).sum()
-        return coefficient ** 2 / target_trace
+        return np.abs(coefficient) ** 2 / target_trace
     elif state.is_density_operator():
         matrix_form = np.reshape(state.data, [state.grid.size, state.grid.size])
         flat_target = np.ravel(target.data)
