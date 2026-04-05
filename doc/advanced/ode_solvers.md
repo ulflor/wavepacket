@@ -21,9 +21,6 @@ For the impatient, the main results of the following treatise are:
   is dictated by the largest (absolute) eigenvalue, not by the typical energies.
 * Truncate aggressively and shift energies to improve performance.
 
-If these results sound suspiciously like the take-home advice from {doc}`polynomial_solvers`,
-this is not a coincidence; after all, all solvers tackle the same problem.
-
 ## Some basics
 
 ### ODE solvers theory
@@ -48,19 +45,19 @@ A similar derivation can be done for the Liouville von-Neumann equation for dens
 
 ODE solvers have the big advantage that they are robust work horses.
 You can throw any problem at them: time-dependent Hamiltonians, complex-valued Hamiltonians,  open systems, ...
-they will eventually produce a solution.
-They are also easy to use.
-You typically get adaptive solvers, which choose the time step based on an error bound that you supply.
+they will produce a solution.
+Nowadays, they always come with adaptive time steps,
+so you only need to set an error bound, and the algorithm chooses an appropriate time step for you.
 
 The big drawback is performance; ODE solvers do not exploit any knowledge of the system,
-and this makes better adapted solvers like polynomial solvers more efficient for specific classes of problems.
+and this makes optimized solvers like polynomial solvers more efficient for specific classes of problems.
 Typically, ODE solvers are not unitary, so the norm is not a conserved quantity and diverges on poor convergence.
 However, because of the adaptive steps, this does not usually happen,
-instead the algorithm chooses tiny step sizes.
+instead the algorithm chooses tiny step sizes with corresponding long run times.
 
 ### Model system
 
-As an example system, we choose a one-dimensional harmonic oscillator
+As example system, we choose a one-dimensional harmonic oscillator
 with a shifted Gaussian as initial state.
 
 ```{code-cell}
@@ -83,27 +80,27 @@ import numpy as np
 eigenstates = [state for _, state in wp.diagonalize(hamiltonian)]
 projection = [wp.population(psi0, state) for state in eigenstates]
 
-plt.semilogy(np.arange(128), projection, '+')
+plt.semilogy(np.arange(128), projection, '+');
 ```
 
-In theory, the population should decay exponentially.
+In theory, the population should decay smoothly.
 In practice, strange things start to happen around the 50th eigenstate.
-You can check that this is an artifact of the finite grid extent and the finite number of grid points,
-we will skip it here to reduce the run time of the notebook.
-This finite grid limitation is a common issue and discussed in depth in {doc}`plane_wave_grid`.
-We will come back to this observation later.
+If we play around with the grid parameters,
+it can be shown that this is an artifact of the finite grid extent and the finite number of grid points.
+We skip the demonstration here to reduce the run time of the notebook.
+This finite grid error is a common issue and discussed in depth in {doc}`plane_wave_grid`.
 
 ## Convergence behavior
 
-Intuitively, we would assume that the time step is determined by the system dynamics,
-i.e., the initial wave function in a time-independent system.
+Intuitively, we would assume that the time step is determined by the specific dynamics,
+i.e., the initial wave function for our time-independent system.
 For example, a low-energy state evolves slower in time than a high-energy state,
-hence it should require fewer time steps.
+hence it should allow larger time steps.
 Unfortunately, this intuition is incorrect.
 
-To understand what happens let us enforce a non-converged calculation.
+To understand what happens let us force a calculation to not converge.
 This is a contrived example; scipy's ODE solvers always use adaptive stepping,
-so we go an extra mile to render the mechanism useless.
+so we need to choose absurd parameters to render this mechanism ineffective.
 To understand where exactly things go awry,
 we can plot the populations of the individual eigenstates
 
@@ -118,11 +115,13 @@ for t, psi in solver.propagate(psi0, 0, 2):
     plt.semilogy(x, populations, '+')
 ```
 
-The plot tells a clear story: The divergence is caused only by the high-energy contributions.
+We succeed: The norm diverges rapidly.
+From the plot of the populations,
+we find that the divergence is caused only by the high-energy contributions.
 These are completely irrelevant for the actual dynamics,
 but require small timesteps for accurate time evolution.
 
-Efficiency gains thus require an optimization of the operator spectrum.
+Improving the efficiency thus require an optimization of the operator spectrum.
 There are two options: We can shift the spectrum, or we can truncate it.
 
 ### Shifting the spectrum
@@ -130,7 +129,7 @@ There are two options: We can shift the spectrum, or we can truncate it.
 The solver spends most effort on the correct propagation of the populated
 states with the highest energies.
 This burden can be reduced by shifting the operator spectrum,
-thereby making the (absolute values of the) energies smaller.
+thereby making the largest (absolute) energies smaller.
 Simple scaling laws suggest that the required time step scales with the inverse of the largest energy,
 so shifting the spectrum to be balanced around zero would ideally halve the computation time.
 
@@ -151,14 +150,14 @@ for t, psi in shifted_solver.propagate(psi0, 0, 2):
 ```
 
 The good news is that the shift helps visibly with the divergent trace.
-Alas, now the populations of the low-energy states start to diverge.
+Alas, now the populations of the low-energy eigenstates start to diverge.
 This causes problems with adaptive step sizes,
-because the low-energy states have larger populations,
+because the low-energy eigenstates have larger populations,
 therefore they contribute more to the step error. 
 
 As a consequence, shifting by half of the spectral range is probably not optimal.
 To figure out the optimal value, we use a "Counting expression" that measures
-the most expensive operation in the algorithm, how often our Hamiltonian is applied.
+how often our Hamiltonian is applied, which is the expensive part of the algorithm.
 
 ```{code-cell}
 class CountingExpression(wp.expression.ExpressionBase):
@@ -185,14 +184,16 @@ for shift in range(0, 51, 10):
     print(f"Shift = {shift} a.u.      count = {counter.count}")
 ```
 
-We find an optimal shift of around 40 a.u., which reduces the computational effort by about 25%.
-The drawback is the required guesswork to find a suitable energy shift;
-choosing incorrectly yields smaller gains.
+We find an optimal shift of around 40 a.u., which reduces the computational effort by about 25%,
+only half the maximum possible reduction.
+The drawback of this shifting is the required guesswork to find a suitable energy shift;
+after all computing time is often cheaper than the scientist's attention.
+And choosing the time step suboptimally yields even smaller gains.
 
 ### Truncating the spectrum
 
 The second manipulation is a direct truncation of the operator spectrum.
-Why this may seem clumsy on first encounter, there are good reasons to truncate aggressively:
+While this may appear clumsy, there are good reasons to truncate aggressively:
 
 1. As the previous analyses have shown, high-energy eigenstates are poorly represented by the grid anyway.
    In the example here, this affects everything above about the 50th eigenstate.
@@ -201,16 +202,18 @@ Why this may seem clumsy on first encounter, there are good reasons to truncate 
    In theory, we could remove these artifacts by extending the grid,
    but then we pay twice: The larger grid makes all computations slower,
    and to faithfully propagate the large-energy components, we need smaller step sizes.
-   And this all for diminishing gains, because the populations are small, after all.
+   And this all gives us tiny gains,
+   because the populations of the high-energy eigenstates are small, after all.
 2. Whenever we simulate existing physical systems,
    we use models that are usually low-energy approximations of the real system.
    For example, we neglect anharmonic contributions,
-   or we ignore the coupling to higher excited electronic states.
-   In the particular example here, we can safely assume that, say, for the 50th excited state,
-   the system will definitely not be harmonic any longer.
+   or we ignore the coupling to highly excited electronic states,
+   maybe we even ignore excited states entirely within the Born-Oppenheimer approximation.
+   In the particular example here, we can safely assume that the 50th excited state
+   will be anything but a harmonic eigenstate.
 
    Again, this means that by truncating the Hamiltonian,
-   we merely trade an incorrect approximation for another incorrect result, no harm done.
+   we merely trade one incorrect approximation for another, so no harm is done.
 
 Truncating the spectrum of the Hamiltonian requires an expensive diagonalization,
 so we truncate the individual components instead.
@@ -229,9 +232,13 @@ for cutoff in range(50, 201, 50):
     print(f"Cutoff = {cutoff} a.u.      count = {counter.count}")
 ```
 
-The computational effort is mostly proportional to the cutoff,
-which supports the original thesis that most effort is spent on propagating high-energy contributions.
-Truncating the Hamiltonian to 50 a.u. in our example halves the computational effort.
+The computational effort drops considerably when reducing the cutoff,
+which supports the thesis that significant effort is spent on propagating high-energy contributions.
+After truncating the kinetic and potential energy to 50 a.u. each,
+we are left with less than half of the original computational effort.
+If we show more restraint and truncate only at 100 a.u., we still reduce the computational effort by one third.
+These numbers suggest an advantage of truncation:
+Even suboptimal or cautious guesses reduce the computational effort significantly.
 
 How bad is the approximation for the dynamics?
 To answer this question, we can look at the projection of the truncated result on the untruncated result;
@@ -252,5 +259,6 @@ result = solver.step(psi0, 0)
 print(f"Overlap after pi/2: {wp.population(truncated_result, result)}")
 ```
 
-The additional error in the sixth decimal is of a similar magnitude
-and therefore consistent with the grid error.
+The additional deviation in the sixth decimal is of a similar magnitude
+and therefore consistent with the grid error,
+so we have introduced no undue additional approximation.

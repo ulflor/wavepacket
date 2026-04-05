@@ -4,7 +4,7 @@ kernelspec:
     name: python3
 ---
 
-# Theory: Converging equally-spaced grids
+# Background theory: Converging equally-spaced grids
 
 This web page can be downloaded as notebook: {nb-download}`plane_wave_grid.ipynb` (Jupyter)
 or {download}`plane_wave_grid.md` (Markdown)
