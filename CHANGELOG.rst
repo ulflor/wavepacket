@@ -17,6 +17,7 @@ Major changes:
 - (#37) Added contour plots for two-dimensional systems.
 - (#35) Added documentation on the convergence of equally-spaced grids
   and absorbing boundary conditions
+- (#48) Added documentation on the convergence of ODE solvers
 
 Minor changes:
 
@@ -32,6 +33,8 @@ Minor changes:
 Bug fixes:
 - (#35) 1D plots calculated abs(energy) instead of real(energy),
   and did not treat unnormalized wave functions correctly.
+- (#48) The calculation of the population lacked an abs(), so the populations could
+  be negative.
 
 0.3
 ---
