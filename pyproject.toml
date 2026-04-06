@@ -66,6 +66,13 @@ doc = [
 [tool.flit.sdist]
 exclude = ['.git*', '.readthedocs*']
 
+[tool.coverage.report]
+exclude_also = ["raise NotImplementedError()"]
+show_missing = true
+skip_covered = true
+omit = ["*/wavepacket/plot/*.py",
+        "*/wavepacket/testing/*.py"]
+
 [tool.tox]
 requires = ["tox >= 4.30"]
 env_list = ["py311", "py312", "py313", "py314", "py311-min", "py312-min", "py313-min"]
