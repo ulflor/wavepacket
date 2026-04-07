@@ -20,11 +20,17 @@ def test_propagation(grid_2d):
     psi0 = wp.testing.random_state(grid_2d, 7 * 9)
     psi = psi0
 
+    lvne_eq = wp.expression.CommutatorLiouvillian(op)
+    lvne_solver = wp.solver.OdeSolver(lvne_eq, dt)
+    rho = wp.builder.pure_density(psi)
+
     for step in range(5):
         t_new = (step + 1) * dt
         psi = solver.step(psi, step * dt)
+        rho = lvne_solver.step(rho, step * dt)
 
         assert_close(psi, _expected_solution(psi0, t_new), 1e-3)
+        assert_close(rho, wp.builder.pure_density(psi), 1e-3)
 
 
 def test_forward_kwargs_to_scipy_solver(grid_1d):
