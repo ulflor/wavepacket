@@ -95,3 +95,17 @@ def test_cutoff(grid_1d):
     print(f"cut: {cut_values}")
     assert np.all(cut_values <= cutoff * 1.0001)
     assert np.all(cut_values >= -cutoff * 1.0001)
+
+
+def test_rotational_kinetic_energy_rejects_bad_arguments():
+    bad_grid = wp.grid.Grid(wp.grid.PlaneWaveDof(1, 2, 3))
+    good_grid = wp.grid.Grid(wp.grid.SphericalHarmonicsDof(5, 0))
+
+    with pytest.raises(wp.BadGridError):
+        wp.operator.RotationalKineticEnergy(bad_grid, 0, 1)
+
+    with pytest.raises(wp.InvalidValueError):
+        wp.operator.RotationalKineticEnergy(good_grid, 0, -1)
+
+    with pytest.raises(wp.InvalidValueError):
+        wp.operator.RotationalKineticEnergy(good_grid, 0, 0)

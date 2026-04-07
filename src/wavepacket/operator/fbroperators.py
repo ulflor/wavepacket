@@ -42,7 +42,7 @@ class PlaneWaveFbrOperator(OperatorBase):
     def __init__(self, grid: wp.grid.Grid, dof_index: int, generator: wpt.Generator,
                  cutoff: float | None = None) -> None:
         if not isinstance(grid.dofs[dof_index], wp.grid.PlaneWaveDof):
-            raise wp.InvalidValueError(
+            raise wp.BadGridError(
                 f"PlaneWaveFbrOperator requires a PlaneWaveDof, but got {grid.dofs[dof_index].__class__}")
 
         self._wf_index = dof_index
@@ -215,7 +215,7 @@ class RotationalKineticEnergy(FbrOperator1D):
             raise wp.InvalidValueError(f"Moment of inertia must be positive, but is {inertia}")
 
         if not isinstance(grid.dofs[dof_index], wp.grid.SphericalHarmonicsDof):
-            raise wp.InvalidValueError(
+            raise wp.BadGridError(
                 f"Degree of freedom should be a SphericalHarmonicsDof, but is {grid.dofs[dof_index].__class__}")
 
         self.inertia: Final[float] = inertia

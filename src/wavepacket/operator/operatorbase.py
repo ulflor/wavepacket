@@ -205,8 +205,6 @@ class OperatorSum(OperatorBase):
     """
 
     def __init__(self, ops: Sequence[OperatorBase]) -> None:
-        if not ops:
-            raise wp.InvalidValueError("OperatorSum needs at least one operator to sum.")
         for op in ops:
             if op.grid != ops[0].grid:
                 raise wp.BadGridError("All grids in a sum operator must be equal.")
@@ -257,8 +255,6 @@ class OperatorProduct(OperatorBase):
     """
 
     def __init__(self, ops: Sequence[OperatorBase]) -> None:
-        if not ops:
-            raise wp.InvalidValueError("OperatorSum needs at least one operator to sum.")
         for op in ops:
             if op.grid != ops[0].grid:
                 raise wp.BadGridError("All grids in a sum operator must be equal.")

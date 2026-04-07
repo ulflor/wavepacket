@@ -27,7 +27,7 @@ def test_reject_bad_constructor_args(grid):
     with pytest.raises(IndexError):
         wp.operator.PlaneWaveFbrOperator(grid, 2, dummy_func)
 
-    with pytest.raises(wp.InvalidValueError):
+    with pytest.raises(wp.BadGridError):
         wp.operator.PlaneWaveFbrOperator(grid, 1, dummy_func)
 
 
@@ -92,3 +92,11 @@ def test_cutoff(grid_1d):
     print(f"cut: {cut_values}")
     assert np.all(cut_values <= cutoff * 1.0001)
     assert np.all(cut_values >= -cutoff * 1.0001)
+
+
+def test_cartesian_kinetic_energy_rejects_bad_arguments(grid_1d):
+    with pytest.raises(wp.InvalidValueError):
+        wp.operator.CartesianKineticEnergy(grid_1d, 0, -1)
+
+    with pytest.raises(wp.InvalidValueError):
+        wp.operator.CartesianKineticEnergy(grid_1d, 0, 0)
