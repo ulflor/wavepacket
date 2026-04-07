@@ -84,7 +84,7 @@ class SoftRectangularFunction:
             return math.cos(self._scale * (self._rect_min - t))
         elif t <= self._rect_max:
             return 1.0
-        elif t <= self._rect_max:
+        elif t < self._max:
             return math.cos(self._scale * (t - self._rect_max))
         else:
             return 0.0

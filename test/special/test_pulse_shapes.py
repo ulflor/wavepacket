@@ -46,10 +46,10 @@ def test_soft_rectangular_values():
 
     assert functor(1.9) == 0.0
     assert functor(2) == 0.0
-    assert 0 <= functor(2.3) <= 1
+    assert 0 < functor(2.3) < 1
     assert functor(3) == 1.0
     assert 1 == functor(3.1) and 1 == functor(6.8)
     assert functor(7) == 1.0
-    assert 0 <= functor(7.5) <= 1
+    assert 0 < functor(7.5) < 1
     assert functor(8) == 0.0
     assert functor(8.5) == 0.0
