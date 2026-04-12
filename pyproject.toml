@@ -70,6 +70,7 @@ doc = [
     "sphinx-rtd-theme >= 3.0.2"
 ]
 
+
 [tool.flit.sdist]
 exclude = ['.git*', '.readthedocs*']
 
@@ -79,6 +80,10 @@ show_missing = true
 skip_covered = true
 omit = ["*/wavepacket/plot/*.py",
         "*/wavepacket/testing/*.py"]
+
+[tool.black]
+required-version = 26
+line-length = 95
 
 [tool.tox]
 requires = ["tox >= 4.30"]
