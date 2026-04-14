@@ -6,8 +6,9 @@ import wavepacket.typing as wpt
 from .solverbase import SolverBase
 
 
-def _inner_solver(t: float, y: wpt.ComplexData,
-                  eq: wp.expression.ExpressionBase, grid: wp.grid.Grid) -> wpt.ComplexData:
+def _inner_solver(
+    t: float, y: wpt.ComplexData, eq: wp.expression.ExpressionBase, grid: wp.grid.Grid
+) -> wpt.ComplexData:
     # 1. Reconstruct a state from the data array y
     if len(y) == grid.size:
         state = wp.grid.State(grid, np.reshape(y, grid.shape))
@@ -53,16 +54,20 @@ class OdeSolver(SolverBase):
         self._kwargs = kwargs
 
         # The default error tolerance is typically too generous for our use cases. Override
-        self._kwargs.setdefault('rtol', 1e-6)
+        self._kwargs.setdefault("rtol", 1e-6)
 
     def step(self, state: wp.grid.State, t: float) -> wp.grid.State:
         t_span = (t, t + self.dt)
         y0 = state.data.ravel()
         args = (self._expression, state.grid)
 
-        solution = solve_ivp(_inner_solver, t_span, y0, t_eval=[t + self.dt], args=args, **self._kwargs)
+        solution = solve_ivp(
+            _inner_solver, t_span, y0, t_eval=[t + self.dt], args=args, **self._kwargs
+        )
         if solution.status != 0:
-            raise wp.ExecutionError("Bad return value from integrating"
-                                    f"Status: {solution.status} != 0; Message: {solution.msg}")
+            raise wp.ExecutionError(
+                "Bad return value from integrating"
+                f"Status: {solution.status} != 0; Message: {solution.msg}"
+            )
 
         return wp.grid.State(state.grid, np.reshape(solution.y, state.data.shape))

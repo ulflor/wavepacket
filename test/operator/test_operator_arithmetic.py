@@ -16,7 +16,7 @@ def test_reject_invalid_types(grid_1d):
 
     # these should throw so that we fail early, before we use the operator
     with pytest.raises(TypeError):
-        op + 'test'
+        op + "test"
 
     # same for subtraction
     op - op
@@ -25,7 +25,7 @@ def test_reject_invalid_types(grid_1d):
     op - 1j
 
     with pytest.raises(TypeError):
-        op - 'test'
+        op - "test"
 
     # same for multiplication
     op * op
@@ -34,7 +34,7 @@ def test_reject_invalid_types(grid_1d):
     op * 1j
 
     with pytest.raises(TypeError):
-        op * 'test'
+        op * "test"
 
 
 def test_reject_different_grids(grid_1d, grid_2d):
@@ -67,20 +67,17 @@ def test_apply_sum(grid_1d, monkeypatch):
     psi = wp.testing.random_state(grid_1d, 128)
     rho = wp.builder.pure_density(psi)
 
-    monkeypatch.setattr(op,
-                        "apply_to_wave_function", lambda data, _t: _t * data)
+    monkeypatch.setattr(op, "apply_to_wave_function", lambda data, _t: _t * data)
     result = sum_op.apply_to_wave_function(psi.data, t)
     expected = 2 * op.apply_to_wave_function(psi.data, t)
     assert_allclose(result, expected, atol=1e-12, rtol=0)
 
-    monkeypatch.setattr(op,
-                        "apply_from_left", lambda data, _t: 2.0 * _t * data)
+    monkeypatch.setattr(op, "apply_from_left", lambda data, _t: 2.0 * _t * data)
     result = sum_op.apply_from_left(rho.data, t)
     expected = 2 * op.apply_from_left(rho.data, t)
     assert_allclose(result, expected, atol=1e-12, rtol=0)
 
-    monkeypatch.setattr(op,
-                        "apply_from_right", lambda data, _t: 3.0 * _t * data)
+    monkeypatch.setattr(op, "apply_from_right", lambda data, _t: 3.0 * _t * data)
     result = sum_op.apply_from_right(rho.data, t)
     expected = 2 * op.apply_from_right(rho.data, t)
     assert_allclose(result, expected, atol=1e-12, rtol=0)
@@ -88,7 +85,7 @@ def test_apply_sum(grid_1d, monkeypatch):
 
 def test_apply_product(grid_1d):
     # We expect these operators to not commute
-    op1 = wp.operator.Potential1D(grid_1d, 0, lambda x: x ** 2)
+    op1 = wp.operator.Potential1D(grid_1d, 0, lambda x: x**2)
     op2 = wp.operator.FbrOperator1D(grid_1d, 0, lambda x: x)
 
     product = op1 * op2
@@ -110,7 +107,7 @@ def test_apply_product(grid_1d):
 
 
 def test_other_arithmetics(grid_1d):
-    op1 = wp.operator.Potential1D(grid_1d, 0, lambda x: x ** 2)
+    op1 = wp.operator.Potential1D(grid_1d, 0, lambda x: x**2)
     op2 = wp.operator.FbrOperator1D(grid_1d, 0, lambda x: x)
 
     psi = wp.testing.random_state(grid_1d, 43)

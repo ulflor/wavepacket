@@ -60,7 +60,7 @@ class PlaneWaveDof(DofBase):
             k_max = math.pi / dx
             fbr = np.linspace(-k_max, k_max, n, endpoint=False, dtype=np.float64)
         else:
-            k_max = math.pi / dx * (n-1) / n
+            k_max = math.pi / dx * (n - 1) / n
             fbr = np.linspace(-k_max, k_max, n, dtype=np.float64)
 
         super().__init__(dvr, fbr)
@@ -69,7 +69,9 @@ class PlaneWaveDof(DofBase):
         self._phase: wpt.ComplexData = np.exp(-1j * fbr * xmin) / np.sqrt(n)
         self._conj_phase: wpt.ComplexData = n * np.conj(self._phase)
 
-    def to_fbr(self, data: wpt.ComplexData, index: int, is_ket: bool = True) -> wpt.ComplexData:
+    def to_fbr(
+        self, data: wpt.ComplexData, index: int, is_ket: bool = True
+    ) -> wpt.ComplexData:
         if is_ket:
             phase = broadcast(self._phase, data.ndim, index)
             transformed = np.fft.fftshift(np.fft.fft(data, axis=index), axes=index)
@@ -79,7 +81,9 @@ class PlaneWaveDof(DofBase):
 
         return phase * transformed
 
-    def from_fbr(self, data: wpt.ComplexData, index: int, is_ket: bool = True) -> wpt.ComplexData:
+    def from_fbr(
+        self, data: wpt.ComplexData, index: int, is_ket: bool = True
+    ) -> wpt.ComplexData:
         if is_ket:
             phase = broadcast(self._conj_phase, data.ndim, index)
             untransformed = phase * data

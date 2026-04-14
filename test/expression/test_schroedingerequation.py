@@ -20,8 +20,7 @@ def test_reject_invalid_states(grid_1d, grid_2d):
 
 def test_equation(grid_1d, monkeypatch):
     op = wp.testing.DummyOperator(grid_1d)
-    monkeypatch.setattr(op, 'apply_to_wave_function',
-                        lambda data, _t: _t * data)
+    monkeypatch.setattr(op, "apply_to_wave_function", lambda data, _t: _t * data)
 
     eq = wp.expression.SchroedingerEquation(op)
     psi = wp.testing.random_state(grid_1d, 42)

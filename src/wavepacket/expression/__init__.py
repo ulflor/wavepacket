@@ -2,8 +2,13 @@
 Classes that wrap operators into expressions for use in partial differential equations.
 """
 
-__all__ = ['CommutatorLiouvillian', 'OneSidedLiouvillian',
-           'ExpressionBase', 'ExpressionSum', 'SchroedingerEquation']
+__all__ = [
+    "CommutatorLiouvillian",
+    "OneSidedLiouvillian",
+    "ExpressionBase",
+    "ExpressionSum",
+    "SchroedingerEquation",
+]
 
 from .expressionbase import ExpressionBase, ExpressionSum
 from .liouvillian import CommutatorLiouvillian, OneSidedLiouvillian

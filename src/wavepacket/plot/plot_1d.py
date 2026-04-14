@@ -26,8 +26,12 @@ class BasePlot1D(ABC):
         The factor that converts from the density to energy units. Constant 1 if no potential is plotted.
     """
 
-    def __init__(self, state: wp.grid.State,
-                 potential: OperatorBase | None = None, hamiltonian: OperatorBase | None = None) -> None:
+    def __init__(
+        self,
+        state: wp.grid.State,
+        potential: OperatorBase | None = None,
+        hamiltonian: OperatorBase | None = None,
+    ) -> None:
         # By default, span the total grid range
         assert len(state.grid.dofs) == 1
         dvr_grid = state.grid.dofs[0].dvr_points
@@ -56,7 +60,10 @@ class BasePlot1D(ABC):
             max_potential = potential_values.max()
             energy = abs(wp.expectation_value(self._hamiltonian, state))
 
-            self.ylim = (min_potential, max(max_potential, energy + 0.5 * (max_potential - min_potential)))
+            self.ylim = (
+                min_potential,
+                max(max_potential, energy + 0.5 * (max_potential - min_potential)),
+            )
             self.conversion_factor = (self.ylim[1] - energy) / max_density
 
     @abstractmethod
@@ -95,7 +102,7 @@ class BasePlot1D(ABC):
 
         if self._potential is None:
             # Just plot the wave function
-            axes.plot(dvr_grid, wp.dvr_density(state), 'b-')
+            axes.plot(dvr_grid, wp.dvr_density(state), "b-")
         else:
             potential_values = get_potential_values(self._potential, t)
             density = wp.dvr_density(state)
@@ -103,9 +110,9 @@ class BasePlot1D(ABC):
             # absorbing boundary conditions can change the trace...
             energy /= wp.trace(state)
 
-            axes.plot(dvr_grid, potential_values, 'b-')
-            axes.plot(dvr_grid, energy * np.ones(dvr_grid.shape), 'r-')
-            axes.plot(dvr_grid, energy + (self.conversion_factor * density), 'r-')
+            axes.plot(dvr_grid, potential_values, "b-")
+            axes.plot(dvr_grid, energy * np.ones(dvr_grid.shape), "r-")
+            axes.plot(dvr_grid, energy + (self.conversion_factor * density), "r-")
 
 
 class SimplePlot1D(BasePlot1D):
@@ -138,8 +145,12 @@ class SimplePlot1D(BasePlot1D):
         The figure that we plot on.
     """
 
-    def __init__(self, state: wp.grid.State,
-                 potential: OperatorBase | None = None, hamiltonian: OperatorBase | None = None) -> None:
+    def __init__(
+        self,
+        state: wp.grid.State,
+        potential: OperatorBase | None = None,
+        hamiltonian: OperatorBase | None = None,
+    ) -> None:
         self.figure, self._axes = plt.subplots()
 
         super().__init__(state, potential, hamiltonian)
@@ -193,8 +204,13 @@ class StackedPlot1D(BasePlot1D):
         The figure that we plot on.
     """
 
-    def __init__(self, num_plots: int, state: wp.grid.State,
-                 potential: OperatorBase | None = None, hamiltonian: OperatorBase | None = None) -> None:
+    def __init__(
+        self,
+        num_plots: int,
+        state: wp.grid.State,
+        potential: OperatorBase | None = None,
+        hamiltonian: OperatorBase | None = None,
+    ) -> None:
         # First, create, layout and expose the figure
         self.figure, self._axes = plt.subplots(num_plots, 1, sharex=True)
         self._index = 0
@@ -214,8 +230,13 @@ class StackedPlot1D(BasePlot1D):
 
         super()._plot(axes, t, state)
 
-        axes.text(0.05 * self.xlim[0] + 0.95 * self.xlim[1], 0.05 * self.ylim[0] + 0.95 * self.ylim[1],
-                  f"t = {t:.4g} a.u.", weight="heavy",
-                  horizontalalignment="right", verticalalignment="top")
+        axes.text(
+            0.05 * self.xlim[0] + 0.95 * self.xlim[1],
+            0.05 * self.ylim[0] + 0.95 * self.ylim[1],
+            f"t = {t:.4g} a.u.",
+            weight="heavy",
+            horizontalalignment="right",
+            verticalalignment="top",
+        )
 
         return axes

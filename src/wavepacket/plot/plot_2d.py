@@ -25,7 +25,10 @@ class BaseContourPlot2D(ABC):
     potential_contours: array_like[float]
         Levels at which contour lines for the potential should be drawn.
     """
-    def __init__(self, state: wp.grid.State, potential: wp.operator.OperatorBase | None = None):
+
+    def __init__(
+        self, state: wp.grid.State, potential: wp.operator.OperatorBase | None = None
+    ):
         assert len(state.grid.dofs) == 2
         assert potential is None or potential.grid == state.grid
 
@@ -47,8 +50,9 @@ class BaseContourPlot2D(ABC):
         else:
             self._potential = potential
             potential_values = get_potential_values(potential, 0)
-            self.potential_contours = np.linspace(potential_values.min(),
-                                                  potential_values.max(), 15)
+            self.potential_contours = np.linspace(
+                potential_values.min(), potential_values.max(), 15
+            )
 
     @abstractmethod
     def plot(self, t: float, state: wp.grid.State) -> plt.Axes:
@@ -91,13 +95,17 @@ class BaseContourPlot2D(ABC):
 
         if self._potential is not None:
             potential_values = get_potential_values(self._potential, t)
-            axes.contour(x, y, potential_values.T,
-                         levels=self.potential_contours, colors='k',
-                         linewidths=0.5, linestyles='--')
+            axes.contour(
+                x,
+                y,
+                potential_values.T,
+                levels=self.potential_contours,
+                colors="k",
+                linewidths=0.5,
+                linestyles="--",
+            )
 
-        axes.contour(x, y, z.T,
-                     levels=self.contours, colors='b',
-                     linewidths=1, linestyles='-')
+        axes.contour(x, y, z.T, levels=self.contours, colors="b", linewidths=1, linestyles="-")
 
 
 class ContourPlot2D(BaseContourPlot2D):
@@ -129,19 +137,21 @@ class ContourPlot2D(BaseContourPlot2D):
         The upper range of the marginals, i.e., reduced densities.
         The default is to initialize them from the supplied state.
     """
-    def __init__(self, state: wp.grid.State, potential: wp.operator.OperatorBase | None = None):
+
+    def __init__(
+        self, state: wp.grid.State, potential: wp.operator.OperatorBase | None = None
+    ):
         super().__init__(state, potential)
 
         # Create a square main plot and the two axes for the reduced densities
         # This seems to be a case that seems not well-supported by the layout engine,
         # so we use fixed layouts here
-        self.figure = plt.figure(figsize=(8, 8), layout='none')
+        self.figure = plt.figure(figsize=(8, 8), layout="none")
         self._axes = self.figure.add_axes((0.1, 0.3, 0.6, 0.6))
         self._ax_bottom = self.figure.add_axes((0.1, 0.1, 0.6, 0.2), sharex=self._axes)
         self._ax_right = self.figure.add_axes((0.7, 0.3, 0.2, 0.6), sharey=self._axes)
 
-        self.max_marginals = (wp.dvr_density(state, 0).max(),
-                              wp.dvr_density(state, 1).max())
+        self.max_marginals = (wp.dvr_density(state, 0).max(), wp.dvr_density(state, 1).max())
 
     def plot(self, t: float, state: wp.grid.State) -> plt.Axes:
         # Plot the 2D contour plot
@@ -153,7 +163,7 @@ class ContourPlot2D(BaseContourPlot2D):
 
         x = state.grid.dofs[0].dvr_points
         reduced_density_x = wp.dvr_density(state, 0)
-        self._ax_bottom.plot(x, reduced_density_x, 'b-')
+        self._ax_bottom.plot(x, reduced_density_x, "b-")
 
         # Plot the reduced density along y
         self._ax_right.clear()
@@ -161,20 +171,22 @@ class ContourPlot2D(BaseContourPlot2D):
 
         y = state.grid.dofs[1].dvr_points
         reduced_density_y = wp.dvr_density(state, 1)
-        self._ax_right.plot(reduced_density_y, y, 'b-')
+        self._ax_right.plot(reduced_density_y, y, "b-")
 
         # Styling: Remove superfluous ticks and such
         self._axes.set_title(f"t = {t:.4g} a.u.")
-        self._axes.xaxis.set_tick_params(labelbottom=False, tickdir='in', top=True)
-        self._axes.yaxis.set_tick_params(labelleft=False, tickdir='in', right=True)
+        self._axes.xaxis.set_tick_params(labelbottom=False, tickdir="in", top=True)
+        self._axes.yaxis.set_tick_params(labelleft=False, tickdir="in", right=True)
 
         self._ax_bottom.set_yticks([])
-        self._ax_bottom.set_xlabel('x (a.u.)')
+        self._ax_bottom.set_xlabel("x (a.u.)")
 
         self._ax_right.set_xticks([])
-        self._ax_right.yaxis.set_tick_params(labelleft=False, labelright=True, left=False, right=True)
-        self._ax_right.set_ylabel('y (a.u.)')
-        self._ax_right.yaxis.set_label_position('right')
+        self._ax_right.yaxis.set_tick_params(
+            labelleft=False, labelright=True, left=False, right=True
+        )
+        self._ax_right.set_ylabel("y (a.u.)")
+        self._ax_right.yaxis.set_label_position("right")
 
         return self._axes
 
@@ -207,37 +219,48 @@ class StackedContourPlot2D(BaseContourPlot2D):
     figure: matplotlib.figure.Figure
         The handle to the figure on which we draw the plots.
     """
-    def __init__(self, num_rows: int, num_cols: int,
-                 state: wp.grid.State, potential: wp.operator.OperatorBase | None = None):
+
+    def __init__(
+        self,
+        num_rows: int,
+        num_cols: int,
+        state: wp.grid.State,
+        potential: wp.operator.OperatorBase | None = None,
+    ):
         super().__init__(state, potential)
 
-        self.figure = plt.figure(figsize=(8, 8), layout='none')
+        self.figure = plt.figure(figsize=(8, 8), layout="none")
         self._shape = (num_rows, num_cols)
         self._index = 0
 
         self._axes = []
         for row in range(num_rows):
             for col in range(num_cols):
-                ax = self.figure.add_axes((0.07 + col*0.3, 0.67 - row * 0.3, 0.27, 0.27))
+                ax = self.figure.add_axes((0.07 + col * 0.3, 0.67 - row * 0.3, 0.27, 0.27))
                 self._axes.append(ax)
 
     def plot(self, t: float, state: wp.grid.State) -> plt.Axes:
         axes = self._axes[self._index]
         super()._contour(axes, t, state)
 
-        axes.text(0.05 * self.xlim[0] + 0.95 * self.xlim[1], 0.05 * self.ylim[0] + 0.95 * self.ylim[1],
-                  f"t = {t:.4g} a.u.", weight="heavy",
-                  horizontalalignment="right", verticalalignment="top")
+        axes.text(
+            0.05 * self.xlim[0] + 0.95 * self.xlim[1],
+            0.05 * self.ylim[0] + 0.95 * self.ylim[1],
+            f"t = {t:.4g} a.u.",
+            weight="heavy",
+            horizontalalignment="right",
+            verticalalignment="top",
+        )
 
         if self._cur_col() != 0:
             axes.set_yticks([])
         else:
-            axes.set_ylabel('y (a.u.)')
+            axes.set_ylabel("y (a.u.)")
 
         if self._cur_row() != self._shape[0] - 1:
             axes.set_xticks([])
         else:
-            axes.set_xlabel('x (a.u.)')
+            axes.set_xlabel("x (a.u.)")
 
         self._index += 1
         if self._index >= len(self._axes):

@@ -59,7 +59,9 @@ class DofBase(ABC):
             raise wp.InvalidValueError("Degrees of freedom may not be empty.")
 
         if dvr_points.ndim != 1 or fbr_points.ndim != 1:
-            raise wp.InvalidValueError("A degree of freedom represents only one-dimensional data.")
+            raise wp.InvalidValueError(
+                "A degree of freedom represents only one-dimensional data."
+            )
 
         if dvr_points.size != fbr_points.size:
             raise wp.InvalidValueError("The DVR and FBR grids must have the same size.")
@@ -69,7 +71,9 @@ class DofBase(ABC):
         self.size: Final[int] = self.dvr_points.size
 
     @abstractmethod
-    def to_fbr(self, data: wpt.ComplexData, index: int, is_ket: bool = True) -> wpt.ComplexData:
+    def to_fbr(
+        self, data: wpt.ComplexData, index: int, is_ket: bool = True
+    ) -> wpt.ComplexData:
         """
         Translates a dimension of the input coefficients from the Wavepacket-default "weighted DVR"
         into the FBR.
@@ -97,7 +101,9 @@ class DofBase(ABC):
         raise NotImplementedError()
 
     @abstractmethod
-    def from_fbr(self, data: wpt.ComplexData, index: int, is_ket: bool = True) -> wpt.ComplexData:
+    def from_fbr(
+        self, data: wpt.ComplexData, index: int, is_ket: bool = True
+    ) -> wpt.ComplexData:
         """
         Translates a dimension of the input coefficients from the FBR  into the Wavepacket-default
         "weighted DVR"

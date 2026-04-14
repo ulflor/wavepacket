@@ -45,14 +45,20 @@ class ChebychevSolver(SolverBase):
     to be consistent with these references.
     """
 
-    def __init__(self, expression: wp.expression.ExpressionBase,
-                 dt: float, spectrum: tuple[float, float]) -> None:
+    def __init__(
+        self,
+        expression: wp.expression.ExpressionBase,
+        dt: float,
+        spectrum: tuple[float, float],
+    ) -> None:
         super().__init__(dt)
 
         if spectrum[1] <= spectrum[0]:
             raise wp.InvalidValueError("Spectrum is not monotonous")
         if expression.time_dependent:
-            raise wp.InvalidValueError("Polynomial solvers do not work for time-dependent operators.")
+            raise wp.InvalidValueError(
+                "Polynomial solvers do not work for time-dependent operators."
+            )
 
         self._expression = expression
         self._spec_min = spectrum[0]
@@ -131,14 +137,17 @@ class RelaxationSolver(SolverBase):
         The order of the expansion.
     """
 
-    def __init__(self, hamiltonian: wp.operator.OperatorBase, dt: float,
-                 spectrum: tuple[float, float]) -> None:
+    def __init__(
+        self, hamiltonian: wp.operator.OperatorBase, dt: float, spectrum: tuple[float, float]
+    ) -> None:
         super().__init__(dt)
 
         if spectrum[1] <= spectrum[0]:
             raise wp.InvalidValueError("Spectrum is not monotonous")
         if hamiltonian.time_dependent:
-            raise wp.InvalidValueError("Polynomial solvers do not work for time-dependent operators.")
+            raise wp.InvalidValueError(
+                "Polynomial solvers do not work for time-dependent operators."
+            )
 
         self._hamiltonian = hamiltonian
         self._spec_min = spectrum[0]
@@ -177,6 +186,6 @@ class RelaxationSolver(SolverBase):
         h_input = self._hamiltonian.apply(state, t=0.0)
 
         factor1 = 2.0 / self._spec_range
-        factor2 = (2.0 / self._spec_range * self._spec_min + 1)
+        factor2 = 2.0 / self._spec_range * self._spec_min + 1
 
         return factor1 * h_input - factor2 * state

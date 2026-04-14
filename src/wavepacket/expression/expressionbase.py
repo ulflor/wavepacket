@@ -40,7 +40,7 @@ class ExpressionBase(ABC):
     def __init__(self, time_dependent: bool) -> None:
         self.time_dependent: Final[bool] = time_dependent
 
-    def __add__(self, other: 'ExpressionBase') -> 'ExpressionBase':
+    def __add__(self, other: "ExpressionBase") -> "ExpressionBase":
         return ExpressionSum([self, other])
 
     @abstractmethod

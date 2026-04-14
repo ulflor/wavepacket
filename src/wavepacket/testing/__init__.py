@@ -2,8 +2,7 @@
 Utility classes and functions for writing Wavepacket tests.
 """
 
-__all__ = ['DummyDof', 'DummyOperator',
-           'assert_close', 'random_state']
+__all__ = ["DummyDof", "DummyOperator", "assert_close", "random_state"]
 
 from .assertions import assert_close
 from .dummydof import DummyDof

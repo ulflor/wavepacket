@@ -76,10 +76,10 @@ class OperatorBase(ABC):
         else:
             raise wp.BadStateError("Cannot apply the operator to an invalid state.")
 
-    def __neg__(self) -> 'OperatorBase':
+    def __neg__(self) -> "OperatorBase":
         return self * wp.operator.Constant(self.grid, -1)
 
-    def __add__(self, other: 'OperatorBase | complex') -> 'OperatorBase':
+    def __add__(self, other: "OperatorBase | complex") -> "OperatorBase":
         if isinstance(other, OperatorBase):
             return OperatorSum([self, other])
         elif isinstance(other, numbers.Number):
@@ -88,16 +88,16 @@ class OperatorBase(ABC):
         else:
             raise TypeError(f"Summation requires operators or numbers. Got {other}")
 
-    def __radd__(self, other: complex) -> 'OperatorBase':
+    def __radd__(self, other: complex) -> "OperatorBase":
         return self + other
 
-    def __sub__(self, other: 'OperatorBase | complex') -> 'OperatorBase':
+    def __sub__(self, other: "OperatorBase | complex") -> "OperatorBase":
         return self + (-1) * other
 
-    def __rsub__(self, other: complex) -> 'OperatorBase':
+    def __rsub__(self, other: complex) -> "OperatorBase":
         return other + (-1) * self
 
-    def __mul__(self, other: 'OperatorBase | complex') -> 'OperatorBase':
+    def __mul__(self, other: "OperatorBase | complex") -> "OperatorBase":
         if isinstance(other, OperatorBase):
             return OperatorProduct([self, other])
         elif isinstance(other, numbers.Number):
@@ -106,7 +106,7 @@ class OperatorBase(ABC):
         else:
             raise TypeError(f"Multiplication requires operators or numbers. Got {other}")
 
-    def __rmul__(self, other: 'OperatorBase | complex') -> 'OperatorBase':
+    def __rmul__(self, other: "OperatorBase | complex") -> "OperatorBase":
         return self * other
 
     @abstractmethod

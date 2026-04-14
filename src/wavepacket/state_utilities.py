@@ -15,7 +15,7 @@ def _take_diagonal(data: wpt.ComplexData, grid: wp.grid.Grid) -> wpt.RealData:
 
 
 def _normalize(u: wpt.ComplexData) -> wpt.ComplexData:
-    return u / math.sqrt(np.abs(u ** 2).sum())
+    return u / math.sqrt(np.abs(u**2).sum())
 
 
 def dvr_density(state: wp.grid.State, dof_index: int | None = None) -> wpt.RealData:
@@ -95,7 +95,7 @@ def dvr_density(state: wp.grid.State, dof_index: int | None = None) -> wpt.RealD
         raise wp.BadStateError("Input is not a valid state.")
 
 
-def fbr_density(state: wp.grid.State, dof_index: int|None = None) -> wpt.RealData:
+def fbr_density(state: wp.grid.State, dof_index: int | None = None) -> wpt.RealData:
     """
     Returns the FBR density of the input state at the FBR grid points.
 
@@ -165,7 +165,7 @@ def trace(state: wp.grid.State) -> float:
     Returns the trace of the supplied input state.
 
     For density operators, this is the usual trace norm, i.e., sum over the
-    diagonal elements. For wave functions, it is the square of the usual 
+    diagonal elements. For wave functions, it is the square of the usual
     L2 norm.
 
     Parameters
@@ -184,7 +184,7 @@ def trace(state: wp.grid.State) -> float:
         If the supplied state is neither a wave function nor a density operator.
     """
     if state.is_wave_function():
-        return np.abs(state.data ** 2).sum()
+        return np.abs(state.data**2).sum()
     elif state.is_density_operator():
         diagonal = _take_diagonal(state.data, state.grid)
         return diagonal.sum()
@@ -312,7 +312,9 @@ def population(state: wp.grid.State, target: wp.grid.State) -> float:
         raise wp.BadStateError("Projection requires a wave function as target.")
 
     if target.grid != state.grid:
-        raise wp.BadGridError("Target wave function must be the same grid as the state to project.")
+        raise wp.BadGridError(
+            "Target wave function must be the same grid as the state to project."
+        )
 
     target_trace = trace(target)
     if state.is_wave_function():

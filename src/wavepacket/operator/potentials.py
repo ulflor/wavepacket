@@ -39,8 +39,13 @@ class Potential1D(OperatorBase):
     >>> harmonicPotential = wp.operator.Potential1D(grid, 1, lambda x: x**2)
     """
 
-    def __init__(self, grid: wp.grid.Grid, dof_index: int, generator: wpt.Generator,
-                 cutoff: float = None) -> None:
+    def __init__(
+        self,
+        grid: wp.grid.Grid,
+        dof_index: int,
+        generator: wpt.Generator,
+        cutoff: float = None,
+    ) -> None:
         data = generator(grid.dofs[dof_index].dvr_points).copy()
 
         if cutoff is not None:

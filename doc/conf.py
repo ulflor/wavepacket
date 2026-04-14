@@ -6,10 +6,10 @@
 # -- Project information -----------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#project-information
 
-project = 'Wavepacket'
-copyright = '2024-%Y, Ulf Lorenz'
-author = 'Ulf Lorenz'
-release = '0.4'
+project = "Wavepacket"
+copyright = "2024-%Y, Ulf Lorenz"
+author = "Ulf Lorenz"
+release = "0.4"
 
 # -- General configuration ---------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#general-configuration
@@ -20,17 +20,22 @@ extensions = [
     "sphinx.ext.inheritance_diagram",
     "autoapi.extension",
     "numpydoc",
-    "myst_nb"
+    "myst_nb",
 ]
 
-templates_path = ['_templates']
-exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store']
+templates_path = ["_templates"]
+exclude_patterns = ["_build", "Thumbs.db", ".DS_Store"]
 
 # ------ AutoApi configuration
 autoapi_dirs = ["../src/wavepacket"]
 
-autoapi_options = ['members', 'undoc-members', 'imported-members',
-                   'show-inheritance', 'show-module-summary']
+autoapi_options = [
+    "members",
+    "undoc-members",
+    "imported-members",
+    "show-inheritance",
+    "show-module-summary",
+]
 
 
 # Unless we prefix _every_ module by "_", we get every symbol twice: Once in the
@@ -49,7 +54,7 @@ def setup(sphinx):
 # -- Options for HTML output -------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#options-for-html-output
 
-html_theme = 'sphinx_rtd_theme'
+html_theme = "sphinx_rtd_theme"
 
 
 # -- Options for MyST-NB

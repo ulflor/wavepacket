@@ -6,8 +6,9 @@ import wavepacket as wp
 import wavepacket.typing as wpt
 
 
-def expectation_value(op: wp.operator.OperatorBase,
-                      state: wp.grid.State, t: float | None = None) -> complex:
+def expectation_value(
+    op: wp.operator.OperatorBase, state: wp.grid.State, t: float | None = None
+) -> complex:
     """
     Calculates the expectation value of an operator for a given state.
 
@@ -27,7 +28,9 @@ def expectation_value(op: wp.operator.OperatorBase,
         If a time-dependent operator was supplied, but no time value was given.
     """
     if op.time_dependent and t is None:
-        raise wp.InvalidValueError("You must supply a time value for time-dependent operators.")
+        raise wp.InvalidValueError(
+            "You must supply a time value for time-dependent operators."
+        )
 
     new = op.apply(state, t)
 
@@ -38,8 +41,9 @@ def expectation_value(op: wp.operator.OperatorBase,
         return np.trace(matrix_data)
 
 
-def diagonalize(op: wp.operator.OperatorBase,
-                t: float | None = None) -> Iterator[tuple[float, wpt.ComplexData]]:
+def diagonalize(
+    op: wp.operator.OperatorBase, t: float | None = None
+) -> Iterator[tuple[float, wpt.ComplexData]]:
     """
     Calculates the eigenstates and -values of an operator.
 
@@ -82,7 +86,9 @@ def diagonalize(op: wp.operator.OperatorBase,
     >>>     print(f'E = {energy}, trace norm = {wp.trace(state)}')
     """
     if op.time_dependent and t is None:
-        raise wp.InvalidValueError("Time-dependent operators require a time whn to diagonalize.")
+        raise wp.InvalidValueError(
+            "Time-dependent operators require a time whn to diagonalize."
+        )
 
     grid = op.grid
 

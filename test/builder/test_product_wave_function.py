@@ -22,8 +22,11 @@ def test_reject_wrong_number_of_inputs(grid_2d):
 def test_build_product_state(grid_2d):
     result = wp.builder.product_wave_function(grid_2d, [generator, generator], normalize=False)
 
-    expected_data = np.einsum("i, j -> ij",
-                              generator(grid_2d.dofs[0].dvr_points), generator(grid_2d.dofs[1].dvr_points))
+    expected_data = np.einsum(
+        "i, j -> ij",
+        generator(grid_2d.dofs[0].dvr_points),
+        generator(grid_2d.dofs[1].dvr_points),
+    )
     scaling = result.data.flat[0] / expected_data.flat[0]
     assert result.grid == grid_2d
     assert_allclose(result.data, expected_data * scaling, atol=1e-12, rtol=0)

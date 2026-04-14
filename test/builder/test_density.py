@@ -43,7 +43,9 @@ def test_construct_pure_density(psi):
     rho_data = np.reshape(rho.data, (size, size))
     for i in range(size):
         for j in range(size):
-            assert_allclose(rho_data[i, j], psi_data[i] * psi_data[j].conjugate(), atol=1e-12, rtol=0)
+            assert_allclose(
+                rho_data[i, j], psi_data[i] * psi_data[j].conjugate(), atol=1e-12, rtol=0
+            )
 
 
 def test_direct_product(psi):
@@ -60,7 +62,9 @@ def test_direct_product(psi):
     rho_data = np.reshape(rho.data, [size, size])
     for i in range(size):
         for j in range(size):
-            assert_allclose(rho_data[i, j], ket_data[i] * bra_data[j].conjugate(), atol=1e-12, rtol=0)
+            assert_allclose(
+                rho_data[i, j], ket_data[i] * bra_data[j].conjugate(), atol=1e-12, rtol=0
+            )
 
 
 def test_unit_density(grid_2d):

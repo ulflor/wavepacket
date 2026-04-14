@@ -63,8 +63,9 @@ class SolverBase(ABC):
         """
         raise NotImplementedError()
 
-    def propagate(self, state0: wp.grid.State, t0: float, num_steps: int,
-                  include_first: bool = True) -> Iterator[tuple[float, wp.grid.State]]:
+    def propagate(
+        self, state0: wp.grid.State, t0: float, num_steps: int, include_first: bool = True
+    ) -> Iterator[tuple[float, wp.grid.State]]:
         """
         Generator function that yields the propagated wave function at multiple time steps.
 

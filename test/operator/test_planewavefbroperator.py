@@ -14,8 +14,9 @@ def dummy_func(data: wpt.RealData) -> wpt.RealData:
 
 @pytest.fixture
 def grid() -> wp.grid.Grid:
-    return wp.grid.Grid([wp.grid.PlaneWaveDof(10, 20, 10),
-                         wp.testing.DummyDof(np.ones(2), np.ones(2))])
+    return wp.grid.Grid(
+        [wp.grid.PlaneWaveDof(10, 20, 10), wp.testing.DummyDof(np.ones(2), np.ones(2))]
+    )
 
 
 @pytest.fixture

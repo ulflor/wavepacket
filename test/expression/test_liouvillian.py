@@ -50,7 +50,9 @@ def test_apply_left_sided_liouvillian(grid_1d):
     expected = wp.builder.direct_product(op_psi, psi)
     assert_close(left, expected, 1e-12)
 
-    right_sided = wp.expression.OneSidedLiouvillian(op, wp.expression.OneSidedLiouvillian.Side.RIGHT)
+    right_sided = wp.expression.OneSidedLiouvillian(
+        op, wp.expression.OneSidedLiouvillian.Side.RIGHT
+    )
     right = right_sided.apply(rho, 0.0)
     expected = wp.builder.direct_product(psi, op_psi)
     assert_close(right, expected, 1e-12)

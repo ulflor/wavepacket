@@ -65,6 +65,12 @@ class LaserField(TimeDependentOperator):
         The initial phase of the pulse
     """
 
-    def __init__(self, grid: wp.grid.Grid, max_field: float, shape: Callable[[float], float],
-                 omega: float, phi: float = 0) -> None:
+    def __init__(
+        self,
+        grid: wp.grid.Grid,
+        max_field: float,
+        shape: Callable[[float], float],
+        omega: float,
+        phi: float = 0,
+    ) -> None:
         super().__init__(grid, lambda t: max_field * shape(t) * math.cos(omega * t + phi))

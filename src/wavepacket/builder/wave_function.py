@@ -7,9 +7,11 @@ import wavepacket as wp
 import wavepacket.typing as wpt
 
 
-def product_wave_function(grid: wp.grid.Grid,
-                          generators: wpt.Generator | Sequence[wpt.Generator],
-                          normalize: bool = True) -> wp.grid.State:
+def product_wave_function(
+    grid: wp.grid.Grid,
+    generators: wpt.Generator | Sequence[wpt.Generator],
+    normalize: bool = True,
+) -> wp.grid.State:
     """
     Builds a product wave function from a set of one-dimensional wave functions.
 
@@ -44,7 +46,8 @@ def product_wave_function(grid: wp.grid.Grid,
     if len(generator_list) != len(grid.dofs):
         raise wp.InvalidValueError(
             "To build a wave function, you need as many generators as degrees of freedoms."
-            f"Given {len(generator_list)} generators for {len(grid.dofs)} DOFs.")
+            f"Given {len(generator_list)} generators for {len(grid.dofs)} DOFs."
+        )
 
     result_data = np.ones(grid.shape, dtype=complex)
     for dof_index, generator in enumerate(generator_list):
@@ -62,8 +65,7 @@ def product_wave_function(grid: wp.grid.Grid,
         return result
 
 
-def random_wave_function(grid: wp.grid.Grid,
-                         generator: np.random.Generator) -> wp.grid.State:
+def random_wave_function(grid: wp.grid.Grid, generator: np.random.Generator) -> wp.grid.State:
     """
     Generates a random wave function.
 

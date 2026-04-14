@@ -20,8 +20,10 @@ def log(t: float, state: wp.grid.State, precision: int = 6) -> None:
     precision : int, default=6
         How many decimal places should be printed.
     """
-    print(f"\n-----------------------------------------------\n"
-          f"t = {float(t):.{precision}},     trace = {wp.trace(state):.{precision}}\n")
+    print(
+        f"\n-----------------------------------------------\n"
+        f"t = {float(t):.{precision}},     trace = {wp.trace(state):.{precision}}\n"
+    )
 
     normalized_state = wp.normalize(state)
     for index, dof in enumerate(state.grid.dofs):
@@ -32,4 +34,6 @@ def log(t: float, state: wp.grid.State, precision: int = 6) -> None:
 
         # In exotic cases, the error dx**2 can become negative, so we trade
         # correctness for robustness here by taking its absolute value.
-        print(f"<x_{index}> = {x_avg:.{precision}}  =/- {math.sqrt(abs(x2_avg - x_avg ** 2)):.{precision}}")
+        print(
+            f"<x_{index}> = {x_avg:.{precision}}  =/- {math.sqrt(abs(x2_avg - x_avg ** 2)):.{precision}}"
+        )

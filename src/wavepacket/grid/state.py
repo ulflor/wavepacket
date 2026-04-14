@@ -57,6 +57,7 @@ class State:
     >>> wp.trace(psi)
     1.0
     """
+
     grid: Grid
     data: wpt.ComplexData
 
@@ -109,8 +110,11 @@ class State:
 
     def _check_states(self, other: Self) -> None:
         if self.grid != other.grid:
-            raise wp.BadGridError("Binary operations with states on different grids are not supported.")
+            raise wp.BadGridError(
+                "Binary operations with states on different grids are not supported."
+            )
 
         if self.data.shape != other.data.shape:
             raise wp.BadStateError(
-                "Binary operations can only be performed for two wave_functions or density operators.")
+                "Binary operations can only be performed for two wave_functions or density operators."
+            )

@@ -26,10 +26,8 @@ def test_reject_invalid_states(grid_1d, monkeypatch):
 
 def test_apply_operator(grid_1d, monkeypatch):
     op = wp.testing.DummyOperator(grid_1d)
-    monkeypatch.setattr(op,
-                        "apply_to_wave_function", lambda data, _t: 2.0 * _t * data)
-    monkeypatch.setattr(op,
-                        "apply_from_left", lambda data, _t: 3.0 * _t * data)
+    monkeypatch.setattr(op, "apply_to_wave_function", lambda data, _t: 2.0 * _t * data)
+    monkeypatch.setattr(op, "apply_from_left", lambda data, _t: 3.0 * _t * data)
 
     psi = wp.testing.random_state(grid_1d, 100)
     t = 7.0

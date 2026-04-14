@@ -11,7 +11,9 @@ def test_random_wave_function(grid_1d):
     result = wp.builder.random_wave_function(grid_1d, generator)
     assert result.is_wave_function()
 
-    expected_abs = wp.builder.product_wave_function(grid_1d, lambda x: np.ones(x.shape), normalize=False)
+    expected_abs = wp.builder.product_wave_function(
+        grid_1d, lambda x: np.ones(x.shape), normalize=False
+    )
     assert_allclose(np.abs(result.data), expected_abs.data, rtol=0, atol=1e-12)
 
     # proxy check that the arguments to the complex numbers differ

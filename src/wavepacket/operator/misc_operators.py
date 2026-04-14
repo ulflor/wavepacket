@@ -44,7 +44,9 @@ class Projection(OperatorBase):
             basis = [basis]
 
         if not basis:
-            raise wp.InvalidValueError("Projection operator requires at least one state to project onto.")
+            raise wp.InvalidValueError(
+                "Projection operator requires at least one state to project onto."
+            )
 
         for state in basis:
             if not state.is_wave_function():

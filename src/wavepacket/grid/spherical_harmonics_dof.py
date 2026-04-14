@@ -53,15 +53,22 @@ class SphericalHarmonicsDof(DofBase):
         super().__init__(dvr_points, fbr_points)
         self._sqrt_weights = np.sqrt(weights)
 
-        harmonics = np.stack([wp.special.SphericalHarmonic(L, m)(dvr_points) for L in range(abs(m), lmax + 1)], 1)
+        harmonics = np.stack(
+            [wp.special.SphericalHarmonic(L, m)(dvr_points) for L in range(abs(m), lmax + 1)],
+            1,
+        )
         self._fbr2weighted = self.from_dvr(harmonics, 0)
 
-    def to_fbr(self, data: wpt.ComplexData, index: int, is_ket: bool = True) -> wpt.ComplexData:
+    def to_fbr(
+        self, data: wpt.ComplexData, index: int, is_ket: bool = True
+    ) -> wpt.ComplexData:
         swapped_data = np.swapaxes(data, 0, index)
         result = np.tensordot(self._fbr2weighted, swapped_data, axes=(0, 0))
         return np.swapaxes(result, 0, index)
 
-    def from_fbr(self, data: wpt.ComplexData, index: int, is_ket: bool = True) -> wpt.ComplexData:
+    def from_fbr(
+        self, data: wpt.ComplexData, index: int, is_ket: bool = True
+    ) -> wpt.ComplexData:
         swapped_data = np.swapaxes(data, 0, index)
         result = np.tensordot(self._fbr2weighted, swapped_data, axes=(1, 0))
         return np.swapaxes(result, 0, index)
@@ -167,6 +174,6 @@ def _quadrature(lmax: int, m: int) -> tuple[wpt.RealData, wpt.RealData]:
     # \int |Y_mm(theta, phi)|^2 sin(theta) dtheta dphi = sum_k w_k * Y_mm(theta_k, 0) == 1
     y_mm = wp.special.SphericalHarmonic(m, m)(points)
     weights /= (1 - np.cos(points) ** 2) ** m
-    weights /= np.sum(weights * y_mm ** 2)
+    weights /= np.sum(weights * y_mm**2)
 
     return points, weights

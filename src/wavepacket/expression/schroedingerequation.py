@@ -36,4 +36,6 @@ class SchroedingerEquation(ExpressionBase):
         if not psi.is_wave_function():
             raise wp.BadStateError("SchroedingerEquation requires a wave function.")
 
-        return wp.grid.State(psi.grid, -1j * self._hamiltonian.apply_to_wave_function(psi.data, t))
+        return wp.grid.State(
+            psi.grid, -1j * self._hamiltonian.apply_to_wave_function(psi.data, t)
+        )

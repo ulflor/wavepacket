@@ -12,9 +12,13 @@ def dummy_func(data: wpt.RealData) -> wpt.RealData:
 
 @pytest.fixture
 def grid() -> wp.grid.Grid:
-    return wp.grid.Grid([wp.testing.DummyDof(np.ones(3), np.ones(3)),
-                         wp.grid.PlaneWaveDof(10, 20, 10),
-                         wp.testing.DummyDof(np.ones(2), np.ones(2))])
+    return wp.grid.Grid(
+        [
+            wp.testing.DummyDof(np.ones(3), np.ones(3)),
+            wp.grid.PlaneWaveDof(10, 20, 10),
+            wp.testing.DummyDof(np.ones(2), np.ones(2)),
+        ]
+    )
 
 
 @pytest.fixture
@@ -35,7 +39,9 @@ def test_apply_to_wave_function(op, grid):
     assert isinstance(dof, wp.grid.PlaneWaveDof)
     k = dof.fbr_points[4]
 
-    psi = wp.builder.product_wave_function(grid, [dummy_func, wp.special.PlaneWave(k), dummy_func])
+    psi = wp.builder.product_wave_function(
+        grid, [dummy_func, wp.special.PlaneWave(k), dummy_func]
+    )
 
     expected = dummy_func(k) * psi.data
     got = op.apply_to_wave_function(psi.data, 0.0)

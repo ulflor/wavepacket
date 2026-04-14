@@ -41,10 +41,18 @@ class Gaussian(wpt.Generator):
     :math:`\sigma = \mathrm{FWHM} / \sqrt{8 \ln 2}`.
     """
 
-    def __init__(self, x: float = 0.0, p: float = 0.0, *,
-                 rms: float | None = None, fwhm: float | None = None) -> None:
+    def __init__(
+        self,
+        x: float = 0.0,
+        p: float = 0.0,
+        *,
+        rms: float | None = None,
+        fwhm: float | None = None,
+    ) -> None:
         if rms is not None and rms <= 0:
-            raise wp.InvalidValueError(f"RMS width of Gaussian is {rms}, but should be positive.")
+            raise wp.InvalidValueError(
+                f"RMS width of Gaussian is {rms}, but should be positive."
+            )
 
         if fwhm is not None and fwhm <= 0:
             raise wp.InvalidValueError(f"FWHM of Gaussian is {rms}, but should be positive.")
@@ -67,7 +75,7 @@ class Gaussian(wpt.Generator):
     def __call__(self, x: wpt.RealData) -> wpt.ComplexData: ...
     def __call__(self, x):
         shifted = x - self._x
-        arg = - shifted ** 2 / (2 * self._rms ** 2) + 1j * self._p * shifted
+        arg = -(shifted**2) / (2 * self._rms**2) + 1j * self._p * shifted
         return np.exp(arg)
 
 
@@ -122,14 +130,18 @@ class SphericalHarmonic(wpt.RealGenerator):
 
         if m > l or m < -l:
             raise wp.InvalidValueError(
-                f"Quantum number m must fulfill -l <= m <= l, but we have {-l} <= {m} <= {l}.")
+                f"Quantum number m must fulfill -l <= m <= l, but we have {-l} <= {m} <= {l}."
+            )
 
         self._l = l
         self._m = m
 
     def __call__(self, theta: wpt.RealData) -> wpt.RealData:
-        factor = math.sqrt((2 * self._l + 1) * math.factorial(self._l - self._m) /
-                           (4 * math.pi * math.factorial(self._l + self._m)))
+        factor = math.sqrt(
+            (2 * self._l + 1)
+            * math.factorial(self._l - self._m)
+            / (4 * math.pi * math.factorial(self._l + self._m))
+        )
         legendre = scipy.special.lpmv(self._m, self._l, np.cos(theta))
 
         return factor * legendre

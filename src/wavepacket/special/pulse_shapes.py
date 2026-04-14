@@ -69,7 +69,9 @@ class SoftRectangularFunction:
             border = half_width / 10
 
         if half_width <= 0 or border <= 0:
-            raise wp.InvalidValueError(f"Half-width '{half_width}' and soft border '{border}'must be positive")
+            raise wp.InvalidValueError(
+                f"Half-width '{half_width}' and soft border '{border}'must be positive"
+            )
 
         self._scale = math.pi / (2 * border)
         self._min = t0 - half_width - border

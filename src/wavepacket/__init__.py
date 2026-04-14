@@ -4,11 +4,31 @@ A package for solving Schrödinger and Liouville von Neumann equations.
 
 __version__ = "0.4.0"
 
-__all__ = ['__version__', 'log', 'BadFunctionCall', 'BadGridError', 'BadStateError',
-           'ExecutionError', 'InvalidValueError',
-           'builder', 'expression', 'grid', 'operator', 'solver', 'special', 'testing', 'typing',
-           'dvr_density', 'fbr_density', 'normalize', 'orthonormalize', 'population', 'trace',
-           'diagonalize', 'expectation_value']
+__all__ = [
+    "__version__",
+    "log",
+    "BadFunctionCall",
+    "BadGridError",
+    "BadStateError",
+    "ExecutionError",
+    "InvalidValueError",
+    "builder",
+    "expression",
+    "grid",
+    "operator",
+    "solver",
+    "special",
+    "testing",
+    "typing",
+    "dvr_density",
+    "fbr_density",
+    "normalize",
+    "orthonormalize",
+    "population",
+    "trace",
+    "diagonalize",
+    "expectation_value",
+]
 
 # order matters, because subpackages depend on each other at times.
 # Though that should only matter for typing, so we could choose an alphabetic order again
@@ -23,8 +43,20 @@ from . import plot
 from . import special
 from . import testing
 
-from .exceptions import (BadFunctionCall, BadGridError, BadStateError, ExecutionError,
-                         InvalidValueError)
+from .exceptions import (
+    BadFunctionCall,
+    BadGridError,
+    BadStateError,
+    ExecutionError,
+    InvalidValueError,
+)
 from .logging import log
-from .state_utilities import dvr_density, fbr_density, normalize, orthonormalize, population, trace
+from .state_utilities import (
+    dvr_density,
+    fbr_density,
+    normalize,
+    orthonormalize,
+    population,
+    trace,
+)
 from .operator_utils import diagonalize, expectation_value

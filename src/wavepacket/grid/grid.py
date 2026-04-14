@@ -100,7 +100,9 @@ class Grid:
         new_shape[index] = self.dofs[index].size
         return np.reshape(data, new_shape)
 
-    def operator_broadcast(self, data: wpt.AnyData, dof_index: int, is_ket: bool = True) -> wpt.AnyData:
+    def operator_broadcast(
+        self, data: wpt.AnyData, dof_index: int, is_ket: bool = True
+    ) -> wpt.AnyData:
         """
         Similar to broadcast, but blows up the array into a form suitable for multiplication with operators.
 

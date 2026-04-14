@@ -32,7 +32,7 @@ def test_propagate_edge_cases(grid_1d):
     psi0 = wp.testing.random_state(grid_1d, 1)
 
     with pytest.raises(wp.InvalidValueError):
-        for _ in solver.propagate(psi0, 0.0, -1): # pragma: no cover
+        for _ in solver.propagate(psi0, 0.0, -1):  # pragma: no cover
             pass
 
     results = [x for x in solver.propagate(psi0, 0.0, 0)]

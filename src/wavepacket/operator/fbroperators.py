@@ -39,11 +39,17 @@ class PlaneWaveFbrOperator(OperatorBase):
         If the supplied degree of freedom is not a plane wave expansion.
     """
 
-    def __init__(self, grid: wp.grid.Grid, dof_index: int, generator: wpt.Generator,
-                 cutoff: float | None = None) -> None:
+    def __init__(
+        self,
+        grid: wp.grid.Grid,
+        dof_index: int,
+        generator: wpt.Generator,
+        cutoff: float | None = None,
+    ) -> None:
         if not isinstance(grid.dofs[dof_index], wp.grid.PlaneWaveDof):
             raise wp.BadGridError(
-                f"PlaneWaveFbrOperator requires a PlaneWaveDof, but got {grid.dofs[dof_index].__class__}")
+                f"PlaneWaveFbrOperator requires a PlaneWaveDof, but got {grid.dofs[dof_index].__class__}"
+            )
 
         self._wf_index = dof_index
         self._ket_index = grid.normalize_index(dof_index)
@@ -106,15 +112,17 @@ class CartesianKineticEnergy(PlaneWaveFbrOperator):
         plane wave expansion.
     """
 
-    def __init__(self, grid: wp.grid.Grid, dof_index: int, mass: float,
-                 cutoff: float | None = None) -> None:
+    def __init__(
+        self, grid: wp.grid.Grid, dof_index: int, mass: float, cutoff: float | None = None
+    ) -> None:
         if mass <= 0:
             raise wp.InvalidValueError(f"Particle mass must be positive, but is {mass}")
 
         self.mass: Final[float] = mass
 
-        super().__init__(grid, dof_index, lambda fbr_points: fbr_points ** 2 / (2 * mass),
-                         cutoff)
+        super().__init__(
+            grid, dof_index, lambda fbr_points: fbr_points**2 / (2 * mass), cutoff
+        )
 
 
 class FbrOperator1D(OperatorBase):
@@ -144,8 +152,13 @@ class FbrOperator1D(OperatorBase):
         Default is not to truncate.
     """
 
-    def __init__(self, grid: wp.grid.Grid, dof_index: int, generator: wpt.Generator,
-                 cutoff: float | None = None) -> None:
+    def __init__(
+        self,
+        grid: wp.grid.Grid,
+        dof_index: int,
+        generator: wpt.Generator,
+        cutoff: float | None = None,
+    ) -> None:
         dof = grid.dofs[dof_index]
         fbr_values = generator(dof.fbr_points).copy()
 
@@ -209,17 +222,22 @@ class RotationalKineticEnergy(FbrOperator1D):
         spherical harmonics expansion.
     """
 
-    def __init__(self, grid: wp.grid.Grid, dof_index: int, inertia: float,
-                 cutoff: float | None = None) -> None:
+    def __init__(
+        self, grid: wp.grid.Grid, dof_index: int, inertia: float, cutoff: float | None = None
+    ) -> None:
         if inertia <= 0:
             raise wp.InvalidValueError(f"Moment of inertia must be positive, but is {inertia}")
 
         if not isinstance(grid.dofs[dof_index], wp.grid.SphericalHarmonicsDof):
             raise wp.BadGridError(
-                f"Degree of freedom should be a SphericalHarmonicsDof, but is {grid.dofs[dof_index].__class__}")
+                f"Degree of freedom should be a SphericalHarmonicsDof, but is {grid.dofs[dof_index].__class__}"
+            )
 
         self.inertia: Final[float] = inertia
 
-        super().__init__(grid, dof_index,
-                         lambda fbr_points: fbr_points * (fbr_points + 1) / (2 * inertia),
-                         cutoff=cutoff)
+        super().__init__(
+            grid,
+            dof_index,
+            lambda fbr_points: fbr_points * (fbr_points + 1) / (2 * inertia),
+            cutoff=cutoff,
+        )

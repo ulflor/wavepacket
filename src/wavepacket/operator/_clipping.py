@@ -3,8 +3,9 @@ import numpy as np
 import wavepacket.typing as wpt
 
 
-def clip_real(data: wpt.AnyData,
-              lower: float | None = None, upper: float | None = None) -> wpt.AnyData:
+def clip_real(
+    data: wpt.AnyData, lower: float | None = None, upper: float | None = None
+) -> wpt.AnyData:
     """
     Clips only the real part of a potentially complex-valued array.
 
@@ -27,7 +28,7 @@ def clip_real(data: wpt.AnyData,
         If the input data is real (data.dtype == "real floating"), this function forwards to numpy.clip().
     """
 
-    if np.isdtype(data.dtype, 'real floating'):
+    if np.isdtype(data.dtype, "real floating"):
         return np.clip(data, lower, upper)
     else:
         imag_data = np.imag(data)

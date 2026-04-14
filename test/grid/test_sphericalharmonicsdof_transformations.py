@@ -8,8 +8,10 @@ import wavepacket.typing as wpt
 
 def spherical_harmonics(dof: wp.grid.SphericalHarmonicsDof) -> wpt.RealData:
     # spherical_harmonics()[k,l] = l-th harmonic, point x_k
-    harmonics = [wp.special.SphericalHarmonic(L + abs(dof.m), dof.m)(dof.dvr_points)
-                 for L in range(dof.size)]
+    harmonics = [
+        wp.special.SphericalHarmonic(L + abs(dof.m), dof.m)(dof.dvr_points)
+        for L in range(dof.size)
+    ]
     return np.stack(harmonics, 1)
 
 

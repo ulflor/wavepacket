@@ -5,6 +5,7 @@ class BadFunctionCall(Exception):
     A typical but rare use-case would be a function that was
     called with incorrect parameters.
     """
+
     pass
 
 
@@ -17,6 +18,7 @@ class BadGridError(Exception):
     is not a useful operation. The grid may also miss required properties, for example
     an operation may expect a specific degree of freedom type along some index.
     """
+
     pass
 
 
@@ -28,6 +30,7 @@ class BadStateError(Exception):
     or you supplied the wrong type of state to a function, for example passing a
     density operator where a wave function was required.
     """
+
     pass
 
 
@@ -38,6 +41,7 @@ class ExecutionError(Exception):
     The main example is the :py:class:`wavepacket.solver.odesolver` getting
     an error back while integrating.
     """
+
     pass
 
 
@@ -45,4 +49,5 @@ class InvalidValueError(Exception):
     """
     A function argument was incorrect, for example out of bounds.
     """
+
     pass

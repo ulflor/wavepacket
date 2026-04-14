@@ -73,7 +73,7 @@ def test_spherical_harmonics():
     assert_allclose(h_20(theta), expected, atol=1e-12, rtol=0)
 
     h_21 = wp.special.SphericalHarmonic(2, 1)
-    expected = - 0.5 * math.sqrt(15 / 2 / math.pi) * np.sin(theta) * np.cos(theta)
+    expected = -0.5 * math.sqrt(15 / 2 / math.pi) * np.sin(theta) * np.cos(theta)
     assert_allclose(h_21(theta), expected, atol=1e-12, rtol=0)
 
     h_33 = wp.special.SphericalHarmonic(3, -3)

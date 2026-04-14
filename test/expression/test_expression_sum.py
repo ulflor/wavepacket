@@ -10,7 +10,9 @@ def test_sum_requires_an_expression():
 
 
 def test_forward_time_dependence(grid_1d):
-    td = wp.expression.SchroedingerEquation(wp.operator.TimeDependentOperator(grid_1d, lambda t: t))
+    td = wp.expression.SchroedingerEquation(
+        wp.operator.TimeDependentOperator(grid_1d, lambda t: t)
+    )
     ti = wp.expression.SchroedingerEquation(wp.operator.Constant(grid_1d, 1))
 
     assert not (ti + ti).time_dependent

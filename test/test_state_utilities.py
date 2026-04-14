@@ -45,14 +45,13 @@ def test_reject_invalid_states(grid_2d):
 
 
 def test_wave_function_dvr_density():
-    grid = wp.grid.Grid([wp.grid.PlaneWaveDof(5, 6, 3),
-                         wp.grid.PlaneWaveDof(10, 12, 5)])
+    grid = wp.grid.Grid([wp.grid.PlaneWaveDof(5, 6, 3), wp.grid.PlaneWaveDof(10, 12, 5)])
     psi = wp.testing.random_state(grid, 42)
 
     result = wp.dvr_density(psi)
 
     dx = 1 / 3.0 * 2 / 5.0
-    expected = np.abs(psi.data ** 2) / dx
+    expected = np.abs(psi.data**2) / dx
     assert_allclose(result, expected, atol=1e-14, rtol=0)
 
 
@@ -67,10 +66,12 @@ def test_density_operator_dvr_density(grid_2d):
 
 
 def test_wave_function_fbr_density():
-    grid = wp.grid.Grid([wp.grid.SphericalHarmonicsDof(10, 2),
-                         wp.grid.SphericalHarmonicsDof(12, 5)])
-    psi = 2j * wp.builder.product_wave_function(grid, [wp.special.SphericalHarmonic(5, 2),
-                                                       wp.special.SphericalHarmonic(7, 5)])
+    grid = wp.grid.Grid(
+        [wp.grid.SphericalHarmonicsDof(10, 2), wp.grid.SphericalHarmonicsDof(12, 5)]
+    )
+    psi = 2j * wp.builder.product_wave_function(
+        grid, [wp.special.SphericalHarmonic(5, 2), wp.special.SphericalHarmonic(7, 5)]
+    )
 
     density = wp.fbr_density(psi)
     expected = np.zeros(grid.shape)
@@ -111,19 +112,19 @@ def test_reduced_dvr_and_fbr_densities_from_density_operators(grid_2d):
     psi2 = wp.testing.random_state(grid_2d, 43)
     rho = wp.builder.pure_density(psi1) + wp.builder.pure_density(psi2)
 
-    assert_allclose(wp.dvr_density(rho, 0),
-                    wp.dvr_density(psi1, 0) + wp.dvr_density(psi2, 0),
-                    1e-12)
-    assert_allclose(wp.dvr_density(rho, 1),
-                    wp.dvr_density(psi1, 1) + wp.dvr_density(psi2, 1),
-                    1e-12)
+    assert_allclose(
+        wp.dvr_density(rho, 0), wp.dvr_density(psi1, 0) + wp.dvr_density(psi2, 0), 1e-12
+    )
+    assert_allclose(
+        wp.dvr_density(rho, 1), wp.dvr_density(psi1, 1) + wp.dvr_density(psi2, 1), 1e-12
+    )
 
-    assert_allclose(wp.fbr_density(rho, 0),
-                    wp.fbr_density(psi1, 0) + wp.fbr_density(psi2, 0),
-                    1e-12)
-    assert_allclose(wp.fbr_density(rho, 1),
-                    wp.fbr_density(psi1, 1) + wp.fbr_density(psi2, 1),
-                    1e-12)
+    assert_allclose(
+        wp.fbr_density(rho, 0), wp.fbr_density(psi1, 0) + wp.fbr_density(psi2, 0), 1e-12
+    )
+    assert_allclose(
+        wp.fbr_density(rho, 1), wp.fbr_density(psi1, 1) + wp.fbr_density(psi2, 1), 1e-12
+    )
 
 
 def test_trace():
@@ -219,7 +220,7 @@ def test_population(grid_2d):
     # create a state that triggers a complex scalar product to check for abs()
     psi = 2 * a + 0.7 * target * np.sqrt(1j)
     rho = wp.builder.pure_density(psi)
-    expected = 0.7 ** 2
+    expected = 0.7**2
 
     psi_projection = wp.population(psi, target)
     assert_allclose(psi_projection, expected, rtol=0, atol=1e-12)
@@ -234,7 +235,7 @@ def test_normalize_population_target(grid_2d):
 
     psi = 0.7 * target * np.sqrt(1j)
     rho = wp.builder.pure_density(psi)
-    expected = 0.7 ** 2
+    expected = 0.7**2
 
     psi_projection = wp.population(psi, 2 * target)
     assert_allclose(psi_projection, expected, rtol=0, atol=1e-12)

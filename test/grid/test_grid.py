@@ -28,9 +28,13 @@ def test_set_and_access_dofs():
 
 
 def test_size_of_grid():
-    grid = wp.grid.Grid([wp.grid.PlaneWaveDof(1, 2, 3),
-                         wp.grid.PlaneWaveDof(1, 2, 10),
-                         wp.grid.PlaneWaveDof(1, 2, 4)])
+    grid = wp.grid.Grid(
+        [
+            wp.grid.PlaneWaveDof(1, 2, 3),
+            wp.grid.PlaneWaveDof(1, 2, 10),
+            wp.grid.PlaneWaveDof(1, 2, 4),
+        ]
+    )
 
     assert grid.size == 3 * 10 * 4
 
@@ -61,9 +65,11 @@ def test_broadcast():
     data = [i + np.arange(shape[i]) for i in range(3)]
     grid = build_grid(shape)
 
-    expected = [np.reshape(data[0], (7, 1, 1)),
-                np.reshape(data[1], (1, 5, 1)),
-                np.reshape(data[2], (1, 1, 3))]
+    expected = [
+        np.reshape(data[0], (7, 1, 1)),
+        np.reshape(data[1], (1, 5, 1)),
+        np.reshape(data[2], (1, 1, 3)),
+    ]
 
     assert_array_equal(grid.broadcast(data[0], -3), expected[0])
     assert_array_equal(grid.broadcast(data[1], 1), expected[1])
