@@ -216,7 +216,8 @@ def test_population(grid_2d):
     states = wp.orthonormalize([wp.testing.random_state(grid_2d, seed) for seed in [1, 2]])
     a, target = (states[0], states[1])
 
-    psi = 2 * a + 0.7 * target * np.sqrt(1j)   # create a complex scalar product to check for abs()
+    # create a state that triggers a complex scalar product to check for abs()
+    psi = 2 * a + 0.7 * target * np.sqrt(1j)
     rho = wp.builder.pure_density(psi)
     expected = 0.7 ** 2
 

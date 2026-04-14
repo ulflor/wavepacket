@@ -57,9 +57,11 @@ class PlaneWaveDof(DofBase):
 
         dvr = np.linspace(xmin, xmax, n, endpoint=False, dtype=np.float64)
         if n % 2 == 0:
-            fbr = np.linspace(-math.pi / dx, math.pi / dx, n, endpoint=False, dtype=np.float64)
+            k_max = math.pi / dx
+            fbr = np.linspace(-k_max, k_max, n, endpoint=False, dtype=np.float64)
         else:
-            fbr = np.linspace(-math.pi / dx * (n - 1) / n, math.pi / dx * (n - 1) / n, n, dtype=np.float64)
+            k_max = math.pi / dx * (n-1) / n
+            fbr = np.linspace(-k_max, k_max, n, dtype=np.float64)
 
         super().__init__(dvr, fbr)
 

@@ -99,12 +99,12 @@ class BasePlot1D(ABC):
         else:
             potential_values = get_potential_values(self._potential, t)
             density = wp.dvr_density(state)
-            energy = wp.expectation_value(self._hamiltonian, state, t).real * np.ones(dvr_grid.shape)
+            energy = wp.expectation_value(self._hamiltonian, state, t).real
             # absorbing boundary conditions can change the trace...
             energy /= wp.trace(state)
 
             axes.plot(dvr_grid, potential_values, 'b-')
-            axes.plot(dvr_grid, energy, 'r-')
+            axes.plot(dvr_grid, energy * np.ones(dvr_grid.shape), 'r-')
             axes.plot(dvr_grid, energy + (self.conversion_factor * density), 'r-')
 
 

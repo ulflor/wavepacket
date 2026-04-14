@@ -64,8 +64,10 @@ def test_expectation_values_forwards_time_correctly(grid_1d, monkeypatch):
 def _diagonalization_setup() -> wp.operator.OperatorBase:
     grid = wp.grid.Grid([wp.grid.PlaneWaveDof(-10, 10, 5),
                          wp.grid.SphericalHarmonicsDof(6, 1)])
-    return (wp.operator.PlaneWaveFbrOperator(grid, 0, lambda p: p)
-            + wp.operator.RotationalKineticEnergy(grid, 1, 10))
+
+    kinetic = wp.operator.PlaneWaveFbrOperator(grid, 0, lambda p: p)
+    rotation = wp.operator.RotationalKineticEnergy(grid, 1, 10)
+    return kinetic + rotation
 
 
 def test_return_eigenstates_and_values():

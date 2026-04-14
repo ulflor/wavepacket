@@ -33,8 +33,9 @@ def test_apply_commutator(grid_1d):
 
     # Follows from the derivation of the Liouville-von-Neumann equation
     dot_psi = -1j * op.apply(psi, 0.0)
-    expected = wp.builder.direct_product(dot_psi, psi) + wp.builder.direct_product(psi, dot_psi)
-    assert_close(dot_rho, expected, 1e-12)
+    left = wp.builder.direct_product(dot_psi, psi)
+    right = wp.builder.direct_product(psi, dot_psi)
+    assert_close(dot_rho, left + right, 1e-12)
 
 
 def test_apply_left_sided_liouvillian(grid_1d):

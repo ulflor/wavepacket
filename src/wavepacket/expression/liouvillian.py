@@ -37,8 +37,9 @@ class CommutatorLiouvillian(ExpressionBase):
         if not rho.is_density_operator():
             raise wp.BadStateError("CommutatorLiouvillian requires a density operator.")
 
-        return wp.grid.State(rho.grid,
-                             -1j * (self._op.apply_from_left(rho.data, t) - self._op.apply_from_right(rho.data, t)))
+        left = self._op.apply_from_left(rho.data, t)
+        right = self._op.apply_from_right(rho.data, t)
+        return wp.grid.State(rho.grid, -1j * (left - right))
 
 
 class OneSidedLiouvillian(ExpressionBase):
