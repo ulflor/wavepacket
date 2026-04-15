@@ -1,9 +1,9 @@
 import math
+
 import pytest
+from numpy.testing import assert_allclose
 
 import wavepacket as wp
-
-from numpy.testing import assert_allclose
 
 
 def test_sin_square_errors():

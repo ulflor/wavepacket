@@ -1,4 +1,5 @@
 import wavepacket as wp
+
 from .expressionbase import ExpressionBase
 
 

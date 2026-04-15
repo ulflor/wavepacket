@@ -5,6 +5,7 @@ from typing import Final
 import scipy
 
 import wavepacket as wp
+
 from .solverbase import SolverBase
 
 

@@ -1,8 +1,9 @@
-from abc import abstractmethod, ABC
+from abc import ABC, abstractmethod
 from typing import Final
 
 import wavepacket as wp
 import wavepacket.typing as wpt
+
 from ._utils import clone_readonly
 
 

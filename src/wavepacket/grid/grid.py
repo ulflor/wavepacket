@@ -1,11 +1,12 @@
-from collections.abc import Sequence
 import math
+from collections.abc import Sequence
 from typing import Final, Iterable
 
 import numpy as np
 
 import wavepacket as wp
 import wavepacket.typing as wpt
+
 from .dofbase import DofBase
 
 

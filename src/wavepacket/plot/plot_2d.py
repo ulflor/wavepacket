@@ -4,6 +4,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 import wavepacket as wp
+
 from ._utilities import get_potential_values
 
 

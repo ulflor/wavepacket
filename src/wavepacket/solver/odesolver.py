@@ -3,6 +3,7 @@ from scipy.integrate import solve_ivp
 
 import wavepacket as wp
 import wavepacket.typing as wpt
+
 from .solverbase import SolverBase
 
 

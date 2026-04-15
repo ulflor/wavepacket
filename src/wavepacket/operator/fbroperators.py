@@ -4,8 +4,9 @@ import numpy as np
 
 import wavepacket as wp
 import wavepacket.typing as wpt
-from .operatorbase import OperatorBase
+
 from ._clipping import clip_real
+from .operatorbase import OperatorBase
 
 
 class PlaneWaveFbrOperator(OperatorBase):

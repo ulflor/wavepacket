@@ -3,6 +3,7 @@ from typing import Self
 
 import wavepacket as wp
 import wavepacket.typing as wpt
+
 from .grid import Grid
 
 

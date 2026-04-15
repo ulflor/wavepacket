@@ -4,8 +4,9 @@ import numpy as np
 
 import wavepacket as wp
 import wavepacket.typing as wpt
-from .dofbase import DofBase
+
 from ._utils import broadcast
+from .dofbase import DofBase
 
 
 class PlaneWaveDof(DofBase):

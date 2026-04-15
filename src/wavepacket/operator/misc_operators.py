@@ -1,5 +1,6 @@
-import numpy as np
 from typing import Final, Sequence
+
+import numpy as np
 
 import wavepacket as wp
 import wavepacket.typing as wpt

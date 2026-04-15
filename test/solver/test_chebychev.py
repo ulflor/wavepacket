@@ -1,7 +1,6 @@
 import numpy as np
-import scipy
-
 import pytest
+import scipy
 
 import wavepacket as wp
 from wavepacket.testing import assert_close

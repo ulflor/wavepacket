@@ -1,11 +1,10 @@
 import math
 
 import numpy as np
-
-import wavepacket as wp
-
 import pytest
 from numpy.testing import assert_allclose
+
+import wavepacket as wp
 from wavepacket.testing import assert_close
 
 

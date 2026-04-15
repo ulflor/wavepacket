@@ -1,10 +1,11 @@
-from abc import abstractmethod, ABC
+from abc import ABC, abstractmethod
 
 import matplotlib.pyplot as plt
 import numpy as np
 
 import wavepacket as wp
 from wavepacket.operator import OperatorBase
+
 from ._utilities import get_potential_values
 
 

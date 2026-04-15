@@ -1,6 +1,6 @@
+import numbers
 from abc import ABC, abstractmethod
 from collections.abc import Sequence
-import numbers
 from typing import Final
 
 import numpy as np
