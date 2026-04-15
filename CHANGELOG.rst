@@ -29,12 +29,15 @@ Minor changes:
   This may be interesting for time-dependent potentials.
 - (#55) Gaussian accepts floats, not only arrays, and can be used for pulse shapes
 - (#55) Comprehensible error message when adding an incorrect object to an operator
+- (#16) Added code coverage and black+isort formatting
 
 Bug fixes:
+
 - (#35) 1D plots calculated abs(energy) instead of real(energy),
   and did not treat unnormalized wave functions correctly.
 - (#48) The calculation of the population lacked an abs(), so the populations could
   be negative.
+- (#16) SoftRectangularFunction had no soft turnoff
 
 0.3
 ---
