@@ -85,6 +85,11 @@ omit = ["*/wavepacket/plot/*.py",
 required-version = 26
 line-length = 95
 
+[tool.isort]
+# Order of import sometimes matters in __init__.py
+profile = "black"
+skip_glob = ["doc/*", "**/__init__.py"]
+
 [tool.tox]
 requires = ["tox >= 4.30"]
 env_list = ["py311", "py312", "py313", "py314", "py311-min", "py312-min", "py313-min"]
