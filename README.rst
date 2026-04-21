@@ -38,11 +38,19 @@ Issue tracker:
 Support
 -------
 
-If you lack a feature, create an issue in the issue tracker.
-Depending on the complexity of the feature, this will lead to an immediate,
-rapid, or prioritized implementation.
+There are three different avenues for feedback and support:
 
-For support requests, also use the issue tracker for the time being.
+- The prefered option is through the mailing list wavepacket@python.org.
+  You may want to subscribe at https://mail.python.org/mailman3/lists/wavepacket.python.org/
+  to ensure you receive all answers.
+- You can use the Forum on github: https://github.com/ulflor/wavepacket/discussions
+  You need a github account to post messages.
+- You can open a new issue for bug reports or feature requests directly at
+  https://github.com/ulflor/wavepacket/.
+  This requires a github account.
+  You can of course also report bugs or request features on the mailing list or in the forum.
+  Depending on the complexity of the feature, this will lead to an immediate,
+  rapid, or prioritized implementation.
 
 
 Contribution
@@ -50,8 +58,8 @@ Contribution
 
 I currently lack a formal procedure for new contributors, but you are
 very welcome to contribute to the project. If you do not know what to do,
-contact one of the developers; there is enough work for
-multiple developers, also for non-coding skills (there is never enough
+use one of the support channels from the previous section ; there is enough
+work for multiple developers, also for non-coding skills (there is never enough
 documentation).
 
 
@@ -62,7 +70,7 @@ The original long-time version of Wavepacket was written in Matlab and is still
 actively maintained under https://sourceforge.net/p/wavepacket/matlab. It is stable,
 battle-tested and works.
 
-However, Matlab is expensive, and not all users had easy
+However, Matlab is expensive, and not all users had (legal)
 access to it. Also, the project's architecture did not support some
 advanced use cases well. Finally,
 C++11 had just come out and looked cool, so I started a
