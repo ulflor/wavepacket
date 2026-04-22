@@ -46,7 +46,7 @@ There are three different avenues for feedback and support:
 - You can use the Forum on github: https://github.com/ulflor/wavepacket/discussions
   You need a github account to post messages.
 - You can open a new issue for bug reports or feature requests directly at
-  https://github.com/ulflor/wavepacket/.
+  https://github.com/ulflor/wavepacket/issues.
   This requires a github account.
   You can of course also report bugs or request features on the mailing list or in the forum.
   Depending on the complexity of the feature, this will lead to an immediate,
