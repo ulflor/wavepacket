@@ -227,8 +227,7 @@ def orthonormalize(states: Sequence[wp.grid.State]) -> list[wp.grid.State]:
 
     This function does a simple Gram-Schmidt orthogonalization followed by a normalization
     of the resulting orthogonal vectors. As such, it is not efficient for a large number
-    of vectors, and produces artefacts for linearly dependent vectors. In short,
-    it should be good for common use cases, but should only be used with sanitized input.
+    of vectors, and produces artifacts for linearly dependent vectors.
 
     Parameters
     ----------
@@ -240,7 +239,8 @@ def orthonormalize(states: Sequence[wp.grid.State]) -> list[wp.grid.State]:
     -------
     list[State]
         A set of wave functions that span the same subspace as the input, but are normalized
-        and orthogonal.
+        and orthogonal. The first element is just the normalized state of the first input, the second
+        element has the first input projected out, the third element has the first two inputs projected out etc.
 
     Raises
     ------

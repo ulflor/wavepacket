@@ -200,6 +200,25 @@ def test_result_is_orthonormal_and_spans_same_subspace(grid_2d):
         assert_allclose(reconstructed, original.data, rtol=0, atol=1e-12)
 
 
+def test_orthonormalize_from_first_element_on():
+    grid = wp.grid.Grid(wp.grid.PlaneWaveDof(0, 1, 3))
+    input = [
+        wp.grid.State(grid, np.array([2, 0, 0])),
+        wp.grid.State(grid, np.array([3, 0, 2])),
+        wp.grid.State(grid, np.array([1, 1, 1])),
+    ]
+
+    got = wp.orthonormalize(input)
+    expected = [
+        wp.grid.State(grid, np.array([1, 0, 0])),
+        wp.grid.State(grid, np.array([0, 0, 1])),
+        wp.grid.State(grid, np.array([0, 1, 0])),
+    ]
+
+    for i in range(3):
+        assert_close(got[i], expected[i], 1e-12)
+
+
 def test_invalid_population_targets(grid_1d, grid_2d):
     good_state = wp.testing.random_state(grid_1d, 1)
     wrong_grid = wp.testing.random_state(grid_2d, 2)
