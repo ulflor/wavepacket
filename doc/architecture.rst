@@ -19,8 +19,8 @@ To get there, the code ended up with a few common concepts.
   function, it offers :py:func:`wavepacket.trace` instead,
 * Classes in Wavepacket are immutable after creation.
   This allows you to recycle objects without side effects; for example,
-  when you have set up a Hamiltonian for the field-free case, you can trivially use it
-  also sum it with the laser interaction to get the Hamiltonian  for the system with a laser field.
+  when you have set up a Hamiltonian for the field-free case, you can
+  sum it with the laser interaction to get the Hamiltonian  for the system with a laser field.
   All classes and packages follow a strict hierarchy as described in the subsequent section.
 
   The Python interpreter does not always guarantee this immutability,
@@ -43,7 +43,7 @@ From lowest to highest layer, these are:
     and the class :py:class:`wavepacket.grid.State`.
 
 :py:mod:`wavepacket.builder`
-    Contains functions to create an initial wave function or density operator.
+    Contains functions to generate an initial wave function or density operator.
     These functions require a grid on which to create the state.
 
 :py:mod:`wavepacket.special`
@@ -56,7 +56,7 @@ From lowest to highest layer, these are:
     hence this module requires the grid module.
 
 :py:mod:`wavepacket.expression`
-    Contains classes that define differential equation.
+    Contains classes that define differential equations.
     These can be a Schroedinger equation or various Liouvillians.
     As these entities wrap an operator, this module requires the operator module.
 

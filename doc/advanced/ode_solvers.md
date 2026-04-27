@@ -197,15 +197,15 @@ While this may appear clumsy, there are good reasons to truncate aggressively:
 
 1. As the previous analyses have shown, high-energy eigenstates are poorly represented by the grid anyway.
    In the example here, this affects everything above about the 50th eigenstate.
-   Aggressive truncation therefore only invalidates results that were already incorrect.
+   Aggressive truncation therefore only invalidates results that were already incorrect in the first place.
 
    In theory, we could remove these artifacts by extending the grid,
    but then we pay twice: The larger grid makes all computations slower,
-   and to faithfully propagate the large-energy components, we need smaller step sizes.
-   And this all gives us tiny gains,
+   and to faithfully propagate the large-energy components, we need smaller time steps.
+   And at the end of the day, the gain in accuracy is tiny.
    because the populations of the high-energy eigenstates are small, after all.
-2. Whenever we simulate existing physical systems,
-   we use models that are usually low-energy approximations of the real system.
+2. Whenever we simulate existing physical systems, we use models.
+   These models are _always_ low-energy approximations of the real system.
    For example, we neglect anharmonic contributions,
    or we ignore the coupling to highly excited electronic states,
    maybe we even ignore excited states entirely within the Born-Oppenheimer approximation.

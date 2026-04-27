@@ -97,7 +97,7 @@ is calculated as
 \begin{align*}
     \langle \hat O \rangle =& \langle \psi | \hat O | \psi \rangle
         = \langle \psi_L + \psi_R | \hat O | \psi_L + \psi_R \rangle \\
-    =& \langle \psi_L | \hat O | \psi_R \rangle + \langle \psi_R | \hat O | \psi_R \rangle
+    =& \langle \psi_L | \hat O | \psi_L \rangle + \langle \psi_R | \hat O | \psi_R \rangle
         + 2 \Re \langle \psi_L | \hat O | \psi_R \rangle
     ,
 \end{align*}

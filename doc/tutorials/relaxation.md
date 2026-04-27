@@ -214,10 +214,10 @@ for step in range(5):
     print(f"beta = {delta_beta * (step+1)},  Z = {wp.trace(rho):.4}")
 ```
 
-Because imaginary-time propagation only makes sense for a particular Liouvillian, you supply again
+Because imaginary-time propagation only makes sense for a particular LvNE, you supply again
 the Hamiltonian directly, not some Liouvillian.
 
-Side note: because this Liouvillian has the same spectrum as the Hamiltonian, we can use the
+Side note: because the Liouvillian has the same spectrum as the Hamiltonian, we can use the
 same RelaxationSolver for density operators and wave functions, in contrast to the real-time ChebychevSolver.
 
 [^ChebychevImag]: R. Kosloff and H. Tal-Ezer, Chem. Phys. Lett. 127(3) 223 (1986)

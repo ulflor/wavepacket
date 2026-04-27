@@ -19,7 +19,7 @@ If a molecule interacts with a non-resonant laser field, the electronic ground s
 We can calculate the shift with standard perturbation theory and cavity-dressed states as
 
 $$
-\Delta E \propto - \sum_n \frac{|\langle \Phi_0 | \hat{\vec{\mu}} \vec E |\Phi_n \rangle|^2}{E_n - E_i - \omega}
+\Delta E \propto - \sum_n \frac{|\langle \Phi_0 | \hat{\vec{\mu}} \vec E |\Phi_n \rangle|^2}{E_n - E_0 - \omega}
     = - \frac{1}{2} \alpha(\omega) E^2 \cos^2 \theta
 $$
 
@@ -41,7 +41,8 @@ rotor towards the laser polarization axis ($\alpha > 0$) or away from it ($\alph
 In the following, we only consider the former case of a positive polarizability.
 As the final step, we introduce three further manipulations:
 
-1. We assume that the electric field changes slowly over time. Effectively, this adds a time-dependent shape function
+1. We assume that the electric field changes slowly (adiabatically) over time.
+   Effectively, this adds a time-dependent shape function
    to the second term in the Hamiltonian. We will follow the reference and assume a Gaussian shape.
 2. Because only the product of electric field strength and polarizability matters, we replace it by a
    single parameter.
@@ -53,7 +54,7 @@ $$
 \hat H = \frac{\hat{L}^2}{2} - \frac{\Delta}{2} \ \cos^2\theta \ \mathrm{e}^{- (t - \delta)^2 / \sigma^2}
 $$
 
-In the following, we will follow ref.[^ortigoso] further by studying the dynamics of this Hamiltonian
+We now follow ref.[^ortigoso] and study the dynamics of this Hamiltonian
 in different parameter regimes.
 
 ## Non-adiabatic alignment

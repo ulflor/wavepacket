@@ -77,14 +77,14 @@ beta_vals_to_calculate = [100, 25, 10]
 ```
 
 Note that the chosen temperatures are high, well above thousand Kelvin.
-They should be understood as examples corresponding to different regimes:
+They should not be understood as examples of typical physics, but as numerical examples corresponding to different regimes:
 
 * For beta = 100 ($k_BT$ is 1/20th of D_e),
   the temperature is on the order of the excitation energy.
 * For beta = 25 ($k_BT$ is 1/5th of D_e),
   the temperature is larger than the excitation energy, and significant compared to the dissociation energy
 * For beta = 10 ($k_BT$ is 1/2 of D_e),
-  the temperature is on the order of the binding energy
+  the temperature is on the order of the dissociation energy
 
 ## Method I: Using the thermal density operator directly
 
@@ -133,12 +133,12 @@ Note that the solver is rather inefficient due to the mostly small alpha values,
 but in practice this would not matter.
 You prepare the initial state once, and any time evolution dwarves the cost of the relaxation.
 If you do not need the partition sum explicitly,
-you can avoid its explicit calculation by normalizing the resulting density operator.
+you can avoid its calculation by directly normalizing the resulting density operator.
 
 ### Conclusions
 
 The calculation of a thermal density by imaginary-time propagation is straight forward.
-It has a direct connection to the theory, where you the density-operator formalism is common.
+It has a direct connection to the theory, where the density-operator formalism is common.
 Finally, the implementation is simpler than for the alternative methods.
 
 If you want to study open systems, you probably want a density operator to describe interactions
@@ -182,7 +182,7 @@ This equation directly suggests an alternative procedure for calculating thermal
    then propagate in real time up to the point where the observable is calculated.
 3. For each such propagated wave function, calculate the expectation value, and sum up all the results.
 4. Divide the sum by the partition sum. From its definition,
-   we formally get the partition sum by calculating steps 1-3 with the humble unit operator as response.
+   we formally get the partition sum by calculating steps 1-3 with the unit operator as response.
 
 Note that this procedure is applicable to *every* orthonormal basis.
 So, with some algebra, we succeeded in replacing the density operator by an ensemble of wave functions.
@@ -193,7 +193,7 @@ While a single wave function is faster to propagate, we need to do so for the fu
 which turns out to be as expensive as propagating the density operator.
 
 As a consequence, this scheme makes most sense if we can faithfully reproduce the results
-using only a few of the basis functions.
+using only few of the basis functions.
 Hence, we need a basis where the result converges (exponentially) quickly,
 and one such set are the eigenfunctions of the Hamiltonian.
 We find that
@@ -284,8 +284,9 @@ As an example, take a rotating, vibrating molecule:
 Calculating the ro-vibrational eigenstates is tricky,
 but calculating the rotational *or* vibrational eigenstates is easy.
 So you might just construct your basis from products of rotational and vibrational eigenstates,
-which should give good enough coverage of the relevant energy range.
-Note that you need to relax these basis functions before the real-time evolution,
+which should give good enough coverage of the relevant energy range,
+and accept the residual systematic error.
+Note, though, that you need to relax these basis functions before the real-time evolution,
 because they are no longer true eigenstates of the Hamiltonian.
 
 ## Method III: Using random wave functions
@@ -302,7 +303,7 @@ $$
 $$
 
 Note: We use the notation from our own publication[^random], which may be a bit uncommon.
-The tilde denotes random variables and other objects.
+The tilde denotes random quantities (variables, wave functions, operators).
 We get the random wave function by assigning a random number as coefficient of each basis function.
 The coefficients are normalized and uncorrelated.
 Roughly the only useful operation on a random variable is the calculation of the expected value,
@@ -321,7 +322,7 @@ $$
         .
 $$
 
-We now take again our [response expression](#eq_response), split the exponential,
+We now take again [the response expression](#eq_response), split the exponential,
 insert and expand a unit operator, rearrange the scalar products, and finally use the resolution of identity
 to get rid of the trace summation,
 
@@ -352,7 +353,7 @@ for calculating the response:
 On first view, this method may look like a slightly deranged variant of the previous method II.
 So how, and especially why and when does it work?
 The hand-waving answer is that this is almost method II, but
-the ensemble of random wave functions (1) is not orthogonal (bad),
+the ensemble of random wave functions (i) is not orthogonal (bad),
 and (ii) covers the "typical" Hilbert space space with few wave functions already (good).
 
 Non-orthogonality is uniformly bad; it means for example that you may count contributions twice,
@@ -421,7 +422,7 @@ There are two caveats, though.
 One is rather theoretical: Pseudo-random number generation even in 2025 is not a solved problem,
 all existing generators have issues.
 It is unlikely, but principally possible that your "random" numbers are less random than you think.
-Such problems are difficult to notice, let alone debug for a non-expert, so the only advise is to be
+Such problems are difficult to notice, let alone debug for a non-expert, so the only advice is to be
 critical of your results.
 
 More severely, you get good results, but not converged results.

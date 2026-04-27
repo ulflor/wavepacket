@@ -126,9 +126,9 @@ In such a case, you probably want to use absorbing boundary conditions.
 
 ## Absorbing boundary conditions
 
-These conditions typically taking the form of negative imaginary potentials (NIPs) [^NipKosloff] [^NipRiss].
+These conditions typically take the form of negative imaginary potentials (NIPs) [^NipKosloff] [^NipRiss].
 They can be used with any basis, but are usually needed for
-problems like the molecular dissociation, for which a plane wave expansion /
+problems like molecular dissociation, for which a plane wave expansion /
 equally-spaced grid is most natural.
 
 NIPs absorb the wave packet at the locations where they are nonzero,
@@ -145,7 +145,7 @@ There are, however, two major drawbacks:
   Some efficient solvers like the ChebychevSolver only work for self-adjoint Hamiltonians.
   The workaround here is to move the NIP out of the Hamiltonian,
   and absorb the wave packet after every propagation step.
-  As of 0.4, this is currently not implemented conveniently, though.
+  As of Wavepacket 0.4, this is currently not implemented conveniently, though.
 
 Let us demonstrate the first point by adding a steep NIP to the Morse oscillator example:
 

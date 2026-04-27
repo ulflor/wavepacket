@@ -48,8 +48,8 @@ For the Discrete Variable Representation, we again expand in an orthonormal basi
 
 but choose the basis functions such that the coefficients are the values of the wave function at some
 fixed grid points, :math:`\psi_i = \psi(x_i)`. It can be shown 
-that basis expansions with N FBR coefficients can usually be converted
-into a DVR with some choice of N grid points without loss of information.
+that a basis expansion with N FBR coefficients can usually be converted
+losslessly into a DVR with a specific choice of N grid points.
 
 The DVR is used for numerics with the DVR approximation: You apply
 a space-local operator like a potential by multiplying the operator
@@ -64,7 +64,8 @@ plot them!
     :math:`|\psi(x)|^2 = \sum_{i,j=1}^N \psi_i \psi_j^\ast g_i(x;N) g_j^\ast(x;N)`,
     where the basis functions also depend on the number of grid points.
     In practice, we side-step these problems by plotting
-    the density only at the grid points, :math:`(x_i, |\psi(x_i)|^2)`.
+    the density only at the grid points, :math:`(x_i, |\psi(x_i)|^2)`
+    and letting the plot function interpolate in-between.
     
     This gives artefacts if the grid has few grid points. However, in these cases,
     it is usually more insightful to study the system in a well-chosen FBR instead.

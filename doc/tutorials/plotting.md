@@ -6,14 +6,12 @@ kernelspec:
 
 # Plotting wave functions and density operators
 
-This tutorial teaches some basics about plotting quantum states in Wavepacket.
-
 This web page can be downloaded as notebook: {nb-download}`plotting.ipynb` (Jupyter)
 or {download}`plotting.md` (Markdown)
 
 ## Basics of plotting with Matplotlib
 
-The standard for plotting under Python is Matplotlib, see `https://matplotlib.org` for the full documentation.
+The standard for plotting under Python is Matplotlib, see <https://matplotlib.org> for the full documentation.
 However, while Matplotlib is powerful and flexible, it does not behave uniformly in all environments.
 Before we plot any wave function, we should therefore get a simple line plotted first.
 
@@ -81,14 +79,14 @@ These classes are opinionated and may not be as flexible and configurable as you
 Their sole purpose is a useful visualisation of the dynamics with minimal setup.
 If they do not fulfill your needs, you might want to write your own plotting code, as discussed in the next section.
 
-Since version 0.2, there are two available helper classes: {py:class}`wp.plot.SimplePlot1D` just draws one plot,
-while {py:class}`wp.plot.StackedPlot1D` stacks multiple plots on top of each other.
+Since version 0.2, there are two available helper classes: {py:class}`wavepacket.plot.SimplePlot1D` just draws one plot,
+while {py:class}`wavepacket.plot.StackedPlot1D` stacks multiple plots on top of each other.
 Otherwise, both classes behave similar; they plot the potential and the state's density
 offset by the energy of the state.
 The simple plot provides a simple way to plot animations, while stacked plots are suitable for
 Jupyter notebooks, where you can have only one plot per cell.
 
-The `StackedPlot1D` constructor gets the number of plots, some wave function for guessing defaults, and the
+The {py:class}`wavepacket.plot.StackedPlot1D` constructor gets the number of plots, some wave function for guessing defaults, and the
 potential and hamiltonian, then you just call plot repeatedly to fill the individual plots.
 If you plot more often than there are axes available, the last plot is overwritten.
 
@@ -106,14 +104,14 @@ In the example here, we have reduced the density scale (density to energy units)
 Further customization options are `stacked_plot.ylim`, which gives the lower and upper range of the y (energy) axis,
 and the same for the x-axis.
 
-For `SimplePlot1D`, you do not supply the number of plots, otherwise the behavior is similar.
+For {py:class}`wavepacket.plot.SimplePlot1D`, you do not supply the number of plots, otherwise the behavior is similar.
 We will use them further below to demonstrate animations from plots.
 
 ## 2D plotting helpers
 
 Since version 0.4, there are also opinionated helper classes for 2D plots.
 These helpers create regular and stacked contour plots.
-Let us demonstrate the stacked plot for a two-dimensional harmonic oscillator example...
+Let us demonstrate the stacked plot for a two-dimensional harmonic oscillator example:
 
 ```{code-cell}
 import math
@@ -137,18 +135,19 @@ for t, psi in solver_2d.propagate(psi0_2d, 0, 8):
     plot.plot(t, psi)
 ```
 
-Note that the strange form of the potential comes from truncation,
-which we can also check to be reasonable along the way.
+The strange form of the potential comes from truncating the potential for efficiency.
+The density stays away from the truncated area.
+This is a nice side effect: We can readily check if the truncation of the potential makes sense.
 
 The regular contour plot adds margins to show the reduced densities.
 
 ```{code-cell}
 plot_regular = wp.plot.ContourPlot2D(psi0_2d, potential_2d)
-plot_regular.plot(t, psi0_2d)
+plot_regular.plot(t, psi0_2d);
 ```
 
 Similar to the one-dimensional plots, some limited customization is possible.
-See the class documentation for details.
+See the class documentation of {py:class}`wavepacket.plot.StackedContourPlot2D` and {py:class}`wavepacket.plot.ContourPlot2D` for details.
 
 ## Manual plotting
 

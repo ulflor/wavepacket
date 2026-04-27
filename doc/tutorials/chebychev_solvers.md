@@ -62,7 +62,7 @@ If it is much larger than say 100, you might run into numerical problems.
 The Chebychev solver is only efficient for rather large time steps.
 If you need the wave function at small timesteps, it is possible to implement (exact) interpolation, but that has
 not been done yet.
-Open a ticket or drop me a mail if this is an issue for your application.
+Open a ticket or send a mail to the list if this is an issue for your application.
 ```
 
 ### Determining the spectrum
@@ -103,7 +103,7 @@ can normally only be used for wave functions *or* density operators.
 #### How can I estimate the bounds of a Hamiltonian's spectrum?
 
 First, we suggest not to spend too much effort on the exact spectrum, but take reasonable bounds instead.
-Your time is usually more valuable than the additional computing time
+Your time is usually more valuable than the computing time penalty
 from guessing generous bounds to the spectrum.
 
 A simple lower bound of the Hamiltonian is given by the smallest value of the potential,
@@ -126,8 +126,8 @@ energy_guess = 1.2 * energy_guess
 print(f"Energy guess = {energy_guess:.4}")
 ```
 
-The initial state must contain the highest-energy eigenstate as a non-negligible component,
-but has negligible relevance otherwise.
+The initial state can be almost arbitrary;
+it only needs to contain the highest-energy eigenstate as a non-negligible component.
 The factor of 1.2 is a guessed safety margin because the result may not have been converged yet.
 Thus, we arrive at an estimate of the spectrum of about [0, 280].
 For an alpha value of 40 or more, our time step must be at least $2 \cdot 40 / 280 = 2/7$.
@@ -178,7 +178,7 @@ Such an imbalance between the spectrum that the Hamiltonian can support and the 
 is unfortunately common.
 
 To get rid of this waste, we truncate the Hamiltonian.
-Because this is difficult, we actually truncate the kinetic and potential energy operators instead.
+Because this is difficult, we actually truncate the kinetic and potential energy operators separately.
 The question is: At what values?
 Here we need some intuition again (or guesswork or plain trial-and-error).
 
@@ -197,7 +197,7 @@ truncated_equation = wp.expression.SchroedingerEquation(truncated_hamiltonian)
 
 We do not know nor care about the exact spectrum of this Hamiltonian,
 but we know that it cannot be larger than 35 + 35 = 70, which is one fourth of the original Hamiltonian.
-This allows us to increase the time step by a factor of 4 for the same computing resources.
+This allows us to increase the time step by a factor of 4 with the same computational effort.
 
 ```{code-cell}
 solver = wp.solver.ChebychevSolver(truncated_equation, 4 * math.pi/10, (0, 70))

@@ -20,7 +20,7 @@ as detailed in {doc}`relaxation`.
 ## Basic eigenstate calculation
 
 As example system, we choose a modified double-well potential (Razavy potential).
-Diagonalizing the Hamiltonian is done with :py:func:`wp.diagonalize`,
+Diagonalizing the Hamiltonian is done with {py:func}`wp.diagonalize`,
 which yields the eigenstates and -energies sorted by the latter.
 
 ```{code-cell}
