@@ -2,6 +2,17 @@
 ChangeLog
 =========
 
+0.5
+---
+
+Breaking changes:
+
+Major changes:
+
+Minor changes:
+
+Bug fixes:
+
 0.4
 ---
 

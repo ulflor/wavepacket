@@ -9,7 +9,7 @@
 project = "Wavepacket"
 copyright = "2024-%Y, Ulf Lorenz"
 author = "Ulf Lorenz"
-release = "0.4"
+release = "0.5"
 
 # -- General configuration ---------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#general-configuration
