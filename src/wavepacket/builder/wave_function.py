@@ -69,8 +69,12 @@ def random_wave_function(grid: wp.grid.Grid, generator: np.random.Generator) -> 
     """
     Generates a random wave function.
 
-    The output is a state in the weighted DVR, whose coefficients in (unweighted) DVR
+    The output is a state in the weighted DVR, whose coefficients
     are complex numbers uniformly distributed on the unit circle.
+
+    Note that such wave functions are only useful in certain
+    situations, see :doc:`/advanced/thermal_states`. In particular,
+    they are not normalized.
 
     Parameters
     ----------
@@ -90,9 +94,6 @@ def random_wave_function(grid: wp.grid.Grid, generator: np.random.Generator) -> 
     >>> psi2 = random_wave_function(grid, rng)
     """
     data = np.ones(grid.shape) * np.exp(2 * math.pi * 1j * generator.random(grid.shape))
-    for index, dof in enumerate(grid.dofs):
-        data = dof.from_dvr(data, index)
-
     return wp.grid.State(grid, data)
 
 

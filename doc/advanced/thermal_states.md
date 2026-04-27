@@ -322,6 +322,13 @@ $$
         .
 $$
 
+```{note}
+Random wave functions are only useful for certain manipulations, such as replacing a unit operator.
+You must not confuse them with ordinary wave functions,
+as not all operations are well-defined.
+For example, it is easy to check that they do not have a finite norm.
+```
+
 We now take again [the response expression](#eq_response), split the exponential,
 insert and expand a unit operator, rearrange the scalar products, and finally use the resolution of identity
 to get rid of the trace summation,

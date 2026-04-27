@@ -38,6 +38,9 @@ Bug fixes:
 - (#48) The calculation of the population lacked an abs(), so the populations could
   be negative.
 - (#16) SoftRectangularFunction had no soft turnoff
+- Random wave functions were set up in the DVR, not in the default representation.
+  In general, this should cause an incorrect norm, but could change results in more
+  subtle ways.
 
 0.3
 ---
