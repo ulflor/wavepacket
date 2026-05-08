@@ -1,0 +1,65 @@
+>>> import math
+>>> import wavepacket as wp
+>>>
+>>> dof = wp.grid.PlaneWaveDof(-10, 10, 96)
+>>> grid = wp.grid.Grid([dof, dof])
+>>>
+>>> kin_args = {"mass": 1, "cutoff": 40}
+>>> pot_args = {"generator": lambda x: 0.5 * x**2, "cutoff": 40}
+>>> T_0 = wp.operator.CartesianKineticEnergy(grid, 0, **kin_args)
+>>> T_1 = wp.operator.CartesianKineticEnergy(grid, 1, **kin_args)
+>>> V_0 = wp.operator.Potential1D(grid, 0, **pot_args)
+>>> V_1 = wp.operator.Potential1D(grid, 1, **pot_args)
+>>> hamiltonian = T_0 + T_1 + V_0 + V_1
+>>> equation = wp.expression.SchroedingerEquation(hamiltonian)
+>>> 
+>>> psi0 = wp.builder.product_wave_function(
+...     grid, [wp.special.Gaussian(-5, 0, rms=1), wp.special.Gaussian(0, 5, rms=1)]
+... )
+>>> solver = wp.solver.ChebychevSolver(equation, math.pi / 3, (0, 160))
+>>> 
+>>> for t, psi in solver.propagate(psi0, 0.0, 6):
+...     wp.log(t, psi, precision=4)
+<BLANKLINE>
+-----------------------------------------------
+t = 0.0,     trace = 1.0
+<BLANKLINE>
+<x_0> = -5.0  =/- 0.7071
+<x_1> = 3.123e-17  =/- 0.7071
+<BLANKLINE>
+-----------------------------------------------
+t = 1.047,     trace = 1.0
+<BLANKLINE>
+<x_0> = -2.5  =/- 0.7071
+<x_1> = 4.33  =/- 0.7071
+<BLANKLINE>
+-----------------------------------------------
+t = 2.094,     trace = 1.0
+<BLANKLINE>
+<x_0> = 2.5  =/- 0.7071
+<x_1> = 4.33  =/- 0.7071
+<BLANKLINE>
+-----------------------------------------------
+t = 3.142,     trace = 1.0
+<BLANKLINE>
+<x_0> = 5.0  =/- 0.7071
+<x_1> = 1.077e-07  =/- 0.7071
+<BLANKLINE>
+-----------------------------------------------
+t = 4.189,     trace = 1.0
+<BLANKLINE>
+<x_0> = 2.5  =/- 0.7071
+<x_1> = -4.33  =/- 0.7071
+<BLANKLINE>
+-----------------------------------------------
+t = 5.236,     trace = 1.0
+<BLANKLINE>
+<x_0> = -2.5  =/- 0.7071
+<x_1> = -4.33  =/- 0.7071
+<BLANKLINE>
+-----------------------------------------------
+t = 6.283,     trace = 1.0
+<BLANKLINE>
+<x_0> = -5.0  =/- 0.7071
+<x_1> = -2.187e-07  =/- 0.7071
+

@@ -1,0 +1,7 @@
+The tests here verify the correctness on a higher level than the unit tests in test/.
+Thy are meant to catch issues in code that is difficult to unit-test (e.g., logging output),
+and to catch invalid unit tests.
+Because the tests are full-fledged simulations and sometimes do unusual things,
+they can also serve as additional examples, but that is not the primary focus here.
+
+Because results are not meant to change at all, most if not all tests are regression tests.
