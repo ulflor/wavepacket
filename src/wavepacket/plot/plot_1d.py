@@ -227,7 +227,7 @@ class StackedPlot1D(BasePlot1D):
 
     def plot(self, t: float, state: wp.grid.State) -> plt.Axes:
         axes: plt.Axes = self._axes.flat[self._index]
-        self._index = min(self._index + 1, self._axes.size)
+        self._index = min(self._index + 1, self._axes.size - 1)
 
         super()._plot(axes, t, state)
 
