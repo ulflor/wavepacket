@@ -27,7 +27,7 @@ def log(t: float, state: wp.grid.State, precision: int = 6) -> None:
 
     normalized_state = wp.normalize(state)
     for index, dof in enumerate(state.grid.dofs):
-        x = wp.operator.Potential1D(state.grid, 0, lambda dvr_grid: dvr_grid)
+        x = wp.operator.Potential1D(state.grid, index, lambda dvr_grid: dvr_grid)
 
         x_avg = wp.expectation_value(x, normalized_state).real
         x2_avg = wp.expectation_value(x * x, normalized_state).real
