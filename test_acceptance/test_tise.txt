@@ -1,0 +1,49 @@
+>>> import numpy as np
+>>> import wavepacket as wp
+>>>
+>>> dof = wp.grid.PlaneWaveDof(-7, 7, 96)
+>>> grid = wp.grid.Grid(dof)
+>>>
+>>> def razavy_potential(x):
+...     cosh_val = np.cosh(x)
+...     return -0.7 * cosh_val + 0.01 * cosh_val ** 2
+>>>
+>>> kinetic = wp.operator.CartesianKineticEnergy(grid, 0, mass=0.5)
+>>> potential = wp.operator.Potential1D(grid, 0, razavy_potential)
+>>> hamiltonian = kinetic + potential
+>>> 
+>>> states = [psi for _, psi in wp.diagonalize(hamiltonian)]
+>>> 
+>>> for index, psi in enumerate(states[:30]):
+...     print(f"{index}:   {wp.expectation_value(hamiltonian, psi).real:.4}")
+0:   -9.002
+1:   -9.002
+2:   -4.012
+3:   -4.011
+4:   -1.16
+5:   -0.9569
+6:   0.2135
+7:   1.374
+8:   2.813
+9:   4.463
+10:   6.305
+11:   8.324
+12:   10.51
+13:   12.86
+14:   15.37
+15:   18.03
+16:   20.84
+17:   23.79
+18:   26.88
+19:   30.11
+20:   33.48
+21:   36.99
+22:   40.62
+23:   44.39
+24:   48.28
+25:   52.3
+26:   56.45
+27:   60.72
+28:   65.11
+29:   69.62
+

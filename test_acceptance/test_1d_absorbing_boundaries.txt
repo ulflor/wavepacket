@@ -1,0 +1,75 @@
+>>> import numpy as np
+>>> import wavepacket as wp
+>>>
+>>> dof = wp.grid.PlaneWaveDof(-10, 20, 96)
+>>> grid = wp.grid.Grid(dof)
+>>>
+>>> def absorbing_boundary(x):
+...     potential = -10j * (x - 12.0) ** 2 / (20 - 12.0) ** 2
+...     potential[x < 12] = 0
+...     return potential
+>>>
+>>> kinetic = wp.operator.CartesianKineticEnergy(grid, 0, mass=1)
+>>> absorber = wp.operator.Potential1D(grid, 0, absorbing_boundary)
+>>> equation = wp.expression.SchroedingerEquation(kinetic + absorber)
+>>> 
+>>> psi0 = wp.builder.product_wave_function(grid, wp.special.Gaussian(-5, 2, rms=1))
+>>> solver = wp.solver.OdeSolver(equation, 1)
+>>> 
+>>> for t, psi in solver.propagate(psi0, 0.0, 10):
+...     wp.log(t, psi, precision=4)
+<BLANKLINE>
+-----------------------------------------------
+t = 0.0,     trace = 1.0
+<BLANKLINE>
+<x_0> = -5.0  =/- 0.7071
+<BLANKLINE>
+-----------------------------------------------
+t = 1.0,     trace = 1.0
+<BLANKLINE>
+<x_0> = -3.0  =/- 1.0
+<BLANKLINE>
+-----------------------------------------------
+t = 2.0,     trace = 1.0
+<BLANKLINE>
+<x_0> = -1.0  =/- 1.581
+<BLANKLINE>
+-----------------------------------------------
+t = 3.0,     trace = 1.0
+<BLANKLINE>
+<x_0> = 1.0  =/- 2.236
+<BLANKLINE>
+-----------------------------------------------
+t = 4.0,     trace = 0.9999
+<BLANKLINE>
+<x_0> = 2.999  =/- 2.914
+<BLANKLINE>
+-----------------------------------------------
+t = 5.0,     trace = 0.996
+<BLANKLINE>
+<x_0> = 4.959  =/- 3.552
+<BLANKLINE>
+-----------------------------------------------
+t = 6.0,     trace = 0.9615
+<BLANKLINE>
+<x_0> = 6.637  =/- 3.959
+<BLANKLINE>
+-----------------------------------------------
+t = 7.0,     trace = 0.8678
+<BLANKLINE>
+<x_0> = 7.791  =/- 4.111
+<BLANKLINE>
+-----------------------------------------------
+t = 8.0,     trace = 0.7319
+<BLANKLINE>
+<x_0> = 8.47  =/- 4.154
+<BLANKLINE>
+-----------------------------------------------
+t = 9.0,     trace = 0.5905
+<BLANKLINE>
+<x_0> = 8.83  =/- 4.18
+<BLANKLINE>
+-----------------------------------------------
+t = 10.0,     trace = 0.4666
+<BLANKLINE>
+<x_0> = 8.994  =/- 4.221
