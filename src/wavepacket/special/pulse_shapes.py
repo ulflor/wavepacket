@@ -36,7 +36,7 @@ class SinSquare:
     def __call__(self, t: float) -> float:
         dt = abs(t - self._t0)
         if dt < self._half_width:
-            return math.cos(self._scale * dt)
+            return math.cos(self._scale * dt) ** 2
         else:
             return 0.0
 

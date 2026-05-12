@@ -18,9 +18,9 @@ def test_sin_square_values():
     functor = wp.special.SinSquare(5.0, 2.0)
 
     assert functor(2.9) == 0
-    assert_allclose(functor(4), math.sqrt(0.5), rtol=0, atol=1e-12)
+    assert_allclose(functor(4), 0.5, rtol=0, atol=1e-12)
     assert functor(5) == 1
-    assert_allclose(functor(6), math.sqrt(0.5), rtol=0, atol=1e-12)
+    assert_allclose(functor(6), 0.5, rtol=0, atol=1e-12)
     assert functor(7.1) == 0
 
 
