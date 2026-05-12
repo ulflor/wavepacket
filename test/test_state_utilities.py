@@ -52,6 +52,7 @@ def test_wave_function_dvr_density():
     dx = 1 / 3.0 * 2 / 5.0
     expected = np.abs(psi.data**2) / dx
     assert_allclose(result, expected, atol=1e-14, rtol=0)
+    assert_allclose(np.imag(result), 0, atol=0, rtol=0)
 
 
 def test_density_operator_dvr_density(grid_2d):
@@ -62,6 +63,7 @@ def test_density_operator_dvr_density(grid_2d):
     density_from_rho = wp.dvr_density(rho)
 
     assert_allclose(density_from_rho, density_from_psi, atol=1e-14, rtol=0)
+    assert_allclose(np.imag(density_from_rho), 0, atol=0, rtol=0)
 
 
 def test_wave_function_fbr_density():
@@ -76,6 +78,7 @@ def test_wave_function_fbr_density():
     expected = np.zeros(grid.shape)
     expected[5 - 2, 7 - 5] = 4
     assert_allclose(expected, density, rtol=0, atol=1e-12)
+    assert_allclose(0, np.imag(density), rtol=0, atol=0)
 
 
 def test_density_operator_fbr_density(grid_2d):
@@ -86,6 +89,7 @@ def test_density_operator_fbr_density(grid_2d):
     density_from_rho = wp.fbr_density(rho)
 
     assert_allclose(density_from_psi, density_from_rho, rtol=0, atol=1e-12)
+    assert_allclose(0, np.imag(density_from_rho), rtol=0, atol=0)
 
 
 def test_reduced_dvr_and_fbr_density(grid_2d):
@@ -136,6 +140,7 @@ def test_trace():
     rho = wp.builder.pure_density(psi)
     result_rho = wp.trace(rho)
     assert_allclose(result_rho, result, atol=1e-12, rtol=0)
+    assert_allclose(result_rho.imag, 0, atol=0, rtol=0)
 
 
 def test_normalize(grid_1d):
@@ -236,7 +241,7 @@ def test_population(grid_2d):
     a, target = (states[0], states[1])
 
     # create a state that triggers a complex scalar product to check for abs()
-    psi = 2 * a + 0.7 * target * np.sqrt(1j)
+    psi = 2j * a + 0.7 * target * np.sqrt(1j)
     rho = wp.builder.pure_density(psi)
     expected = 0.7**2
 
@@ -245,13 +250,14 @@ def test_population(grid_2d):
 
     rho_projection = wp.population(rho, target)
     assert_allclose(rho_projection, expected, rtol=0, atol=1e-12)
+    assert_allclose(rho_projection.imag, 0, rtol=0, atol=0)
 
 
 def test_normalize_population_target(grid_2d):
     target = wp.testing.random_state(grid_2d, 1)
     target /= math.sqrt(wp.trace(target))
 
-    psi = 0.7 * target * np.sqrt(1j)
+    psi = 0.7j * target * np.sqrt(1j)
     rho = wp.builder.pure_density(psi)
     expected = 0.7**2
 
