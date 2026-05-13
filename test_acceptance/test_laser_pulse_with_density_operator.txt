@@ -1,0 +1,159 @@
+Note:
+
+* It is not required to use a density operator here; in fact, doing so
+  slows down the calculation by a factor of ~10; however, we have no
+  other complex test of density operators right now.
+* For a proper calculation, the time evolution should have 20 steps,
+  which is the length of the laser pulse. We truncate because
+  using a density operator is rather expensive.
+
+>>> import numpy as np
+>>> import wavepacket as wp
+>>> 
+>>> unit_amu = 1e-3 / 9.10938215E-31 / 6.0221408E23
+>>> unit_angstroem = 1.88973
+>>> unit_debye = 1e10 / 1.60217662E-19 * 1e-21 / 299792458
+>>> unit_mv_per_cm = 0.000194469
+>>> unit_fs = 41.3414
+>>> unit_inv_cm = 4.55634e-06
+>>> 
+>>> def morse_potential(x):
+...     return  0.1994 * (1 - np.exp(-1.189 * (x - 1.821))) ** 2
+>>> 
+>>> def mecke_dipole(x):
+...     q0 = 7.85 * unit_debye
+...     r0 = 0.6 * unit_angstroem
+...     return q0 * x * np.exp(-x / r0)
+>>> 
+>>> mass_H1 = 1.0078250 * unit_amu
+>>> mass_O16 = 15.994915 * unit_amu
+>>> mu = mass_H1 * mass_O16 / (mass_H1 + mass_O16)
+>>> 
+>>> dof = wp.grid.PlaneWaveDof(0.7, 8, 64)
+>>> grid = wp.grid.Grid(dof)
+>>> 
+>>> kinetic = wp.operator.CartesianKineticEnergy(grid, 0, mass=mu, cutoff=0.3)
+>>> potential = wp.operator.Potential1D(grid, 0, morse_potential, cutoff=0.3)
+>>> dipole = wp.operator.Potential1D(grid, 0, mecke_dipole)
+>>> laser = wp.operator.LaserField(grid,
+...                                max_field=328.5 * unit_mv_per_cm,
+...                                shape=wp.special.SinSquare(500 * unit_fs, 500 * unit_fs),
+...                                omega=3424.19 * unit_inv_cm)
+>>> equation = wp.expression.CommutatorLiouvillian(kinetic + potential - dipole * laser)
+>>> 
+>>> bound_states = [state for energy, state in wp.diagonalize(kinetic + potential) if energy < 0.1994]
+>>>                 
+>>> psi_0 = wp.builder.product_wave_function(grid, lambda x: bound_states[0].data)
+>>> rho_0 = wp.builder.pure_density(psi_0)
+>>> 
+>>> solver = wp.solver.OdeSolver(equation, 50.0 * unit_fs)
+>>> populations = np.zeros((9, 8))
+>>> time_index = 0
+>>> for t, rho in solver.propagate(rho_0, 0.0, 8):
+...     for state_index in range(8):
+...         populations[time_index, state_index] = wp.population(rho, bound_states[state_index])
+...     time_index += 1
+>>> 
+>>> for i in range(7):
+...     print(f"\n\nbound state {i}\n\n")
+...     for t in range(9):
+...         print(f"{t*50*41.341:.4}:   {populations[t, i]:.4}")
+<BLANKLINE>
+<BLANKLINE>
+bound state 0
+<BLANKLINE>
+<BLANKLINE>
+0.0:   1.0
+2.067e+03:   0.9999
+4.134e+03:   0.9978
+6.201e+03:   0.9894
+8.268e+03:   0.9662
+1.034e+04:   0.9366
+1.24e+04:   0.8892
+1.447e+04:   0.803
+1.654e+04:   0.705
+<BLANKLINE>
+<BLANKLINE>
+bound state 1
+<BLANKLINE>
+<BLANKLINE>
+0.0:   1.572e-17
+2.067e+03:   0.0001345
+4.134e+03:   0.002225
+6.201e+03:   0.01055
+8.268e+03:   0.03287
+1.034e+04:   0.05944
+1.24e+04:   0.09693
+1.447e+04:   0.1512
+1.654e+04:   0.1706
+<BLANKLINE>
+<BLANKLINE>
+bound state 2
+<BLANKLINE>
+<BLANKLINE>
+0.0:   -1.057e-17
+2.067e+03:   3.286e-08
+4.134e+03:   5.724e-06
+6.201e+03:   9.384e-05
+8.268e+03:   0.0009288
+1.034e+04:   0.003546
+1.24e+04:   0.01048
+1.447e+04:   0.02547
+1.654e+04:   0.03777
+<BLANKLINE>
+<BLANKLINE>
+bound state 3
+<BLANKLINE>
+<BLANKLINE>
+0.0:   1.166e-18
+2.067e+03:   2.194e-12
+4.134e+03:   2.451e-08
+6.201e+03:   1.135e-06
+8.268e+03:   4.049e-05
+1.034e+04:   0.0003052
+1.24e+04:   0.001663
+1.447e+04:   0.006138
+1.654e+04:   0.02057
+<BLANKLINE>
+<BLANKLINE>
+bound state 4
+<BLANKLINE>
+<BLANKLINE>
+0.0:   4.112e-18
+2.067e+03:   3.471e-12
+4.134e+03:   1.793e-10
+6.201e+03:   3.112e-08
+8.268e+03:   4.711e-06
+1.034e+04:   4.706e-05
+1.24e+04:   0.0007506
+1.447e+04:   0.006458
+1.654e+04:   0.03295
+<BLANKLINE>
+<BLANKLINE>
+bound state 5
+<BLANKLINE>
+<BLANKLINE>
+0.0:   -1.822e-18
+2.067e+03:   8.738e-13
+4.134e+03:   2.395e-12
+6.201e+03:   2.164e-09
+8.268e+03:   1.098e-06
+1.034e+04:   4.586e-05
+1.24e+04:   0.0005787
+1.447e+04:   0.003726
+1.654e+04:   0.01069
+<BLANKLINE>
+<BLANKLINE>
+bound state 6
+<BLANKLINE>
+<BLANKLINE>
+0.0:   8.746e-18
+2.067e+03:   1.648e-13
+4.134e+03:   1.881e-13
+6.201e+03:   1.854e-11
+8.268e+03:   7.184e-08
+1.034e+04:   1.186e-05
+1.24e+04:   0.0003607
+1.447e+04:   0.003443
+1.654e+04:   0.01842
+

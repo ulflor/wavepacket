@@ -1,0 +1,37 @@
+>>> import numpy as np
+>>> import wavepacket as wp
+>>> 
+>>> dof = wp.grid.PlaneWaveDof(0.7, 8, 96)
+>>> grid = wp.grid.Grid(dof)
+>>> 
+>>> def morse_potential(x):
+...     return  0.1994 * (1 - np.exp(-1.189 * (x - 1.821))) ** 2
+>>> 
+>>> kinetic = wp.operator.CartesianKineticEnergy(grid, 0, mass=1728.539, cutoff=0.3)
+>>> potential = wp.operator.Potential1D(grid, 0, morse_potential, cutoff=0.3)
+>>> hamiltonian = kinetic + potential
+>>> 
+>>> bound_states = [state for energy, state in wp.diagonalize(kinetic + potential) if energy < 0.1994]
+>>> 
+>>> solver = wp.solver.RelaxationSolver(hamiltonian, 20, (0, 0.6))
+>>> psi0 = wp.builder.product_wave_function(grid, wp.special.Gaussian(2, 0, fwhm=0.5))
+>>> 
+>>> relaxed_states = []
+>>> for i in range(5):
+...     psi = psi0
+...     for step in range(20):
+...         psi = solver.step(psi, 0.0)
+...         # Trick: the last element is orthogonalized w.r.t. all other elements.
+...         # That way, we can orthonormalize psi against all already found states.
+...         psi = wp.orthonormalize(relaxed_states + [psi])[-1]
+...     relaxed_states.append(psi)
+>>> 
+>>> for i in range(5):
+...     energy_bound = wp.expectation_value(hamiltonian, bound_states[i]).real
+...     energy_relaxed = wp.expectation_value(hamiltonian, relaxed_states[i]).real
+...     print(f"State {i}:   E_bound = {energy_bound:.6}     E_relax = {energy_relaxed:.6}")
+State 0:   E_bound = 0.00892781     E_relax = 0.00892781
+State 1:   E_bound = 0.02617     E_relax = 0.02617
+State 2:   E_bound = 0.0425944     E_relax = 0.0425944
+State 3:   E_bound = 0.0582008     E_relax = 0.0582009
+State 4:   E_bound = 0.0729895     E_relax = 0.0729896
