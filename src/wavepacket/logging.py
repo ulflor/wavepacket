@@ -51,4 +51,4 @@ def log(
 
         # In exotic cases, the error dx**2 can become negative, so we trade
         # correctness for robustness here by taking its absolute value.
-        print(f"<x_{index}> = {x_avg:.{precision}}  =/- {dx:.{precision}}")
+        print(f"<x_{index}> = {x_avg:.{precision}}  +/- {dx:.{precision}}")
