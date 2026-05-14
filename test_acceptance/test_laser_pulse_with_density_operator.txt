@@ -54,6 +54,8 @@ Note:
 ...         populations[time_index, state_index] = wp.population(rho, bound_states[state_index])
 ...     time_index += 1
 >>> 
+>>> populations[np.abs(populations) < 1e-10] = 0
+>>> 
 >>> for i in range(7):
 ...     print(f"\n\nbound state {i}\n\n")
 ...     for t in range(9):
@@ -77,7 +79,7 @@ bound state 0
 bound state 1
 <BLANKLINE>
 <BLANKLINE>
-0.0:   1.572e-17
+0.0:   0.0
 2.067e+03:   0.0001345
 4.134e+03:   0.002225
 6.201e+03:   0.01055
@@ -91,7 +93,7 @@ bound state 1
 bound state 2
 <BLANKLINE>
 <BLANKLINE>
-0.0:   -1.057e-17
+0.0:   0.0
 2.067e+03:   3.286e-08
 4.134e+03:   5.724e-06
 6.201e+03:   9.384e-05
@@ -105,8 +107,8 @@ bound state 2
 bound state 3
 <BLANKLINE>
 <BLANKLINE>
-0.0:   1.166e-18
-2.067e+03:   2.194e-12
+0.0:   0.0
+2.067e+03:   0.0
 4.134e+03:   2.451e-08
 6.201e+03:   1.135e-06
 8.268e+03:   4.049e-05
@@ -119,8 +121,8 @@ bound state 3
 bound state 4
 <BLANKLINE>
 <BLANKLINE>
-0.0:   4.112e-18
-2.067e+03:   3.471e-12
+0.0:   0.0
+2.067e+03:   0.0
 4.134e+03:   1.793e-10
 6.201e+03:   3.112e-08
 8.268e+03:   4.711e-06
@@ -133,9 +135,9 @@ bound state 4
 bound state 5
 <BLANKLINE>
 <BLANKLINE>
-0.0:   -1.822e-18
-2.067e+03:   8.738e-13
-4.134e+03:   2.395e-12
+0.0:   0.0
+2.067e+03:   0.0
+4.134e+03:   0.0
 6.201e+03:   2.164e-09
 8.268e+03:   1.098e-06
 1.034e+04:   4.586e-05
@@ -147,10 +149,10 @@ bound state 5
 bound state 6
 <BLANKLINE>
 <BLANKLINE>
-0.0:   8.746e-18
-2.067e+03:   1.648e-13
-4.134e+03:   1.881e-13
-6.201e+03:   1.854e-11
+0.0:   0.0
+2.067e+03:   0.0
+4.134e+03:   0.0
+6.201e+03:   0.0
 8.268e+03:   7.184e-08
 1.034e+04:   1.186e-05
 1.24e+04:   0.0003607
