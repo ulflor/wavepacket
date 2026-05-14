@@ -17,7 +17,7 @@
 >>> solver = wp.solver.OdeSolver(equation, 1)
 >>> 
 >>> for t, psi in solver.propagate(psi0, 0.0, 10):
-...     wp.log(t, psi, precision=4)
+...     wp.log(t, psi, precision=4, truncate=1e-10)
 <BLANKLINE>
 -----------------------------------------------
 t = 0.0,     trace = 1.0

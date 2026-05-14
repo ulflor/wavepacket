@@ -19,13 +19,13 @@
 >>> solver = wp.solver.ChebychevSolver(equation, math.pi / 3, (0, 160))
 >>> 
 >>> for t, psi in solver.propagate(psi0, 0.0, 6):
-...     wp.log(t, psi, precision=4)
+...     wp.log(t, psi, precision=4, truncate=1e-10)
 <BLANKLINE>
 -----------------------------------------------
 t = 0.0,     trace = 1.0
 <BLANKLINE>
 <x_0> = -5.0  =/- 0.7071
-<x_1> = 3.123e-17  =/- 0.7071
+<x_1> = 0.0  =/- 0.7071
 <BLANKLINE>
 -----------------------------------------------
 t = 1.047,     trace = 1.0

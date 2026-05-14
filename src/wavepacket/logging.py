@@ -3,7 +3,16 @@ import math
 import wavepacket as wp
 
 
-def log(t: float, state: wp.grid.State, precision: int = 6) -> None:
+def _truncate(value: float, truncation: float | None) -> float:
+    if truncation is None or abs(value) >= truncation:
+        return value
+    else:
+        return 0.0
+
+
+def log(
+    t: float, state: wp.grid.State, precision: int = 6, truncate: float | None = None
+) -> None:
     """
     Prints some data about the state for inspection.
 
@@ -19,6 +28,11 @@ def log(t: float, state: wp.grid.State, precision: int = 6) -> None:
         The state to log.
     precision : int, default=6
         How many decimal places should be printed.
+    truncate: float | None, default=None
+        If set, set all calculated values smaller than this boundary to zero.
+        The main use case is for tests; values that are approximately zero can
+        differ in their actual value based on numpy version etc. This causes
+        regression tests to fail for uninteresting reasons.
     """
     print(
         f"\n-----------------------------------------------\n"
@@ -29,11 +43,12 @@ def log(t: float, state: wp.grid.State, precision: int = 6) -> None:
     for index, dof in enumerate(state.grid.dofs):
         x = wp.operator.Potential1D(state.grid, index, lambda dvr_grid: dvr_grid)
 
-        x_avg = wp.expectation_value(x, normalized_state).real
-        x2_avg = wp.expectation_value(x * x, normalized_state).real
+        x_val = wp.expectation_value(x, normalized_state).real
+        x2_val = wp.expectation_value(x * x, normalized_state).real
+
+        x_avg = _truncate(x_val, truncate)
+        dx = _truncate(math.sqrt(x2_val - x_avg**2), truncate)
 
         # In exotic cases, the error dx**2 can become negative, so we trade
         # correctness for robustness here by taking its absolute value.
-        print(
-            f"<x_{index}> = {x_avg:.{precision}}  =/- {math.sqrt(abs(x2_avg - x_avg ** 2)):.{precision}}"
-        )
+        print(f"<x_{index}> = {x_avg:.{precision}}  =/- {dx:.{precision}}")
