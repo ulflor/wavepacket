@@ -324,7 +324,7 @@ def population(state: wp.grid.State, target: wp.grid.State) -> float:
         matrix_form = np.reshape(state.data, [state.grid.size, state.grid.size])
         flat_target = np.ravel(target.data)
         left_summation = np.tensordot(np.conj(flat_target), matrix_form, axes=(0, 0))
-        return np.real(
+        return np.abs(
             np.tensordot(left_summation, flat_target, axes=(0, 0)).sum() / target_trace
         )
     else:

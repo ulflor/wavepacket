@@ -15,6 +15,7 @@ Bug fixes:
 
 - population() could return complex values for density operators.
   The imaginary part was negligible, but the type was still wrong.
+  The return values are also no longer (negligible) negative values.
 
 - log() calculated <x> only for the first degree of freedom,
   and reported it for all other degrees of freedom as well.
