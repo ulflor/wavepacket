@@ -98,7 +98,7 @@ env_list = ["py311", "py312", "py313", "py314", "py311-min", "py312-min", "py313
 description = "Run unit tests under {python_base}; Standard environments like py313 implicitly inherit this."
 set_env = { "PIP_ONLY_BINARY" = ":all:" }
 dependency_groups = ["test"]
-commands = [["pytest", "test"]]
+commands = [["pytest", "test", "test_acceptance"]]
 
 [tool.tox.env.py311-min]
 dependency_groups = ["minimum_dependencies", "test"]
