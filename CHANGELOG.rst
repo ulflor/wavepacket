@@ -2,16 +2,26 @@
 ChangeLog
 =========
 
-0.5
----
-
-Breaking changes:
-
-Major changes:
+0.4.1
+-----
 
 Minor changes:
 
+- (#56) Added acceptance / regression tests, also for CI
+
 Bug fixes:
+
+- The SinSquare function had an incorrect implementation without the "square" part
+
+- population() could return complex values for density operators.
+  The imaginary part was negligible, but the type was still wrong.
+
+- log() calculated <x> only for the first degree of freedom,
+  and reported it for all other degrees of freedom as well.
+  Also, fixed a typo in the output.
+
+- Stacked1DPlot threw an exception if you exceeded the number of plots.
+  It now overwrites the last plot as it is documented.
 
 0.4
 ---
