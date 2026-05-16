@@ -17,6 +17,7 @@ how to extract non-trivial data with minimal fuss and plot it.
 
 If a molecule interacts with a non-resonant laser field, the electronic ground state is shifted in energy.
 We can calculate the shift with standard perturbation theory and cavity-dressed states as
+(we use atomic units throughout the text)
 
 $$
 \Delta E \propto - \sum_n \frac{|\langle \Phi_0 | \hat{\vec{\mu}} \vec E |\Phi_n \rangle|^2}{E_n - E_0 - \omega}

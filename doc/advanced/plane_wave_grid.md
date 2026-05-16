@@ -143,9 +143,9 @@ There are, however, two major drawbacks:
   and you may need to converge this as well.
 * With the NIP term, the Hamiltonian is no longer self-adjoint.
   Some efficient solvers like the ChebychevSolver only work for self-adjoint Hamiltonians.
-  The workaround here is to move the NIP out of the Hamiltonian,
+  A possible workaround here is to move the NIP out of the Hamiltonian,
   and absorb the wave packet after every propagation step.
-  As of Wavepacket 0.4, this is currently not implemented conveniently, though.
+  As of Wavepacket 0.4, this is not implemented conveniently, though.
 
 Let us demonstrate the first point by adding a steep NIP to the Morse oscillator example:
 

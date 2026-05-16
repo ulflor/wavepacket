@@ -15,6 +15,7 @@ Wavepacket focuses on a particular niche:
 - Direct solution of Schrödinger / Liouville von Neumann equations.
   No electronic structure, no MCTDH, no semiclassics, at least for now.
 - Grid-based representation of operators (DVR approximation).
+  Atomic units to simplify equations.
 - Accessibility is an overriding goal. Wavepacket should be directly usable in teaching.
   We try to provide good tutorials / docs, but also goodies like simple plotting.
 - Exotic use cases should be as frictionless as possible.
@@ -40,7 +41,7 @@ Support
 
 There are three different avenues for feedback and support:
 
-- The prefered option is through the mailing list wavepacket@python.org.
+- The preferred option is through the mailing list wavepacket@python.org.
   You may want to subscribe at https://mail.python.org/mailman3/lists/wavepacket.python.org/
   to ensure you receive all answers.
 - You can use the Forum on github: https://github.com/ulflor/wavepacket/discussions

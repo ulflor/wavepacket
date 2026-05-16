@@ -25,7 +25,7 @@ For the impatient, the main results of the following treatise are:
 
 ### ODE solvers theory
 
-We start from the Schrödinger equation
+We start from the Schrödinger equation (we use atomic units throughout the text)
 
 $$
     \imath \dot \psi(t) = \hat H(t) \psi(t)

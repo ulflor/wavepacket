@@ -12,6 +12,7 @@ or {download}`relaxation.md` (Markdown)
 ## Introduction
 
 In imaginary time, $t \to \imath \tau$, the Schrödinger equation becomes
+(we use atomic units throughout the text)
 
 $$
     \frac{\partial \psi}{\partial \tau} = - \hat H \psi(\tau)

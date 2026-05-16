@@ -25,6 +25,7 @@ was introduced by Huisinga et al. [^faber], but we omit this discussion for simp
 ## Basic theory
 
 For a time-independent, closed system, the time evolution operator is defined by
+(we use atomic units throughout the text)
 
 $$
     \psi(t+\Delta t) = \hat U(\Delta t) \psi(t) = \mathrm{e}^{-\imath \hat H \Delta t} \psi(t).
@@ -96,10 +97,10 @@ We get for a normalized state
 We do not care about the exact value of the error, just note two properties of the expression:
 
 1. There is an upper bound for the error independent of the initial state. That is, the convergence is continuous,
-   there are no individual states for which the series does not converge.
+   there are no singular states for which the series does not converge.
 2. For large enough N, the right-hand side decreases exponentially with increasing N.
 
-In practice, we do not target a specific value of the (upper bound of the) propagation error,
+For simplicity, we do not target a specific value of the (upper bound of the) propagation error,
 but simply truncate the series as soon as the Bessel function has reached a certain cutoff.
 This cutoff can still be considered a proxy for the order of magnitude of the error,
 but is not a rigorous quantity.
@@ -117,7 +118,7 @@ The size of the time step, that is, the gain, however, is proportional to the al
 argument of said Bessel function.
 
 So we can rephrase the question: At which value of alpha do we get most gain per cost?
-Let us plot the behaviour of the Bessel functions for different values of alpha
+Let us plot the behavior of the Bessel functions for different values of alpha
 
 ```{code-cell}
 import matplotlib.pyplot as plt
@@ -149,7 +150,7 @@ Hence, the proposition of using an alpha value of at least 40 to avoid inefficie
 of increasing alpha beyond, say, 100.
 Both values are not exact numbers, however, just crude rules of thumb.
 
-However, very large orders of expansion may lead to artefacts.
+However, very large orders of expansion may lead to artifacts.
 For example the values of the Bessel functions may become inaccurate, depending on the implementation details.
 Therefore, we would recommend not increasing alpha beyond something like 100, but that is also not a hard value.
 For example, we encountered a Matlab version around 2010

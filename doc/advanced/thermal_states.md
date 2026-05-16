@@ -14,6 +14,7 @@ or {download}`thermal_states.md` (Markdown)
 Sometimes, we wish to study systems at finite temperatures.
 To describe such systems, we need either a density operator or an ensemble of wave functions.
 The textbook expression for a thermal state is a density operator
+(we use atomic units throughout the text)
 
 $$
     \hat \varrho_\mathrm{th} = \frac{1}{Z} \ \mathrm{e}^{- \beta \hat H}
@@ -211,7 +212,7 @@ explicit solver.
 
 ### Implementation
 
-For simplicity, we choose to obtain the eigenstates here from diagonalising the Hamiltonian matrix.
+For simplicity, we choose to obtain the eigenstates here from diagonalizing the Hamiltonian matrix.
 This is not a good choice performance-wise, but keeps the example focused.
 
 Conceptually, we need two passes.
@@ -276,7 +277,7 @@ complexity.
 One solution is the use of imaginary-time relaxation to get the lowest few eigenstates.
 This method is discussed in {doc}`/tutorials/relaxation`.
 Curiously, the relaxation limitation to few excited eigenstates aligns naturally
-with the this method's limitation to few excited eigenstates.
+with this method's limitation to few excited eigenstates.
 
 If relaxation is difficult, you can simply choose a different basis.
 After all, we do not need energy eigenstates, we need to cover the relevant low-energy subspace.
@@ -361,7 +362,7 @@ On first view, this method may look like a slightly deranged variant of the prev
 So how, and especially why and when does it work?
 The hand-waving answer is that this is almost method II, but
 the ensemble of random wave functions (i) is not orthogonal (bad),
-and (ii) covers the "typical" Hilbert space space with few wave functions already (good).
+and (ii) covers the "typical" Hilbert space with few wave functions already (good).
 
 Non-orthogonality is uniformly bad; it means for example that you may count contributions twice,
 and this problem only averages out over large samples.

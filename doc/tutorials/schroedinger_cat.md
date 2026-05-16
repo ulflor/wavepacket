@@ -53,6 +53,8 @@ A few notes about the code so far:
 - We tried to keep the interfaces consistent where possible.
   For example, all operators take the grid as first parameter, followed (where it makes sense) by the index
   of the dimension along which the operator acts, followed by other parameters.
+- Wavepacket uses atomic units exclusively, which gets rid of most natural constants.
+  The grid in the example here extends in both directions up to 20 Bohr radii, about 10 Angstrom.
 
 Operators themselves are sometimes used directly, for example when diagonalizing an operator or
 propagating in imaginary time.

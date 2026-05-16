@@ -129,8 +129,8 @@ print(f"Energy guess = {energy_guess:.4}")
 The initial state can be almost arbitrary;
 it only needs to contain the highest-energy eigenstate as a non-negligible component.
 The factor of 1.2 is a guessed safety margin because the result may not have been converged yet.
-Thus, we arrive at an estimate of the spectrum of about [0, 280].
-For an alpha value of 40 or more, our time step must be at least $2 \cdot 40 / 280 = 2/7$.
+Thus, we arrive at an estimate of the spectrum of about [0, 280] a.u.
+For an alpha value of 40 or more, our time step must be at least $2 \cdot 40 / 280 = 2/7$ a.u.
 Let us evolve a Gaussian wave packet with such values:
 
 ```{code-cell}
@@ -182,7 +182,7 @@ Because this is difficult, we actually truncate the kinetic and potential energy
 The question is: At what values?
 Here we need some intuition again (or guesswork or plain trial-and-error).
 
-Our Gaussian (x0 = -5, rms = 1) extends maybe three rms up to x=8, where the potential value is
+Our Gaussian (x0 = -5, rms = 1) extends maybe three rms up to x=8 a.u., where the potential value is
 $8^2/2 = 32 \ \mathrm{a.u.}$.
 Hence, we might truncate at 35 a.u., which is just a little less than the maximum potential of 50 a.u.
 For the kinetic energy, we do the same, which has a much larger effect.

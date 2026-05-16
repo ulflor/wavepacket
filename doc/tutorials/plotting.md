@@ -47,7 +47,7 @@ What happens if you execute this code?
       What should work most of the time is a GTK-based backend.
       Install PyGObject with `pip install PyGObject`. Matplotlib may already use it as default then.
       If not, set the environment variable, `export MPLBACKEND=GTK3Agg`. Now you should finally get a plot display.
-* Other environments, such as PyCharm of VSCode plugins, or MacOS may have their own particular behavior.
+* Other environments, such as PyCharm of VSCode plugins, or macOS may have their own particular behavior.
 
 If you managed to show a simple plot, we can go on plotting real data.
 Wavepacket does not handle these behavior differences, so you typically have to `show()` the plot
@@ -76,7 +76,7 @@ solver = wp.solver.OdeSolver(equation, dt=0.5)
 
 Wavepacket offers utility classes to make plotting of states easier.
 These classes are opinionated and may not be as flexible and configurable as you need them.
-Their sole purpose is a useful visualisation of the dynamics with minimal setup.
+Their sole purpose is a useful visualization of the dynamics with minimal setup.
 If they do not fulfill your needs, you might want to write your own plotting code, as discussed in the next section.
 
 Since version 0.2, there are two available helper classes: {py:class}`wavepacket.plot.SimplePlot1D` just draws one plot,
@@ -87,7 +87,7 @@ The simple plot provides a simple way to plot animations, while stacked plots ar
 Jupyter notebooks, where you can have only one plot per cell.
 
 The {py:class}`wavepacket.plot.StackedPlot1D` constructor gets the number of plots, some wave function for guessing defaults, and the
-potential and hamiltonian, then you just call plot repeatedly to fill the individual plots.
+potential and Hamiltonian, then you just call plot repeatedly to fill the individual plots.
 If you plot more often than there are axes available, the last plot is overwritten.
 
 ```{code-cell}
@@ -152,7 +152,7 @@ See the class documentation of {py:class}`wavepacket.plot.StackedContourPlot2D` 
 ## Manual plotting
 
 You need to write your own plotting functions if the default functionality does not cover your use case,
-or if you need a specific styling, for example for a publication. Doing so is well supported, but
+or if you need a specific styling, for example for a publication. Doing so is well-supported, but
 requires deeper access and familiarity with Wavepacket data structures.
 
 As an example, let us assume you want to plot the density in the plane-wave expansion (the FBR).
@@ -207,7 +207,7 @@ stacked_plot.figure.savefig(f"harmonic_oscillator_stacked.png")
 The figure is saved directly from the plotting data without showing the plot,
 therefore you do not even need an interactive backend.
 
-As mentioned before, you can create crude animations outside of Jupyter notebooks by calling `plt.pause(1)`.
+As mentioned before, you can create crude animations outside Jupyter notebooks by calling `plt.pause(1)`.
 This shows the plot and blocks the execution of the Python script for one second.
 The `matplot.animation` package offers other approaches that we will skip here.
 At some point, however, showing the animation is not enough,
@@ -231,8 +231,8 @@ with writer.saving(simple_plot.figure, "harmonic_oscillator.html", dpi=200):
 ```
 
 The animation is written to disk as soon as the block enclosed with "with" is left.
-The `HTMLWriter` by default creates [a HTML page](harmonic_oscillator.html) consisting of the individual
-frames as png files and some Javascript to play the animation.
+The `HTMLWriter` by default creates [an HTML page](harmonic_oscillator.html) consisting of the individual
+frames as png files and some JavaScript to play the animation.
 In the example, we reduced the playback rate to 3 frames per second, and embedded the images
 into the HTML due to document generator constraints.
 This robust approach should generally work, and the result is suitable for embedding in a web page.
