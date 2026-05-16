@@ -36,17 +36,17 @@ def direct_product(ket: wp.grid.State, bra: wp.grid.State) -> wp.grid.State:
     """
     Returns the direct product of wave functions as a density operator.
 
-    Given two wave functions :math:`\psi, \phi`, this function returns the
-    density operator as :math:`| \psi \\rangle\langle \phi |`.
+    Given two wave functions :math:`\\psi, \\phi`, this function returns the
+    density operator as :math:`| \\psi \\rangle\\langle \\phi |`.
     This operation can be useful to build up a
     density operator piece by piece.
 
     Parameters
     ----------
     ket : wp.grid.State
-         The ket state :math:`\psi`
+         The ket state :math:`\\psi`
     bra : wp.grid.State
-         The bra state :math:`\phi`. Note that the function performs a
+         The bra state :math:`\\phi`. Note that the function performs a
          complex conjugation of this state prior to multiplication.
 
     Returns

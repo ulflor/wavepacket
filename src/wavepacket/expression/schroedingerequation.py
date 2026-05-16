@@ -19,7 +19,7 @@ class SchroedingerEquation(ExpressionBase):
     Notes
     -----
     The Schrödinger equation is given by
-    :math:`\dot \psi = -\imath \hat H \psi`,
+    :math:`\\dot \\psi = -\\imath \\hat H \\psi`,
     so this class only multiplies the wave function with the
     negative imaginary number, and wraps the input Hamiltonian
     into an expression so that solvers can work with it.

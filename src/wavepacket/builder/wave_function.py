@@ -108,12 +108,12 @@ def unit_wave_function(grid: wp.grid.Grid) -> wp.grid.State:
     --------
 
     Given a potential V, applying the potential to wave function
-    returns the product :math:`V_i \psi_i` at every grid point i. With a unit
+    returns the product :math:`V_i \\psi_i` at every grid point i. With a unit
     wave function as input, this yields the potential for each grid point.
 
-     >>> unit = wp.builder.unit_wave_function(grid_1d)
-     >>> potvals = potential.apply(unit, 0.0)
-     >>> plot(grid_1d.dofs[0].dvr_grid, potvals.data)
+    >>> unit = wp.builder.unit_wave_function(grid_1d)
+    >>> potvals = potential.apply(unit, 0.0)
+    >>> plot(grid_1d.dofs[0].dvr_grid, potvals.data)
     """
     return wp.grid.State(grid, np.ones(grid.shape))
 
