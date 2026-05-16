@@ -2,6 +2,21 @@
 ChangeLog
 =========
 
+0.5
+---
+
+Breaking changes:
+
+Major changes:
+
+Minor changes:
+
+- documented use of atomic units in the code
+
+Bug fixes:
+
+- (#63) removed some warnings due to incorrect formula escaping
+
 0.4.1
 -----
 
