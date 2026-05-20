@@ -28,6 +28,7 @@ Wavepacket documentation
 
     advanced/pendular_states
     advanced/thermal_states
+    advanced/reduced_density
     advanced/plane_wave_grid
     advanced/ode_solvers
     advanced/polynomial_solvers
