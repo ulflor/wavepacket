@@ -1,0 +1,118 @@
+>>> import math
+>>>
+>>> import wavepacket as wp
+>>>
+>>>
+>>> system_dof = wp.grid.PlaneWaveDof(-10, 10, 96)
+>>> environment_dof = wp.grid.PlaneWaveDof(-5, 5, 96)
+>>> full_grid = wp.grid.Grid([system_dof, environment_dof])
+>>>
+>>> trafo = wp.grid.PartialTraceTransformation(full_grid, 0)
+>>> system_grid = trafo.target_grid
+>>>
+>>> left_gauss = wp.special.Gaussian(-5, 0, rms=0.5)
+>>> right_gauss = wp.special.Gaussian(5, 0, rms=0.5)
+>>> env_gauss = wp.special.Gaussian(0, 0, rms=0.5)
+
+>>> # One-dimensional system only
+>>>
+>>> kinetic_sys = wp.operator.CartesianKineticEnergy(system_grid, 0, mass=1, cutoff=40)
+>>> potential_sys = wp.operator.Potential1D(system_grid, 0, lambda x: 0.5 * x**2, cutoff=40)
+>>> equation_sys = wp.expression.SchroedingerEquation(kinetic_sys + potential_sys)
+>>>
+>>> psi0_sys = math.sqrt(0.5) * (
+...              wp.builder.product_wave_function(system_grid, left_gauss)
+...              + wp.builder.product_wave_function(system_grid, right_gauss)
+... )
+>>>
+>>> solver = wp.solver.ChebychevSolver(equation_sys, math.pi/6, (0, 80))
+>>> for t, psi in solver.propagate(psi0_sys, 0.0, 3):
+...     wp.log(t, psi, precision=4, truncate=1e-10)
+<BLANKLINE>
+-----------------------------------------------
+t = 0.0,     trace = 1.0
+<BLANKLINE>
+<x_0> = 0.0  +/- 5.012
+<BLANKLINE>
+-----------------------------------------------
+t = 0.5236,     trace = 1.0
+<BLANKLINE>
+<x_0> = 0.0  +/- 4.398
+<BLANKLINE>
+-----------------------------------------------
+t = 1.047,     trace = 1.0
+<BLANKLINE>
+<x_0> = -1.343e-07  +/- 2.789
+<BLANKLINE>
+-----------------------------------------------
+t = 1.571,     trace = 1.0
+<BLANKLINE>
+<x_0> = -1.741e-07  +/- 1.414
+
+>>> # System-bath, but no coupling and product state
+>>> kinetic_full = (wp.operator.CartesianKineticEnergy(full_grid, 0, mass=1, cutoff=40)
+...                + wp.operator.CartesianKineticEnergy(full_grid, 1, mass=1, cutoff=40))
+>>> potential_full = (wp.operator.Potential1D(full_grid, 0, lambda x: 0.5 * x**2, cutoff=40)
+...                  + wp.operator.Potential1D(full_grid, 1, lambda x: 0.5 * (2*x)**2, cutoff=40))
+>>> equation_uncoupled = wp.expression.SchroedingerEquation(kinetic_full + potential_full)
+>>>
+>>> psi0_full = math.sqrt(0.5) * (
+...               wp.builder.product_wave_function(full_grid, [left_gauss, env_gauss])
+...               + wp.builder.product_wave_function(full_grid, [right_gauss, env_gauss])
+... )
+>>>
+>>> solver = wp.solver.ChebychevSolver(equation_uncoupled, math.pi/6, (0, 160))
+>>> for t, psi in solver.propagate(psi0_full, 0.0, 3):
+...     reduced_density = trafo.transform(psi)
+...     wp.log(t, reduced_density, precision=4, truncate=1e-10)
+<BLANKLINE>
+-----------------------------------------------
+t = 0.0,     trace = 1.0
+<BLANKLINE>
+<x_0> = 0.0  +/- 5.012
+<BLANKLINE>
+-----------------------------------------------
+t = 0.5236,     trace = 1.0
+<BLANKLINE>
+<x_0> = 0.0  +/- 4.398
+<BLANKLINE>
+-----------------------------------------------
+t = 1.047,     trace = 1.0
+<BLANKLINE>
+<x_0> = -1.343e-07  +/- 2.789
+<BLANKLINE>
+-----------------------------------------------
+t = 1.571,     trace = 1.0
+<BLANKLINE>
+<x_0> = -1.741e-07  +/- 1.414
+
+>>> # System + bath with coupling -> mixed reduced density
+>>> coupling = -0.5 * (wp.operator.Potential1D(full_grid, 0, lambda x: x)
+...                  * wp.operator.Potential1D(full_grid, 1, lambda x: x))
+>>> equation_coupled = wp.expression.SchroedingerEquation(kinetic_full + potential_full + coupling)
+>>>
+>>> solver = wp.solver.ChebychevSolver(equation_coupled, math.pi/6, (0, 210))
+>>> for t, psi in solver.propagate(psi0_full, 0.0, 3):
+...     reduced_density = trafo.transform(psi)
+...     wp.log(t, reduced_density, precision=4, truncate=1e-10)
+<BLANKLINE>
+-----------------------------------------------
+t = 0.0,     trace = 1.0
+<BLANKLINE>
+<x_0> = 0.0  +/- 5.012
+<BLANKLINE>
+-----------------------------------------------
+t = 0.5236,     trace = 1.0
+<BLANKLINE>
+<x_0> = 0.0  +/- 4.402
+<BLANKLINE>
+-----------------------------------------------
+t = 1.047,     trace = 1.0
+<BLANKLINE>
+<x_0> = -2.357e-08  +/- 2.838
+<BLANKLINE>
+-----------------------------------------------
+t = 1.571,     trace = 1.0
+<BLANKLINE>
+<x_0> = -1.396e-08  +/- 1.467
+
