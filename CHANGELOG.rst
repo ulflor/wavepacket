@@ -9,6 +9,11 @@ Breaking changes:
 
 Major changes:
 
+- (#39) Added a PartialTraceTransformation to trace out all but one degree of freedom
+
+- added new tutorials / examples / theory pages
+  - (#39) Effect of an environment on system states (decoherence) for a simple example
+
 Minor changes:
 
 - documented use of atomic units in the code
