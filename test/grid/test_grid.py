@@ -109,3 +109,16 @@ def test_bad_broadcast():
 
     with pytest.raises(ValueError):
         grid.operator_broadcast(data, 0)
+
+
+def test_channel_existence():
+    channel_dof = wp.grid.ChannelDof(2)
+    other_dof = wp.grid.PlaneWaveDof(1, 2, 3)
+
+    grid_with_channel = wp.grid.Grid([channel_dof, other_dof])
+    grid_with_two_channels = wp.grid.Grid([channel_dof, other_dof, channel_dof])
+    grid_without_channel = wp.grid.Grid(other_dof)
+
+    assert grid_with_channel.has_single_channel_dof()
+    assert not grid_without_channel.has_single_channel_dof()
+    assert not grid_with_two_channels.has_single_channel_dof()

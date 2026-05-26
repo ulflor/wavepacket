@@ -7,6 +7,7 @@ import numpy as np
 import wavepacket as wp
 import wavepacket.typing as wpt
 
+from .channel_dof import ChannelDof
 from .dofbase import DofBase
 
 
@@ -123,3 +124,12 @@ class Grid:
 
         new_shape[shape_index] = self.dofs[dof_index].size
         return np.reshape(data, new_shape)
+
+    def has_single_channel_dof(self) -> bool:
+        """
+        Returns True if the grid has exactly one channel degree of freedom.
+
+        This is a convenience shorthand mainly for some functionality (e.g., plotting)
+        to check if special handling of channels needs to be done.
+        """
+        return sum(isinstance(x, ChannelDof) for x in self.dofs) == 1
