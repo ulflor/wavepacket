@@ -111,7 +111,7 @@ def test_bad_broadcast():
         grid.operator_broadcast(data, 0)
 
 
-def test_channel_existence():
+def test_get_channel_dof():
     channel_dof = wp.grid.ChannelDof(2)
     other_dof = wp.grid.PlaneWaveDof(1, 2, 3)
 
@@ -119,6 +119,6 @@ def test_channel_existence():
     grid_with_two_channels = wp.grid.Grid([channel_dof, other_dof, channel_dof])
     grid_without_channel = wp.grid.Grid(other_dof)
 
-    assert grid_with_channel.has_single_channel_dof()
-    assert not grid_without_channel.has_single_channel_dof()
-    assert not grid_with_two_channels.has_single_channel_dof()
+    assert grid_with_channel.get_single_channel_dof() == channel_dof
+    assert grid_without_channel.get_single_channel_dof() is None
+    assert grid_with_two_channels.get_single_channel_dof() is None

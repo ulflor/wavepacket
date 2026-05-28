@@ -125,11 +125,22 @@ class Grid:
         new_shape[shape_index] = self.dofs[dof_index].size
         return np.reshape(data, new_shape)
 
-    def has_single_channel_dof(self) -> bool:
+    def get_single_channel_dof(self) -> ChannelDof | None:
         """
-        Returns True if the grid has exactly one channel degree of freedom.
+        Returns the single degree of freedom if the grid has one or None.
 
         This is a convenience shorthand mainly for some functionality (e.g., plotting)
-        to check if special handling of channels needs to be done.
+        to check if special handling of channels needs to be done, and to simplify the
+        query for the channels.
+
+        Returns
+        -------
+        wavepacket.grid.ChannelDof
+            The degree of freedom that describes the channel.
+            If the grid has no or multiple channel degrees of freedom, this function returns None.
         """
-        return sum(isinstance(x, ChannelDof) for x in self.dofs) == 1
+        channel_dofs = [dof for dof in self.dofs if isinstance(dof, ChannelDof)]
+        if len(channel_dofs) == 1:
+            return channel_dofs[0]
+        else:
+            return None
