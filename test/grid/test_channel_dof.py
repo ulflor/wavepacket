@@ -61,21 +61,13 @@ def test_retrieve_names():
     assert numeric_dof.names == ["0", "1", "2", "3"]
 
 
-def test_raise_on_invalid_indexing_parameters():
-    dof = wp.grid.ChannelDof(["a", "b", "c"])
-
-    with pytest.raises(wp.InvalidValueError):
-        dof.get_index(-4)
-    with pytest.raises(wp.InvalidValueError):
-        dof.get_index(3)
-
-    with pytest.raises(wp.InvalidValueError):
-        dof.get_index("d")
-
-
 def test_get_channel_index():
     dof = wp.grid.ChannelDof(["a", "b", "c"])
 
     assert dof.get_index(0) == 0
     assert dof.get_index(-3) == -3
     assert dof.get_index("b") == 1
+
+    assert dof.get_index(-4) is None
+    assert dof.get_index(3) is None
+    assert dof.get_index("d") is None

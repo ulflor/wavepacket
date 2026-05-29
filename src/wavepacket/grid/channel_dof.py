@@ -62,7 +62,7 @@ class ChannelDof(DofBase):
         grid = np.arange(num_channels, dtype=float)
         super().__init__(grid, grid)
 
-    def get_index(self, channel: int | str) -> int:
+    def get_index(self, channel: int | str) -> int | None:
         """
         Returns the index/number of a channel that is given as a number or a name.
 
@@ -74,22 +74,23 @@ class ChannelDof(DofBase):
         channel: int | str
             The number or name of the channel
 
-        Raises
-        ------
-        wp.InvalidValueError
-            Raised if the integer parameter is out of bounds,
-            or if the string parameter is not the name of an existing channel.
+        Returns
+        -------
+        int | None
+            If the channel exists, returns the index of the referenced channel.
+            If the channel does not exist, returns None.
         """
         if isinstance(channel, numbers.Integral):
-            if channel < -self.size or channel >= self.size:
-                raise wp.InvalidValueError(f"Index '{channel}' references no valid channel.")
-
-            return channel
+            if -self.size <= channel < self.size:
+                return channel
+            else:
+                return None
         else:
-            if channel not in self.names:
-                raise wp.InvalidValueError(f"Name {channel} references no valid channel.")
-
-            return self.names.index(channel)
+            assert isinstance(channel, str)
+            if channel in self.names:
+                return self.names.index(channel)
+            else:
+                return None
 
     def from_fbr(
         self, data: wpt.ComplexData, index: int, is_ket: bool = True

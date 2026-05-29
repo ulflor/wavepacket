@@ -32,11 +32,14 @@ class Channel(OperatorBase):
 
     def __init__(self, grid: wp.grid.Grid, channel: int | str):
         channel_dof = grid.get_single_channel_dof()
-
         if channel_dof is None:
             raise wp.BadGridError("Grid has no channel degree of freedom.")
 
         index = channel_dof.get_index(channel)
+        if index is None:
+            raise wp.InvalidValueError(
+                f"'{channel}' does not reference a valid channel (index out of bounds or name unknown)."
+            )
 
         data = np.zeros(channel_dof.size)
         data[index] = 1.0
@@ -85,16 +88,19 @@ class Coupling(OperatorBase):
 
     def __init__(self, grid: wp.grid.Grid, from_channel: int | str, to_channel: int | str):
         channel_dof = grid.get_single_channel_dof()
-
         if channel_dof is None:
             raise wp.BadGridError("Grid has no channel degree of freedom.")
 
         from_index = channel_dof.get_index(from_channel)
         to_index = channel_dof.get_index(to_channel)
 
+        if from_index is None or to_index is None:
+            raise wp.InvalidValueError(
+                f"'{from_channel}' and/or '{to_channel}' do not reference a valid channel (index out of bounds or name unknown)."
+            )
         if channel_dof.dvr_points[from_index] == channel_dof.dvr_points[to_index]:
             raise wp.InvalidValueError(
-                "Coupling of a channel with itself is not supported. Use 'Channel' for that."
+                "Coupling of a channel with itself is not supported. Use 'wavepacket.operator.Channel' for that."
             )
 
         data = np.zeros((channel_dof.size, channel_dof.size))
