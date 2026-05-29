@@ -5,6 +5,7 @@ This module contains classes that define operators on a given grid.
 __all__ = [
     "CartesianKineticEnergy",
     "Channel",
+    "Coupling",
     "RotationalKineticEnergy",
     "OperatorBase",
     "PlaneWaveFbrOperator",
@@ -23,7 +24,7 @@ from .fbroperators import (
     FbrOperator1D,
     RotationalKineticEnergy,
 )
-from .channel_operators import Channel
+from .channel_operators import Channel, Coupling
 from .misc_operators import Projection, Constant
 from .time_dependent_operators import TimeDependentOperator, LaserField
 from .potentials import Potential1D
