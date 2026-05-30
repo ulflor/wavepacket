@@ -71,3 +71,7 @@ def test_get_channel_index():
     assert dof.get_index(-4) is None
     assert dof.get_index(3) is None
     assert dof.get_index("d") is None
+
+    noname_dof = wp.grid.ChannelDof(3)
+    assert noname_dof.get_index(-1) == -1
+    assert noname_dof.get_index("a") is None

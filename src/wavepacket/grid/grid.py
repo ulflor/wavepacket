@@ -37,7 +37,7 @@ class Grid:
         For example, a grid with dimensions (5, 4) has operator dimensions (5, 4, 5, 4).
     size: int, readonly
         The total number of grid points
-    dofs: int, readonly
+    dofs: list[wavepacket.grid.DofBase], readonly
         A list of degrees of freedom that describe the degrees of freedom of the grid
 
     Raises
@@ -56,7 +56,7 @@ class Grid:
         self.shape: Final[tuple[int, ...]] = tuple(dof.size for dof in dofs)
         self.operator_shape: Final[tuple[int, ...]] = self.shape + self.shape
         self.size: Final[int] = math.prod(dof.size for dof in dofs)
-        self.dofs: Final[Sequence] = list(dofs)
+        self.dofs: Final[list[wp.grid.DofBase]] = list(dofs)
 
     def normalize_index(self, index: int) -> int:
         """

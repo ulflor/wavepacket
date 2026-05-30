@@ -32,7 +32,7 @@ class ChannelDof(DofBase):
 
     Attributes
     ----------
-    names: list[str]
+    names: list[str], readonly
         The names of the individual channels.
 
     Raises
