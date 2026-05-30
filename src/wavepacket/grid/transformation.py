@@ -1,9 +1,11 @@
 from abc import ABC, abstractmethod
+import math
 from typing import Final
 
 import numpy as np
 
 import wavepacket as wp
+import wavepacket.typing as wpt
 
 from .grid import Grid
 from .state import State
@@ -22,7 +24,7 @@ class TransformationBase(ABC):
     source_grid: Grid, readonly
         The grid from which we transform.
     target_grid: Grid, readonly
-        The grid onto which we transform.
+        The grid onto which we transform. Usually, this grid is created by the transformation.
     """
 
     def __init__(self, source_grid: Grid, target_grid: Grid):
@@ -132,3 +134,105 @@ class PartialTraceTransformation(TransformationBase):
             return State(self.target_grid, result)
         else:
             raise wp.BadStateError("Cannot transform invalid state.")
+
+
+class ChannelProjectionTransformation(TransformationBase):
+    """
+    Transformation that strips the channel degree of freedom and projects.
+
+    This transformation does two things: It projects the state onto a specific channel,
+    similar to {py:class}`wavepacket.operator.Channel`, and then it removes the channel
+    degree of freedom.
+
+    Note that the actual transformation _requires_ a channel onto which to project.
+
+    The purpose here is to get rid of the channel degree of freedom, but still retain the rest.
+    This is relevant for example for plotting, where you want to plot everything but the
+    channel degree of freedom.
+
+    Parameters
+    ----------
+    grid: wavepacket.grid.Grid
+        The source grid from which to transform.
+
+    Raises
+    ------
+    wavepacket.BadGridError
+        Raised if the grid has no channel degree of freedom, multiple of them,
+        or no other degree of freedom.
+    """
+
+    def __init__(self, grid: Grid):
+        channel_dof = grid.get_single_channel_dof()
+        if channel_dof is None:
+            raise wp.BadGridError("Transformation requires a grid with a single channel dof.")
+        if len(grid.dofs) == 1:
+            raise wp.BadGridError("Transformation requires more than one degree of freedom.")
+
+        dof_index = grid.dofs.index(channel_dof)
+        before = grid.dofs[:dof_index]
+        after = grid.dofs[dof_index + 1 :]
+
+        points_before = math.prod([dof.size for dof in before])
+        points = channel_dof.size
+        points_after = math.prod([dof.size for dof in after])
+        self._fixed_shape = (points_before, points, points_after)
+
+        super().__init__(grid, wp.grid.Grid(before + after))
+
+    def transform(self, state: State, **kwargs) -> State:
+        """
+        Transforms the wave function
+
+        Parameter
+        ---------
+        state: wavepacket.grid.State
+            the input state to transform
+        **kwargs:
+            This function requires the argument "channel" to be set.
+            It must be a valid index or name of the channel onto which
+            the state is projected.
+
+        Returns
+        -------
+        wavepacket.grid.State
+            The projected state in the target grid (removed channel degree of freedom).
+
+        Raises
+        ------
+        wavepacket.BadGridError
+            Raised if the state is not defined on the transformation's source grid.
+        wavepacket.BadStateError
+            Raised if the input state is not a valid state (wave function or density operator)
+        wavepacket.BadFunctionCall
+            Raised if the channel argument is missing.
+        wavepacket.InvalidValueError
+            Raised if the channel argument does not describe a valid channel.
+        """
+        if state.grid is not self.source_grid:
+            raise wp.BadGridError("State is defined on wrong grid.")
+
+        if "channel" not in kwargs:
+            raise wp.BadFunctionCall(
+                "Transformation requires a 'channel' onto which to project."
+            )
+
+        channel = kwargs["channel"]
+        channel_index = self.source_grid.get_single_channel_dof().get_index(channel)
+        if channel_index is None:
+            raise wp.InvalidValueError(f"Invalid channel: '{channel_index}'")
+
+        if state.is_wave_function():
+            reshaped = np.reshape(state.data, self._fixed_shape)
+            projected = reshaped[:, channel_index, :]
+            result = np.reshape(projected, self.target_grid.shape)
+
+            return wp.grid.State(self.target_grid, result)
+        elif state.is_density_operator():
+            reshaped = np.reshape(state.data, self._fixed_shape + self._fixed_shape)
+            projected = reshaped[:, channel_index, :, :, channel_index, :]
+            result = np.reshape(projected, self.target_grid.operator_shape)
+
+            return wp.grid.State(self.target_grid, result)
+        else:
+            raise wp.BadStateError("Invalid state cannot be transformed.")
