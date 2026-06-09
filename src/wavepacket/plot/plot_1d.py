@@ -33,9 +33,23 @@ class BasePlot1D(ABC):
         potential: OperatorBase | None = None,
         hamiltonian: OperatorBase | None = None,
     ) -> None:
+        # Figure out if we have a simple plot or multiple electronic states
+        # Both cases are set up similarly; instead of a unit transformation, we add a special
+        # member function, though.
+        channel_dof = state.grid.get_single_channel_dof()
+        if channel_dof is None:
+            assert len(state.grid.dofs) == 1
+            self._transform = None
+            self._plot_grid = state.grid
+            self._num_channels = 1
+        else:
+            assert len(state.grid.dofs) == 2
+            self._transform = wp.grid.ChannelProjectionTransformation(state.grid)
+            self._plot_grid = self._transform.target_grid
+            self._num_channels = channel_dof.size
+
         # By default, span the total grid range
-        assert len(state.grid.dofs) == 1
-        dvr_grid = state.grid.dofs[0].dvr_points
+        dvr_grid = self._plot_grid.dofs[0].dvr_points
         xrange = dvr_grid.max() - dvr_grid.min()
         self.xlim = (dvr_grid.min() - 1e-2 * xrange, dvr_grid.max() + 1e-2 * xrange)
 
@@ -91,6 +105,12 @@ class BasePlot1D(ABC):
         """
         raise NotImplementedError()
 
+    def _to_plot_grid(self, state: wp.grid.State, channel: int) -> wp.grid.State:
+        if self._transform is None:
+            return state
+        else:
+            return self._transform.transform(state, channel=channel)
+
     def _plot(self, axes: plt.Axes, t: float, state: wp.grid.State) -> None:
         """
         Internal plotting function that actually draws the density on a given Axes.
@@ -99,21 +119,48 @@ class BasePlot1D(ABC):
         axes.set_xlim(*self.xlim)
         axes.set_ylim(*self.ylim)
 
-        dvr_grid = state.grid.dofs[0].dvr_points
+        dvr_grid = self._plot_grid.dofs[0].dvr_points
+        line_styles = ["b-", "r-", "g-", "k-"]
 
         if self._potential is None:
-            # Just plot the wave function
-            axes.plot(dvr_grid, wp.dvr_density(state), "b-")
+            # Just plot the wave functions
+            for channel in range(self._num_channels):
+                channel_state = self.to_plot_grid(state, channel)
+                axes.plot(
+                    dvr_grid,
+                    wp.dvr_density(channel_state),
+                    line_styles[channel % len(line_styles)],
+                )
         else:
             potential_values = get_potential_values(self._potential, t)
-            density = wp.dvr_density(state)
-            energy = wp.expectation_value(self._hamiltonian, state, t).real
-            # absorbing boundary conditions can change the trace...
-            energy /= wp.trace(state)
 
-            axes.plot(dvr_grid, potential_values, "b-")
-            axes.plot(dvr_grid, energy * np.ones(dvr_grid.shape), "r-")
-            axes.plot(dvr_grid, energy + (self.conversion_factor * density), "r-")
+            for channel in range(self._num_channels):
+                # transform a pseudo state with the potential as content and extract the grid again.
+                tmp = wp.grid.State(state.grid, potential_values)
+                channel_potential = self._to_plot_grid(tmp, channel).data
+                axes.plot(dvr_grid, channel_potential, line_styles[channel % len(line_styles)])
+
+                channel_state = self._to_plot_grid(state, channel)
+                density = wp.dvr_density(channel_state)
+                trace = wp.trace(channel_state)
+
+                if trace < 1e-3:
+                    # negligible channel, do not plot, we only get noise and numerical errors
+                    continue
+
+                prj = wp.operator.Channel(self._hamiltonian.grid, channel)
+                energy = wp.expectation_value(self._hamiltonian * prj, state, t).real / trace
+
+                axes.plot(
+                    dvr_grid,
+                    energy * np.ones(dvr_grid.shape),
+                    line_styles[channel % len(line_styles)],
+                )
+                axes.plot(
+                    dvr_grid,
+                    energy + (self.conversion_factor * density),
+                    line_styles[channel % len(line_styles)],
+                )
 
 
 class SimplePlot1D(BasePlot1D):
@@ -125,7 +172,7 @@ class SimplePlot1D(BasePlot1D):
     showing the dynamics of a simple quantum system.
 
     Customization of the plot is limited, see :py:class:`BasePlot1D` for the customizable attributes.
-    The underlying grid must be one-dimensional.
+    The underlying grid must be one-dimensional or two-dimensional with a single channel degree of freedom..
 
     Parameters
     ----------
