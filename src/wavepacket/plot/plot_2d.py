@@ -30,19 +30,32 @@ class BaseContourPlot2D(ABC):
     def __init__(
         self, state: wp.grid.State, potential: wp.operator.OperatorBase | None = None
     ):
-        assert len(state.grid.dofs) == 2
         assert potential is None or potential.grid == state.grid
 
-        x = state.grid.dofs[0].dvr_points
-        y = state.grid.dofs[1].dvr_points
-        density = wp.dvr_density(state)
+        # Figure out if we have a simple plot or multiple electronic states
+        # Both cases are set up similarly; instead of a unit transformation, we add a special
+        # member function, though.
+        channel_dof = state.grid.get_single_channel_dof()
+        if channel_dof is None:
+            assert len(state.grid.dofs) == 2
+            self._transform = None
+            self._plot_grid = state.grid
+            self._num_channels = 1
+        else:
+            assert len(state.grid.dofs) == 3
+            self._transform = wp.grid.ChannelProjectionTransformation(state.grid)
+            self._plot_grid = self._transform.target_grid
+            self._num_channels = channel_dof.size
+
+        x = self._plot_grid.dofs[0].dvr_points
+        y = self._plot_grid.dofs[1].dvr_points
+        max_density = wp.dvr_density(state).max()
 
         xrange = x[-1] - x[0]
         yrange = y[-1] - y[0]
         self.xlim = (x[0] - 1e-2 * xrange, x[-1] + 1e-2 * xrange)
         self.ylim = (y[0] - 1e-2 * yrange, y[-1] + 1e-2 * yrange)
 
-        max_density = density.max()
         self.contours = np.linspace(0, max_density, 15)
 
         if potential is None:
@@ -52,7 +65,7 @@ class BaseContourPlot2D(ABC):
             self._potential = potential
             potential_values = get_potential_values(potential, 0)
             self.potential_contours = np.linspace(
-                potential_values.min(), potential_values.max(), 15
+                potential_values.min(), potential_values.max(), 15 * self._num_channels
             )
 
     @abstractmethod
@@ -79,34 +92,55 @@ class BaseContourPlot2D(ABC):
         """
         raise NotImplementedError("Abstract base method should not be called")
 
+    def _to_plot_grid(self, state: wp.grid.State, channel: int) -> wp.grid.State:
+        if self._transform is None:
+            return state
+        else:
+            return self._transform.transform(state, channel=channel)
+
     def _contour(self, axes: plt.Axes, t: float, state: wp.grid.State) -> None:
         """
         Internal plotting function that actually draws the contours on a given Axes.
         """
-        assert len(state.grid.dofs) == 2
         assert self._potential is None or state.grid == self._potential.grid
 
         axes.clear()
         axes.set_xlim(self.xlim)
         axes.set_ylim(self.ylim)
 
-        x = state.grid.dofs[0].dvr_points
-        y = state.grid.dofs[1].dvr_points
-        z = wp.dvr_density(state)
+        x = self._plot_grid.dofs[0].dvr_points
+        y = self._plot_grid.dofs[1].dvr_points
+        colors = ["b", "r", "g", "k"]
 
-        if self._potential is not None:
-            potential_values = get_potential_values(self._potential, t)
+        for channel in range(self._num_channels):
+            if self._potential is not None:
+                # we can transform a potential using a pseudo "wave function"
+                # with the potential values as amplitude
+                potential_values = get_potential_values(self._potential, t)
+                pseudo_state = wp.grid.State(self._potential.grid, potential_values)
+                plot_values = self._to_plot_grid(pseudo_state, channel).data
+
+                axes.contour(
+                    x,
+                    y,
+                    plot_values.T,
+                    levels=self.potential_contours,
+                    colors=colors[channel % len(colors)],
+                    linewidths=0.5,
+                    linestyles=":",
+                )
+
+            channel_state = self._to_plot_grid(state, channel)
+            z = wp.dvr_density(channel_state)
             axes.contour(
                 x,
                 y,
-                potential_values.T,
-                levels=self.potential_contours,
-                colors="k",
-                linewidths=0.5,
-                linestyles="--",
+                z.T,
+                levels=self.contours,
+                colors=colors[channel % len(colors)],
+                linewidths=1,
+                linestyles="-",
             )
-
-        axes.contour(x, y, z.T, levels=self.contours, colors="b", linewidths=1, linestyles="-")
 
 
 class ContourPlot2D(BaseContourPlot2D):
