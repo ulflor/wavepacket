@@ -9,7 +9,7 @@ import wavepacket.typing as wpt
 
 def product_wave_function(
     grid: wp.grid.Grid,
-    generators: wpt.Generator | Sequence[wpt.Generator],
+    generators: wpt.Generator | int | Sequence[wpt.Generator | int],
     normalize: bool = True,
 ) -> wp.grid.State:
     """
@@ -19,11 +19,16 @@ def product_wave_function(
     ----------
     grid : wp.grid.Grid
            The grid on which the product wave function is assembled
-    generators : wpt.Generator | Sequence[wp.typing.Generator]
-                One or more callables that specifies the wave function
-                along each degree of freedom. The `generators` return
-                the one-dimensional functions in the DVR, i.e., raw function
-                values at the grid points.
+    generators : wpt.Generator | int | Sequence[wp.typing.Generator | int]
+                Normally a list containing for each degree of freedom either
+                a callable that take the DVR grid points as input and returns
+                the raw wave function value as output, or the index of the
+                occupied channel.
+                For convenience, you can directly give the callable / channel.
+                for one-dimensional problems without specifying a list.
+                Technically, giving a channel sets the wave function to zero
+                except for the one DVR grid point whose index is given, where it is one
+                Usually, this only makes sense for a channel degree of freedom.
     normalize : bool, default=true
                If the norm is non-zero and this value is set, the resulting
                product wave function is normalized, otherwise the product
@@ -52,8 +57,18 @@ def product_wave_function(
     result_data = np.ones(grid.shape, dtype=complex)
     for dof_index, generator in enumerate(generator_list):
         dof = grid.dofs[dof_index]
-        array = generator(dof.dvr_points)
-        array = dof.from_dvr(array, 0)
+
+        if isinstance(generator, int):
+            try:
+                array = np.zeros(dof.dvr_points.shape)
+                array[generator] = 1.0
+            except IndexError:
+                raise wp.InvalidValueError(
+                    "Channel index for initial wave function out of range."
+                )
+        else:
+            array = generator(dof.dvr_points)
+            array = dof.from_dvr(array, 0)
 
         result_data *= grid.broadcast(array, dof_index)
 
