@@ -25,6 +25,7 @@ class ChebychevSolver(SolverBase):
         The Schrödinger equation or Liouvillian that describes the right-hand side of the differential equation.
     dt: float
         The time step that is propagated in one go.
+        The product dt * spectral_range / 2 should be ideally in the range (40,100)
     spectrum: tuple[float, float]
         Lower and upper bound of the spectrum of the Hamiltonian or Liouvillian.
         If the bound is generous, the solver is less efficient. If the spectrum extends beyond the bounds,
