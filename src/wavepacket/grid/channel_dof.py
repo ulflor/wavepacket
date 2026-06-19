@@ -1,3 +1,4 @@
+from collections.abc import Sequence
 import numbers
 from copy import deepcopy
 from typing import Final
@@ -42,7 +43,7 @@ class ChannelDof(DofBase):
         if the list of names is empty, or if any channel name is empty.
     """
 
-    def __init__(self, channels: int | list[str]):
+    def __init__(self, channels: int | Sequence[str]):
         if isinstance(channels, numbers.Integral):
             if channels <= 0:
                 raise wp.InvalidValueError(

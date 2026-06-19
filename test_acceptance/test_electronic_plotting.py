@@ -12,8 +12,9 @@ def trace_out_y(psi: wp.grid.State, target: wp.grid.Grid):
 
 def test_plotting(delay: int = 0):
     dof = wp.grid.PlaneWaveDof(-10, 10, 64)
-    grid = wp.grid.Grid([dof, dof, wp.grid.ChannelDof(["ground", "exc"])])
-    grid_1d = wp.grid.Grid([dof, wp.grid.ChannelDof(2)])
+    channel_dof = wp.grid.ChannelDof(["ground", "excited"])
+    grid = wp.grid.Grid([dof, dof, channel_dof])
+    grid_1d = wp.grid.Grid([dof, channel_dof])
 
     x = wp.operator.Potential1D(grid, 0, lambda x: x, cutoff=20)
     y = wp.operator.Potential1D(grid, 1, lambda x: x, cutoff=20)

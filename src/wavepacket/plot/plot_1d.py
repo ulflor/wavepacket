@@ -42,11 +42,13 @@ class BasePlot1D(ABC):
             self._transform = None
             self._plot_grid = state.grid
             self._num_channels = 1
+            self._label = [""]
         else:
             assert len(state.grid.dofs) == 2
             self._transform = wp.grid.ChannelProjectionTransformation(state.grid)
             self._plot_grid = self._transform.target_grid
             self._num_channels = channel_dof.size
+            self._labels = channel_dof.names
 
         # By default, span the total grid range
         dvr_grid = self._plot_grid.dofs[0].dvr_points
@@ -125,11 +127,12 @@ class BasePlot1D(ABC):
         if self._potential is None:
             # Just plot the wave functions
             for channel in range(self._num_channels):
-                channel_state = self.to_plot_grid(state, channel)
+                channel_state = self._to_plot_grid(state, channel)
                 axes.plot(
                     dvr_grid,
                     wp.dvr_density(channel_state),
                     line_styles[channel % len(line_styles)],
+                    label=self._labels[channel],
                 )
         else:
             potential_values = get_potential_values(self._potential, t)
@@ -138,7 +141,12 @@ class BasePlot1D(ABC):
                 # transform a pseudo state with the potential as content and extract the grid again.
                 tmp = wp.grid.State(state.grid, potential_values)
                 channel_potential = self._to_plot_grid(tmp, channel).data
-                axes.plot(dvr_grid, channel_potential, line_styles[channel % len(line_styles)])
+                axes.plot(
+                    dvr_grid,
+                    channel_potential,
+                    line_styles[channel % len(line_styles)],
+                    label=self._labels[channel],
+                )
 
                 channel_state = self._to_plot_grid(state, channel)
                 density = wp.dvr_density(channel_state)
@@ -161,6 +169,8 @@ class BasePlot1D(ABC):
                     energy + (self.conversion_factor * density),
                     line_styles[channel % len(line_styles)],
                 )
+
+        axes.legend(loc="upper right")
 
 
 class SimplePlot1D(BasePlot1D):
@@ -279,7 +289,7 @@ class StackedPlot1D(BasePlot1D):
         super()._plot(axes, t, state)
 
         axes.text(
-            0.05 * self.xlim[0] + 0.95 * self.xlim[1],
+            0.2 * self.xlim[0] + 0.8 * self.xlim[1],
             0.05 * self.ylim[0] + 0.95 * self.ylim[1],
             f"t = {t:.4g} a.u.",
             weight="heavy",

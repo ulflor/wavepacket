@@ -68,7 +68,7 @@ def log(
                 continue
 
             print(
-                f"\n  channel {channel},      trace = {channel_trace:.{precision}}"
-                "\n  -------------------------------------------------\n"
+                f"\n  channel '{channel_dof.names[channel]}',      trace = {channel_trace:.{precision}}"
+                "\n  ---------------------------------------------------\n"
             )
             _print_expectation_values(channel_state, precision, truncate)
