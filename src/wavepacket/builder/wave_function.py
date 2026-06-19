@@ -9,7 +9,7 @@ import wavepacket.typing as wpt
 
 def product_wave_function(
     grid: wp.grid.Grid,
-    generators: wpt.Generator | int | Sequence[wpt.Generator | int],
+    generators: wpt.Generator | int | str | Sequence[wpt.Generator | int | str],
     normalize: bool = True,
 ) -> wp.grid.State:
     """
@@ -58,7 +58,19 @@ def product_wave_function(
     for dof_index, generator in enumerate(generator_list):
         dof = grid.dofs[dof_index]
 
-        if isinstance(generator, int):
+        if isinstance(generator, str):
+            if not isinstance(dof, wp.grid.ChannelDof):
+                raise wp.InvalidValueError(
+                    f"Setting the channel '{generator}' requires a channel degree of freedom."
+                )
+
+            index = dof.get_index(generator)
+            if index is None:
+                raise wp.InvalidValueError(f"Channel '{generator}' does not exist.")
+
+            array = np.zeros(dof.dvr_points.shape)
+            array[index] = 1.0
+        elif isinstance(generator, int):
             try:
                 array = np.zeros(dof.dvr_points.shape)
                 array[generator] = 1.0

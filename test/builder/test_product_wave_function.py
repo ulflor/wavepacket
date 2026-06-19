@@ -19,14 +19,21 @@ def test_reject_wrong_number_of_inputs(grid_2d):
         wp.builder.product_wave_function(grid_2d, generator)
 
 
-def test_reject_out_of_range_indices():
-    grid = wp.grid.Grid(wp.grid.ChannelDof(3))
+def test_reject_invalid_channels():
+    grid = wp.grid.Grid(wp.grid.ChannelDof(["A", "B", "C"]))
 
     with pytest.raises(wp.InvalidValueError):
         wp.builder.product_wave_function(grid, -4)
 
     with pytest.raises(wp.InvalidValueError):
         wp.builder.product_wave_function(grid, 3)
+
+    with pytest.raises(wp.InvalidValueError):
+        wp.builder.product_wave_function(grid, "D")
+
+    non_channel_grid = wp.grid.Grid(wp.grid.PlaneWaveDof(1, 2, 3))
+    with pytest.raises(wp.InvalidValueError):
+        wp.builder.product_wave_function(non_channel_grid, "A")
 
 
 def test_build_product_state(grid_2d):
@@ -54,6 +61,15 @@ def test_build_product_state_with_indices(grid_2d):
 
     expected = np.zeros(grid_2d.shape)
     expected[2, -1] = 1.0
+    assert_array_equal(result.data, expected)
+
+
+def test_build_product_state_with_channel_names():
+    grid = wp.grid.Grid(wp.grid.ChannelDof(["A", "B", "C"]))
+
+    result = wp.builder.product_wave_function(grid, "B")
+
+    expected = np.array([0, 1, 0])
     assert_array_equal(result.data, expected)
 
 
