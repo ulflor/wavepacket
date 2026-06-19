@@ -47,6 +47,8 @@ class BaseContourPlot2D(ABC):
             self._plot_grid = self._transform.target_grid
             self._num_channels = channel_dof.size
 
+        self.colors = ["b", "r", "g", "k"]
+
         x = self._plot_grid.dofs[0].dvr_points
         y = self._plot_grid.dofs[1].dvr_points
         max_density = wp.dvr_density(state).max()
@@ -110,7 +112,6 @@ class BaseContourPlot2D(ABC):
 
         x = self._plot_grid.dofs[0].dvr_points
         y = self._plot_grid.dofs[1].dvr_points
-        colors = ["b", "r", "g", "k"]
 
         for channel in range(self._num_channels):
             if self._potential is not None:
@@ -125,19 +126,19 @@ class BaseContourPlot2D(ABC):
                     y,
                     plot_values.T,
                     levels=self.potential_contours,
-                    colors=colors[channel % len(colors)],
+                    colors=self.colors[channel % len(self.colors)],
                     linewidths=0.5,
                     linestyles=":",
                 )
 
             channel_state = self._to_plot_grid(state, channel)
             z = wp.dvr_density(channel_state)
-            axes.contour(
+            contour = axes.contour(
                 x,
                 y,
                 z.T,
                 levels=self.contours,
-                colors=colors[channel % len(colors)],
+                colors=self.colors[channel % len(self.colors)],
                 linewidths=1,
                 linestyles="-",
             )
@@ -192,21 +193,23 @@ class ContourPlot2D(BaseContourPlot2D):
         # Plot the 2D contour plot
         self._contour(self._axes, t, state)
 
-        # Plot the reduced density along x
+        # Prepare the marginal plots along x and y
         self._ax_bottom.clear()
         self._ax_bottom.set_ylim(0, self.max_marginals[0])
-
-        x = state.grid.dofs[0].dvr_points
-        reduced_density_x = wp.dvr_density(state, 0)
-        self._ax_bottom.plot(x, reduced_density_x, "b-")
-
-        # Plot the reduced density along y
         self._ax_right.clear()
         self._ax_right.set_xlim(self.max_marginals[1], 0)
 
-        y = state.grid.dofs[1].dvr_points
-        reduced_density_y = wp.dvr_density(state, 1)
-        self._ax_right.plot(reduced_density_y, y, "b-")
+        # and plot the margins
+        for channel in range(self._num_channels):
+            channel_state = self._to_plot_grid(state, channel)
+
+            x = channel_state.grid.dofs[0].dvr_points
+            reduced_density_x = wp.dvr_density(channel_state, 0)
+            self._ax_bottom.plot(x, reduced_density_x, self.colors[channel % len(self.colors)])
+
+            y = channel_state.grid.dofs[1].dvr_points
+            reduced_density_y = wp.dvr_density(channel_state, 1)
+            self._ax_right.plot(reduced_density_y, y, self.colors[channel % len(self.colors)])
 
         # Styling: Remove superfluous ticks and such
         self._axes.set_title(f"t = {t:.4g} a.u.")
