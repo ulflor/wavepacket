@@ -19,6 +19,7 @@ Wavepacket documentation
     tutorials/schroedinger_cat
     tutorials/eigenstates
     tutorials/plotting
+    tutorials/channels
     tutorials/chebychev_solvers
     tutorials/relaxation
 

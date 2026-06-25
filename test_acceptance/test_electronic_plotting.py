@@ -10,7 +10,7 @@ def trace_out_y(psi: wp.grid.State, target: wp.grid.Grid):
     return wp.grid.State(target, result_data)
 
 
-def test_plotting(delay: int = 0):
+def test_plotting(delay: bool = False):
     dof = wp.grid.PlaneWaveDof(-10, 10, 64)
     channel_dof = wp.grid.ChannelDof(["ground", "excited"])
     grid = wp.grid.Grid([dof, dof, channel_dof])
@@ -48,8 +48,9 @@ def test_plotting(delay: int = 0):
         plotter_1d.plot(t, reduced)
         plotter_2d.plot(t, psi)
 
-        plt.pause(delay)
+        if delay:
+            plt.pause(1)
 
 
 if __name__ == "__main__":
-    test_plotting(1)
+    test_plotting(True)
