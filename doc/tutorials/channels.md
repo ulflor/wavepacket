@@ -31,7 +31,8 @@ We further separate the full Hamiltonian into the atomic kinetic energy and an
 electronic Hamiltonian that parametrically depends on the atomic coordinates,
 
 \begin{gather*}
-    \hat H(\mathbf{R}, \mathbf{r}) = T_\mathbf{R} + H_\mathrm{el}(\mathbf{r}; \mathbf{R}),
+    \hat H(\mathbf{R}, \mathbf{r}) = \hat T_\mathbf{R}
+        + \hat H_\mathrm{el}(\mathbf{r}; \mathbf{R}),
     .
 \end{gather*}
 
@@ -53,12 +54,12 @@ Plugging this expansion into the full Schrödinger equation,
 multiplying with $\varphi_k^\ast$ and integrating over the electronic coordinates yields
 
 \begin{gather*}
-    \imath \frac{\partial \psi_k(\mathbf{R}, t}{\partial t} 
-        = \hat (T_\mathbf{R} + V_n(\mathbf{R})) \psi_k(\mathbf{R}, t) + \sum_m C_{km} \psi_m(\mathbf{R}, t)
+    \imath \frac{\partial \psi_k(\mathbf{R}, t)}{\partial t} 
+        = (\hat T_\mathbf{R} + V_n(\mathbf{R})) \psi_k(\mathbf{R}, t) + \sum_m \hat C_{km} \psi_m(\mathbf{R}, t)
 \end{gather*}
 
-The couplings C originate from the action of the atomic kinetic energy coordinates
-on the $\mathbf{R}$-dependent electronic eigenstates (adiabatic couplings), or from
+The couplings C originate from the kinetic energy operator $\hat T_\mathbf{R}$ acting on
+the $\mathbf{R}$-dependence of the electronic eigenstates (adiabatic couplings), or from
 external couplings, for example from coupling electronic states with electromagnetic fields.
 
 This formulation reduces the time evolution of the molecule
@@ -153,9 +154,9 @@ The kinetic energy operator is the same for all channels, so it needs no additio
 Note how the channels can be interchangeably denoted through the index or the name.
 
 ```{code-cell}
-kinetic = wp.operator.CartesianKineticEnergy(grid, 0, mass=0.97989 / amu)
-pot_X = wp.operator.Potential1D(grid, 0, potential_X) * wp.operator.Channel(grid, "X")
-pot_A = wp.operator.Potential1D(grid, 0, potential_A) * wp.operator.Channel(grid, 1)
+kinetic = wp.operator.CartesianKineticEnergy(grid, 0, mass=0.97989 / amu, cutoff=0.7)
+pot_X = wp.operator.Potential1D(grid, 0, potential_X, cutoff=-1.2) * wp.operator.Channel(grid, "X")
+pot_A = wp.operator.Potential1D(grid, 0, potential_A, cutoff=-1.2) * wp.operator.Channel(grid, 1)
 hamiltonian = kinetic + pot_X + pot_A
 
 # The laser field is extremely strong, but at least that gives a visible effect.
@@ -172,24 +173,23 @@ and place the initial state on the ground state ("X") channel.
 
 ```{code-cell}
 psi0 = wp.builder.product_wave_function(grid, [
-        wp.special.Gaussian(2.519868, rms=math.sqrt(2) * 0.153688),
+        wp.special.Gaussian(2.519868, rms=np.sqrt(2) * 0.153688),
         "X"
     ])
 ```
 
 Now let us take a small detour: How can we get rid of the channels?
-As an example, we want to play around with only the ground state channel.
-As a silly but instructive example,
-let us calculate the trace of the ground-state component of the initial wave function.
+As a somewhat pointless example,
+let us calculate the trace of the excited-state channel of the initial wave function.
 You have two options for that.
 
 First, we can recognize that the Channel operators are projectors.
 By applying them onto a state, we project out the respective channel.
 
 ```{code-cell}
-projector_X = wp.operator.Channel(grid, "X")
-projected_state = projector_X.apply(psi0, 0.0)
-print(f"Trace of groundstate is {wp.trace(projected_state}.")
+projector_A = wp.operator.Channel(grid, "A")
+projected_state = projector_A.apply(psi0, 0.0)
+print(f"Trace of excited channel is {wp.trace(projected_state)}.")
 ```
 
 Alternatively, you can set up a transformation to get rid of the channel altogether.
@@ -202,25 +202,47 @@ because these are not trivially transformed.
 
 ```{code-cell}
 transformation = wp.grid.ChannelProjectionTransformation(grid)
-transformed = transformation.transform(psi0, "X")
+transformed = transformation.transform(psi0, channel=1)
 assert transformed.grid.dofs == [dof] 
-print(f"Trace of groundstate is {wp.trace(transformed)}.")
+print(f"Trace of excited channel is {wp.trace(transformed)}.")
 ```
 
-# Plotting etc.
+## Plotting etc.
 
 Both the standard log output and the plotting objects are aware of channel DOFs.
 Instead of treating them like a normal degree of freedom, the state is inspected separately for each channel.
 
+Following the recommendation in {doc}`relaxation`, we first relax the initial state for some time.
+This improves the initial state only marginally here,
+but would be important if the two channels were coupled from the start.
+
 ```{code-cell}
+relaxation = wp.solver.RelaxationSolver(hamiltonian, 30, (-1.9, 0.3))
+psi = psi0
+for i in range(5):
+    psi = relaxation.step(psi, 0)
+
 solver = wp.solver.OdeSolver(eq, 0.6 * fs)
-plotter = StackedPlot1D(6, psi0, potential_X+potential_A, hamiltonian)
+plotter = wp.plot.StackedPlot1D(6, psi0, pot_X+pot_A, hamiltonian)
 plotter.xlim = [1.5, 4]
-plotter.ylim = [-2, -1.45]
+plotter.ylim = [-1.9, -1.45]
 
 for t, psi in solver.propagate(psi0, 0.0, 5):
     plotter.plot(t, psi)
     wp.log(t, psi)
+```
+
+```{note}
+If you have channel coupling, the eigenstates of the Hamiltonian,
+even the ground state, usually cover multiple channels.
+The population of excited state channels is typically small, on the order of 1e-3,
+but the interference terms with the ground state scale with the wave function magnitude,
+reaching multiple percent.
+Erroneously placing the initial wave function onto a single channel then causes fast oscillations
+with a few percent amplitude, which has caused confusion more than once.
+
+The solution is to always emply a relaxation workflow as used here.
+The relaxation correctly spreads the initial state over multiple channels.
 ```
 
 The dynamics of the HCl+ cation are rather dull. 
