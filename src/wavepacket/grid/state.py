@@ -76,7 +76,7 @@ class State:
 
     def __add__(self, other: Self | complex) -> Self:
         if isinstance(other, State):
-            self._check_states(other)
+            self._check_same_type(other)
             return State(self.grid, self.data + other.data)
         else:
             return State(self.grid, self.data + other)
@@ -86,7 +86,7 @@ class State:
 
     def __sub__(self, other: Self | complex) -> Self:
         if isinstance(other, State):
-            self._check_states(other)
+            self._check_same_type(other)
             return State(self.grid, self.data - other.data)
         else:
             return State(self.grid, self.data - other)
@@ -109,7 +109,7 @@ class State:
     def __neg__(self) -> Self:
         return State(self.grid, -self.data)
 
-    def _check_states(self, other: Self) -> None:
+    def _check_same_type(self, other: Self) -> None:
         if self.grid != other.grid:
             raise wp.BadGridError(
                 "Binary operations with states on different grids are not supported."
