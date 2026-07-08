@@ -35,30 +35,34 @@ class Channel(OperatorBase):
         if channel_dof is None:
             raise wp.BadGridError("Grid has no channel degree of freedom.")
 
-        index = channel_dof.get_index(channel)
-        if index is None:
+        self._ket_index = grid.dofs.index(channel_dof)
+        self._bra_index = len(grid.dofs) + self._ket_index
+
+        self._channel = channel_dof.get_index(channel)
+        if self._channel is None:
             raise wp.InvalidValueError(
                 f"'{channel}' does not reference a valid channel (index out of bounds or name unknown)."
             )
 
-        data = np.zeros(channel_dof.size)
-        data[index] = 1.0
-
-        dof_index = grid.dofs.index(channel_dof)
-        self._wf_data = grid.broadcast(data, dof_index)
-        self._ket_data = grid.operator_broadcast(data, dof_index)
-        self._bra_data = grid.operator_broadcast(data, dof_index, False)
-
         super().__init__(grid, False)
 
     def apply_to_wave_function(self, psi: wpt.ComplexData, t: float) -> wpt.ComplexData:
-        return self._wf_data * psi
+        tmp = np.swapaxes(psi, 0, self._ket_index)
+        result = np.zeros_like(tmp)
+        result[self._channel, ...] = tmp[self._channel, ...]
+        return np.swapaxes(result, 0, self._ket_index)
 
     def apply_from_left(self, rho: wpt.ComplexData, t: float) -> wpt.ComplexData:
-        return self._ket_data * rho
+        tmp = np.swapaxes(rho, 0, self._ket_index)
+        result = np.zeros_like(tmp)
+        result[self._channel, ...] = tmp[self._channel, ...]
+        return np.swapaxes(result, 0, self._ket_index)
 
     def apply_from_right(self, rho: wpt.ComplexData, t: float) -> wpt.ComplexData:
-        return self._bra_data * rho
+        tmp = np.swapaxes(rho, 0, self._bra_index)
+        result = np.zeros_like(tmp)
+        result[self._channel, ...] = tmp[self._channel, ...]
+        return np.swapaxes(result, 0, self._bra_index)
 
 
 class Coupling(OperatorBase):
@@ -91,21 +95,21 @@ class Coupling(OperatorBase):
         if channel_dof is None:
             raise wp.BadGridError("Grid has no channel degree of freedom.")
 
-        from_index = channel_dof.get_index(from_channel)
-        to_index = channel_dof.get_index(to_channel)
+        self._from_index = channel_dof.get_index(from_channel)
+        self._to_index = channel_dof.get_index(to_channel)
 
-        if from_index is None or to_index is None:
+        if self._from_index is None or self._to_index is None:
             raise wp.InvalidValueError(
                 f"'{from_channel}' and/or '{to_channel}' do not reference a valid channel (index out of bounds or name unknown)."
             )
-        if channel_dof.dvr_points[from_index] == channel_dof.dvr_points[to_index]:
+        if channel_dof.dvr_points[self._from_index] == channel_dof.dvr_points[self._to_index]:
             raise wp.InvalidValueError(
                 "Coupling of a channel with itself is not supported. Use 'wavepacket.operator.Channel' for that."
             )
 
         data = np.zeros((channel_dof.size, channel_dof.size))
-        data[from_index, to_index] = 1.0
-        data[to_index, from_index] = 1.0
+        data[self._from_index, self._to_index] = 1.0
+        data[self._to_index, self._from_index] = 1.0
 
         self._ket_index = grid.dofs.index(channel_dof)
         self._bra_index = self._ket_index + len(grid.dofs)
@@ -115,15 +119,21 @@ class Coupling(OperatorBase):
 
     def apply_to_wave_function(self, psi: wpt.ComplexData, t: float) -> wpt.ComplexData:
         tmp = np.swapaxes(psi, 0, self._ket_index)
-        result = np.tensordot(self._matrix, tmp, axes=(1, 0))
+        result = np.zeros_like(tmp)
+        result[self._to_index, ...] = tmp[self._from_index, ...]
+        result[self._from_index, ...] = tmp[self._to_index, ...]
         return np.swapaxes(result, 0, self._ket_index)
 
     def apply_from_left(self, rho: wpt.ComplexData, t: float) -> wpt.ComplexData:
         tmp = np.swapaxes(rho, 0, self._ket_index)
-        result = np.tensordot(self._matrix, tmp, axes=(1, 0))
+        result = np.zeros_like(tmp)
+        result[self._to_index, ...] = tmp[self._from_index, ...]
+        result[self._from_index, ...] = tmp[self._to_index, ...]
         return np.swapaxes(result, 0, self._ket_index)
 
     def apply_from_right(self, rho: wpt.ComplexData, t: float) -> wpt.ComplexData:
         tmp = np.swapaxes(rho, 0, self._bra_index)
-        result = np.tensordot(self._matrix, tmp, axes=(1, 0))
+        result = np.zeros_like(tmp)
+        result[self._to_index, ...] = tmp[self._from_index, ...]
+        result[self._from_index, ...] = tmp[self._to_index, ...]
         return np.swapaxes(result, 0, self._bra_index)
