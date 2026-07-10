@@ -160,7 +160,7 @@ def _quadrature(lmax: int, m: int) -> tuple[wpt.RealData, wpt.RealData]:
 
     result = np.linalg.eig(matrix)
 
-    points = np.acos(result.eigenvalues)
+    points = np.acos(result.eigenvalues.real)
     weights = result.eigenvectors[0, :] ** 2
 
     # Sorting is wrong, we need to fix that
