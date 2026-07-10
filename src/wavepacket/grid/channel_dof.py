@@ -1,11 +1,13 @@
-from collections.abc import Sequence
 import numbers
+from collections.abc import Sequence
 from copy import deepcopy
 from typing import Final
 
 import numpy as np
+
 import wavepacket as wp
 import wavepacket.typing as wpt
+
 from .dofbase import DofBase
 
 
