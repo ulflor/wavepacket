@@ -24,6 +24,7 @@ Diagonalizing the Hamiltonian is done with {py:func}`wp.diagonalize`,
 which yields the eigenstates and -energies sorted by the latter.
 
 ```{code-cell}
+:tags: [hide-output]
 import numpy as np
 import wavepacket as wp
 

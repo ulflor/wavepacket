@@ -155,7 +155,7 @@ for t, psi in solver.propagate(psi0_full, 0.0, 3):
 
 This result also makes sense for philosophical reasons.
 If the addition of an arbitrary, uninteresting degree of freedom would change the results,
-we could modify any calculation results by, say, considering the phase of the moon
+we could modify any calculation results by, say, adding the phase of the moon
 which is an obviously silly proposition.
 
 ### Couplings and correlations

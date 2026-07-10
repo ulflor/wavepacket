@@ -36,8 +36,8 @@ electronic Hamiltonian that parametrically depends on the atomic coordinates,
     .
 \end{gather*}
 
-Doing normal quantum chemistry, we solve the electronic problem,
-and get the electronic eigenstates and -energies
+"Normal" quantum chemistry, such as DTF or CI methods solve the electronic problem,
+yielding electronic eigenstates and -energies
 
 \begin{gather*}
     \hat H_\mathrm{el}(\mathbf{r}; \mathbf{R}) \varphi_n(\mathbf{r}; \mathbf{R})
@@ -66,20 +66,21 @@ This formulation reduces the time evolution of the molecule
 to that of a set of coupled atomic wave functions, the so-called channels.
 This situation is common in molecular systems, which is why this is an important topic.
 The only, though common, exception arises if you can neglect the couplings (Born-Oppenheimer approximation).
-In that case, you can typically ignore all channels but the initially populated electronic ground state.
+In that case, you typically ignore all channels but the initially populated electronic ground state.
 
 ## Model
 
 As a model system for this tutorial, we choose the laser-excitation from the electronic ground state
 to an excited electronic state of the HCl+ cation.
 We ignore rotation, so we end up with two channels (electronic states),
-with the interatomic distance as sole coordinate.
+and the interatomic distance as sole atomic coordinate.
 Adiabatic couplings are neglected, but the channels have an electronic dipole coupling.
 
 The two potential energy surfaces and the dipole coupling are interpolated from tabulated data,
-taken from the original Matlab version's demo.
+taken from the original Matlab version's demo (click to expand for details)
 
 ```{code-cell}
+:tags: [hide-input]
 import numpy as np
 import scipy as sp
 
@@ -135,7 +136,7 @@ eV = 0.0367493
 Channels are treated as a special degree of freedom (DOF).
 You can initialize a channel DOF either with the number of channels,
 or by explicitly labeling the individual channels.
-These Labels can be optionally used to reference channels in a more readable way,
+These labels can be optionally used to reference channels in a more readable way,
 so choose preferably short, descriptive names
 
 ```{code-cell}
@@ -145,6 +146,10 @@ dof = wp.grid.PlaneWaveDof(1.5, 7.5, 128)
 channels = wp.grid.ChannelDof(['X', 'A'])
 grid = wp.grid.Grid([dof, channels])
 ```
+
+It is theoretically possible to have more than one channel DOF defined on a grid,
+but this is not well supported;
+the second channel DOF should be ignored by the convenience functionality described next.
 
 Two special operators exist for convenience:
 {py:class}`wavepacket.operator.Channel` projects onto a specific channel, while
@@ -160,7 +165,7 @@ pot_A = wp.operator.Potential1D(grid, 0, potential_A, cutoff=-1.2) * wp.operator
 hamiltonian = kinetic + pot_X + pot_A
 
 # The laser field is extremely strong, but at least that gives a visible effect.
-dip = wp.operator.Potential1D(grid, 0, dipole) * wp.operator.Coupling(grid, "X", "A")
+dip = wp.operator.Potential1D(grid, 0, dipole) * wp.operator.Coupling(grid, 0, "A")
 laser = wp.operator.LaserField(grid, max_field=0.5, shape=wp.special.SinSquare(1.5*fs, 1.5*fs),
                                omega=3.52*eV, phi = np.pi/2)
 
@@ -192,9 +197,9 @@ projected_state = projector_A.apply(psi0, 0.0)
 print(f"Trace of excited channel is {wp.trace(projected_state)}.")
 ```
 
-Alternatively, you can set up a transformation to get rid of the channel altogether.
+Alternatively, you can set up a transformation to get rid of the channel degree of freedom.
 {py:class}`wavepacket.grid.ChannelProjectionTransformation` takes a state,
-projects out the requested channel, and moves the state onto a target grid without the channel DOF.
+projects out the requested channel, and moves this projected state onto a target grid without the channel DOF.
 This is comfortable for some usages;
 for example the plotting functionality always gets rid of the channel DOF in that way.
 The approach is inconvenient for everything that involves operators, however,
@@ -235,26 +240,27 @@ for t, psi in solver.propagate(psi0, 0.0, 5):
 ```{note}
 If you have channel coupling, the eigenstates of the Hamiltonian,
 even the ground state, usually cover multiple channels.
-The population of excited state channels is typically small, on the order of 1e-3,
+The population of excited state channels (squared wave function) is typically small, on the order of 1e-3,
 but the interference terms with the ground state scale with the wave function magnitude,
 reaching multiple percent.
 Erroneously placing the initial wave function onto a single channel then causes fast oscillations
 with a few percent amplitude, which has caused confusion more than once.
 
-The solution is to always emply a relaxation workflow as used here.
-The relaxation correctly spreads the initial state over multiple channels.
+The solution is to always relax the wave function before propagating.
+The relaxation drives the wave function towards the correct eigenstate,
+and spreads the initial state over multiple channels.
 ```
 
 The dynamics of the HCl+ cation are rather dull. 
 The laser couples the channels and excites the ground state wave function to the electronic excited state.
+Because the excited state has a different potential, the wave function starts to move.
+On the simulation time scale of 3 femtoseconds, however, it does not get very far.
 
-Because the excited state has a different potential, the wave function starts to oscillate.
-On the simulation time scale of 3 femtoseconds, however, the oscillation does not get very far.
-
-A final side note: The laser pulse is extremely strong; it not only excites most of the ground state,
-but depopulates the excited state channel again.
-This suggests that a first-order perturbation theory picture, where the molecule absorbs only one photon,
-is not sufficient.
+A final side note: The laser pulse is extremely strong here; it not only excites the ground state,
+but even depopulates the excited state channel again.
+This suggests that a first-order perturbation theory picture, where the molecule absorbs only one photon
+to reach the excited state, is not sufficient.
 You need to take multi-photon excitation into account and consider higher excited states as well.
-In fact, the field is so strong that you would normally expect significant multiphoton ionisation.
-At least, the strong field means that we see an significant effect.
+In fact, the field is so strong that you should expect significant multiphoton ionisation.
+
+So as usual: Always be critical of your simulation results.
