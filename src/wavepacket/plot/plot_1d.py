@@ -42,7 +42,7 @@ class BasePlot1D(ABC):
             self._transform = None
             self._plot_grid = state.grid
             self._num_channels = 1
-            self._label = [""]
+            self._labels = [""]
         else:
             assert len(state.grid.dofs) == 2
             self._transform = wp.grid.ChannelProjectionTransformation(state.grid)
@@ -156,8 +156,13 @@ class BasePlot1D(ABC):
                     # negligible channel, do not plot, we only get noise and numerical errors
                     continue
 
-                prj = wp.operator.Channel(self._hamiltonian.grid, channel)
-                energy = wp.expectation_value(self._hamiltonian * prj, state, t).real / trace
+                if self._hamiltonian.grid.get_single_channel_dof() is None:
+                    energy = wp.expectation_value(self._hamiltonian, state, t).real / trace
+                else:
+                    prj = wp.operator.Channel(self._hamiltonian.grid, channel)
+                    energy = (
+                        wp.expectation_value(self._hamiltonian * prj, state, t).real / trace
+                    )
 
                 axes.plot(
                     dvr_grid,

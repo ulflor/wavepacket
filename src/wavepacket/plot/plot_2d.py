@@ -133,7 +133,7 @@ class BaseContourPlot2D(ABC):
 
             channel_state = self._to_plot_grid(state, channel)
             z = wp.dvr_density(channel_state)
-            contour = axes.contour(
+            axes.contour(
                 x,
                 y,
                 z.T,
