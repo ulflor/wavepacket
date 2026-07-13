@@ -1,4 +1,3 @@
-import math
 from collections.abc import Sequence
 
 import numpy as np
@@ -120,7 +119,7 @@ def random_wave_function(grid: wp.grid.Grid, generator: np.random.Generator) -> 
     >>> psi = random_wave_function(grid, rng)
     >>> psi2 = random_wave_function(grid, rng)
     """
-    data = np.ones(grid.shape) * np.exp(2 * math.pi * 1j * generator.random(grid.shape))
+    data = np.ones(grid.shape) * np.exp(2 * np.pi * 1j * generator.random(grid.shape))
     return wp.grid.State(grid, data)
 
 

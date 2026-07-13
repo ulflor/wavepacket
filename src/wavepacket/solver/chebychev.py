@@ -1,7 +1,7 @@
 import itertools
-import math
 from typing import Final
 
+import numpy as np
 import scipy
 
 import wavepacket as wp
@@ -67,7 +67,7 @@ class ChebychevSolver(SolverBase):
         self._spec_range = spectrum[1] - spectrum[0]
 
         alpha = self._spec_range * self.dt / 2.0
-        self._prefactor = math.e ** (-1j * (spectrum[0] + spectrum[1]) / 2.0 * dt)
+        self._prefactor = np.exp(-1j * (spectrum[0] + spectrum[1]) / 2.0 * dt)
         self._coeffs = [scipy.special.j0(alpha)]
         for n in itertools.count(1):
             c = 2 * scipy.special.jv(n, alpha)
@@ -156,7 +156,7 @@ class RelaxationSolver(SolverBase):
         self._spec_range = spectrum[1] - spectrum[0]
 
         alpha = self._spec_range * self.dt / 2.0
-        self._prefactor = math.e ** (-(spectrum[0] + spectrum[1]) / 2.0 * dt)
+        self._prefactor = np.exp(-(spectrum[0] + spectrum[1]) / 2.0 * dt)
         self._coeffs = [scipy.special.i0(alpha)]
         for n in itertools.count(1):
             c = 2 * scipy.special.iv(n, alpha)

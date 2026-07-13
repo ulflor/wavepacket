@@ -1,5 +1,3 @@
-import math
-
 import numpy as np
 
 import wavepacket as wp
@@ -58,15 +56,15 @@ class PlaneWaveDof(DofBase):
 
         dvr = np.linspace(xmin, xmax, n, endpoint=False, dtype=np.float64)
         if n % 2 == 0:
-            k_max = math.pi / dx
+            k_max = np.pi / dx
             fbr = np.linspace(-k_max, k_max, n, endpoint=False, dtype=np.float64)
         else:
-            k_max = math.pi / dx * (n - 1) / n
+            k_max = np.pi / dx * (n - 1) / n
             fbr = np.linspace(-k_max, k_max, n, dtype=np.float64)
 
         super().__init__(dvr, fbr)
 
-        self._sqrt_weights: wpt.RealData = math.sqrt(dx) * np.ones(n)
+        self._sqrt_weights: wpt.RealData = np.sqrt(dx) * np.ones(n)
         self._phase: wpt.ComplexData = np.exp(-1j * fbr * xmin) / np.sqrt(n)
         self._conj_phase: wpt.ComplexData = n * np.conj(self._phase)
 

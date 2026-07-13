@@ -1,4 +1,3 @@
-import math
 from collections.abc import Sequence
 
 import numpy as np
@@ -15,7 +14,7 @@ def _take_diagonal(data: wpt.ComplexData, grid: wp.grid.Grid) -> wpt.RealData:
 
 
 def _normalize(u: wpt.ComplexData) -> wpt.ComplexData:
-    return u / math.sqrt(np.abs(u**2).sum())
+    return u / np.sqrt(np.abs(u**2).sum())
 
 
 def dvr_density(state: wp.grid.State, dof_index: int | None = None) -> wpt.RealData:

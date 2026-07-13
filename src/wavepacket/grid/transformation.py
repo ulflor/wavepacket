@@ -172,7 +172,7 @@ class ChannelProjectionTransformation(TransformationBase):
         before = grid.dofs[:dof_index]
         after = grid.dofs[dof_index + 1 :]
 
-        points_before = math.prod([dof.size for dof in before])
+        points_before = math.prod([dof.size for dof in before])  # math.prod([]) == 1 !
         points = channel_dof.size
         points_after = math.prod([dof.size for dof in after])
         self._fixed_shape = (points_before, points, points_after)
