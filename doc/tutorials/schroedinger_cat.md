@@ -77,15 +77,15 @@ Of course, once we propagate our state in time, we want to do something with the
 Here, we just plot the density.
 
 ```{code-cell}
-import math
+import numpy as np
 
-rms = math.sqrt(0.5)
+rms = np.sqrt(0.5)
 psi_left = wp.builder.product_wave_function(grid, wp.special.Gaussian(-3, rms=rms))
 psi_right = wp.builder.product_wave_function(grid, wp.special.Gaussian(3, rms=rms))
-psi_0 = math.sqrt(0.5) * (psi_left + psi_right)
+psi_0 = np.sqrt(0.5) * (psi_left + psi_right)
 
 schroedinger_eq = wp.expression.SchroedingerEquation(hamiltonian)
-solver = wp.solver.OdeSolver(schroedinger_eq, dt=math.pi/5)
+solver = wp.solver.OdeSolver(schroedinger_eq, dt=np.pi/5)
 
 plot_1d = wp.plot.StackedPlot1D(6, psi_0)
 for t, psi in solver.propagate(psi_0, t0=0.0, num_steps=5):
@@ -144,7 +144,7 @@ $\hat \rho = 1/2 (|\psi_L\rangle\langle\psi_L| + |\psi_R\rangle\langle\psi_R|)$.
 rho_0 = 0.5 * (wp.builder.pure_density(psi_left) + wp.builder.pure_density(psi_right))
 
 liouvillian = wp.expression.CommutatorLiouvillian(hamiltonian)
-solver = wp.solver.OdeSolver(liouvillian, dt=math.pi/5)
+solver = wp.solver.OdeSolver(liouvillian, dt=np.pi/5)
 
 plot_1d = wp.plot.StackedPlot1D(6, rho_0)
 for t, rho in solver.propagate(rho_0, t0=0.0, num_steps=5):

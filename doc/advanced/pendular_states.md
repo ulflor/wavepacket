@@ -74,7 +74,6 @@ Note that at certain points in time, the rotor exhibits alignment recurrence eve
 This field-free alignment is used in practice because the molecule is aligned, yet undisturbed by external fields.
 
 ```{code-cell}
-import math
 import matplotlib.pyplot as plt
 import numpy as np
 
@@ -92,7 +91,7 @@ def calculate_alignment(Delta, sigma, l0=0, m=0):
     kinetic = wp.operator.RotationalKineticEnergy(grid, 0, 0.5)
     cos2 = wp.operator.Potential1D(grid, 0, lambda theta: np.cos(theta)**2)
     laser = wp.operator.TimeDependentOperator(grid,
-                                              lambda t: Delta * math.exp(-(t-delay)**2/sigma**2))
+                                              lambda t: Delta * np.exp(-(t-delay)**2/sigma**2))
 
     hamiltonian = kinetic - 0.5 * cos2 * laser
     equation = wp.expression.SchroedingerEquation(hamiltonian)

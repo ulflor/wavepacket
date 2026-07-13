@@ -114,7 +114,7 @@ to an almost arbitrary state converges exponentially towards the eigenvector wit
 The implementation is straight forward:
 
 ```{code-cell}
-import math
+import numpy as np
 
 psi = wp.builder.unit_wave_function(grid)
 for iteration in range(10):
@@ -135,7 +135,7 @@ Let us evolve a Gaussian wave packet with such values:
 
 ```{code-cell}
 psi0 = wp.builder.product_wave_function(grid, wp.special.Gaussian(-5, 0, rms=1))
-solver = wp.solver.ChebychevSolver(equation, math.pi/10, (0, energy_guess))
+solver = wp.solver.ChebychevSolver(equation, np.pi/10, (0, energy_guess))
 
 for t, psi in solver.propagate(psi0, t0=0.0, num_steps=10):
     wp.log(t, psi)
@@ -144,7 +144,7 @@ for t, psi in solver.propagate(psi0, t0=0.0, num_steps=10):
 We can also check what happens if we get the spectrum wrong. Let us say we cut at 200 a.u.:
 
 ```{code-cell}
-bad_solver = wp.solver.ChebychevSolver(equation, math.pi/10, (0, 200))
+bad_solver = wp.solver.ChebychevSolver(equation, np.pi/10, (0, 200))
 
 for t, psi in bad_solver.propagate(psi0, t0=0.0, num_steps=10):
     wp.log(t, psi)
@@ -200,7 +200,7 @@ but we know that it cannot be larger than 35 + 35 = 70, which is one fourth of t
 This allows us to increase the time step by a factor of 4 with the same computational effort.
 
 ```{code-cell}
-solver = wp.solver.ChebychevSolver(truncated_equation, 4 * math.pi/10, (0, 70))
+solver = wp.solver.ChebychevSolver(truncated_equation, 4 * np.pi/10, (0, 70))
 
 for t, psi in solver.propagate(psi0, t0=0.0, num_steps=10):
     wp.log(t, psi)

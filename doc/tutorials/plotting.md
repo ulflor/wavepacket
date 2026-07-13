@@ -114,7 +114,7 @@ These helpers create regular and stacked contour plots.
 Let us demonstrate the stacked plot for a two-dimensional harmonic oscillator example:
 
 ```{code-cell}
-import math
+import numpy as np
 
 dof = wp.grid.PlaneWaveDof(-15, 15, 128)
 grid_2d = wp.grid.Grid([dof, dof])
@@ -129,7 +129,7 @@ equation_2d = wp.expression.SchroedingerEquation(kinetic_2d + potential_2d)
 psi0_2d = wp.builder.product_wave_function(grid_2d, [wp.special.Gaussian(-5, 0, rms=1),
                                                      wp.special.Gaussian(-5, -5, rms=1)])
 
-solver_2d = wp.solver.ChebychevSolver(equation_2d, math.pi/5, (0, 140))
+solver_2d = wp.solver.ChebychevSolver(equation_2d, np.pi/5, (0, 140))
 plot = wp.plot.StackedContourPlot2D(3, 3, psi0_2d, potential_2d)
 for t, psi in solver_2d.propagate(psi0_2d, 0, 8):
     plot.plot(t, psi)

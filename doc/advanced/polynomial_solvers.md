@@ -167,7 +167,7 @@ so let us back this up with numbers.
 We choose the truncated harmonic oscillator example from {doc}`/tutorials/chebychev_solvers`.
 
 ```{code-cell}
-import math
+import numpy as np
 import wavepacket as wp
 
 grid = wp.grid.Grid(wp.grid.PlaneWaveDof(-10, 10, 128))
@@ -201,17 +201,17 @@ Then we only wrap our (truncated) expression and propagate for a common time.
 ```{code-cell}
 counting_equation = CountingExpression(equation)
 
-solver_chebychev = wp.solver.ChebychevSolver(counting_equation, math.pi/2, (0, 70))
+solver_chebychev = wp.solver.ChebychevSolver(counting_equation, np.pi/2, (0, 70))
 solver_chebychev.step(psi0, t=0)
 print(f"Chebychev solver:                      count={counting_equation.count}, alpha={solver_chebychev.alpha:.4}")
 
 counting_equation.count = 0
-solver_rk45 = wp.solver.OdeSolver(counting_equation, math.pi/2)
+solver_rk45 = wp.solver.OdeSolver(counting_equation, np.pi/2)
 solver_rk45.step(psi0, t=0)
 print(f"Runge-Kutta 4/5 solver:                count={counting_equation.count}")
 
 counting_equation.count = 0
-solver_rk45_precise = wp.solver.OdeSolver(counting_equation, math.pi/2, rtol=1e-9, atol=1e-9)
+solver_rk45_precise = wp.solver.OdeSolver(counting_equation, np.pi/2, rtol=1e-9, atol=1e-9)
 solver_rk45_precise.step(psi0, t=0)
 print(f"High-precision Runge-Kutta 4/5 solver: count={counting_equation.count}")
 ```

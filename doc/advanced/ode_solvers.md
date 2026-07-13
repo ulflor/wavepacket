@@ -245,15 +245,13 @@ To answer this question, we can look at the projection of the truncated result o
 any deviation from one can serve as a figure of merit of the additional error.
 
 ```{code-cell}
-import math
-
 truncated_hamiltonian = (wp.operator.CartesianKineticEnergy(grid, 0, 1.0, cutoff=50)
                         + wp.operator.Potential1D(grid, 0, lambda x: 0.5 * x ** 2, cutoff=50))
 truncated_equation = wp.expression.SchroedingerEquation(truncated_hamiltonian)
-truncated_solver = wp.solver.OdeSolver(truncated_equation, math.pi / 2)
+truncated_solver = wp.solver.OdeSolver(truncated_equation, np.pi / 2)
 truncated_result = truncated_solver.step(psi0, 0)
 
-solver = wp.solver.OdeSolver(equation, math.pi/2)
+solver = wp.solver.OdeSolver(equation, np.pi/2)
 result = solver.step(psi0, 0)
 
 print(f"Overlap after pi/2: {wp.population(truncated_result, result)}")
