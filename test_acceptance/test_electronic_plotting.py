@@ -49,9 +49,9 @@ def test_plotting(delay: bool = False):
         plotter_1d.plot(t, reduced)
         plotter_2d.plot(t, psi)
 
-        if delay:
+        if delay:  # pragma: no cover
             plt.pause(1)
 
 
-if __name__ == "__main__":
+if __name__ == "__main__":  # pragma: no cover
     test_plotting(True)

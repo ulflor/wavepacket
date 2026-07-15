@@ -65,7 +65,7 @@ class OdeSolver(SolverBase):
         solution = solve_ivp(
             _inner_solver, t_span, y0, t_eval=[t + self.dt], args=args, **self._kwargs
         )
-        if solution.status != 0:
+        if solution.status != 0:  # pragma: no cover
             raise wp.ExecutionError(
                 "Bad return value from integrating"
                 f"Status: {solution.status} != 0; Message: {solution.msg}"
