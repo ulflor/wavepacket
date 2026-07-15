@@ -93,11 +93,11 @@ For didactic reasons, we will discuss three items in the following:
 
 If the spectrum of the Hamiltonian is inside the interval
 $[E_\mathrm{min}, E_\mathrm{min} + \delta E]$, then the corresponding
-{py:class}`wp.expression.CommutatorLiouvillian` has the spectrum inside $[-\delta E, \delta E]$,
+{py:class}`wavepacket.expression.CommutatorLiouvillian` has the spectrum inside $[-\delta E, \delta E]$,
 because the coherence terms with the fastest oscillations $\sim \exp(\pm \imath \delta E t)$
 occur between the eigenstates with the largest and smallest eigenvalues, respectively.
 
-An important corollary is that a {py:class}`wp.solver.ChebychevSolver`
+An important corollary is that a {py:class}`wavepacket.solver.ChebychevSolver`
 can normally only be used for wave functions *or* density operators.
 
 #### How can I estimate the bounds of a Hamiltonian's spectrum?

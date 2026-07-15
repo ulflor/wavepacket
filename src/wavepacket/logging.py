@@ -38,11 +38,11 @@ def log(
 
     Parameters
     ----------
-    t : float
+    t: float
         The time at which you log.
-    state : wp.grid.State
+    state: wp.grid.State
         The state to log.
-    precision : int, default=6
+    precision: int, default=6
         How many decimal places should be printed.
     truncate: float | None, default=None
         If set, set all calculated values smaller than this boundary to zero.

@@ -50,7 +50,7 @@ but the path to more complex setups should be readily apparent from the formulas
 As example system, we calculate the temperature-dependent energy of a Morse oscillator,
 with parameters chosen for an OH radical.
 The system is simple, but not entirely trivial.
-Because we are going to use the {py:class}`RelaxationSolver`,
+Because we are going to use the {py:class}`wavepacket.solver.RelaxationSolver`,
 we truncate the operators at energies well beyond the dissociation energy.
 This has the side effect of providing us bounds for the spectrum of the Hamiltonian that we can use later.
 
@@ -384,7 +384,7 @@ where the phase is drawn uniformly from the interval $\phi \in [-\pi, \pi]$.
 The overall implementation is similar to that of method II with three differences.
 
 1. Instead of calculating eigenstates, we generate random wave functions using
-   {py:func}`wp.builder.random_wave_function`.
+   {py:func}`wavepacket.builder.random_wave_function`.
 2. We need to explicitly relax the states.
 3. We do not sum the individual contributions, but average.
 

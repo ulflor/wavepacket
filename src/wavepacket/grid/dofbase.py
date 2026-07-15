@@ -21,7 +21,7 @@ class DofBase(ABC):
     Note that the transformation functions are highly flexible, but awkward and error-prone
     to use, so they should generally be avoided outside Wavepacket-internal code.
     In general, you should use convenience functions instead that perform the required
-    transformation behind the scenes, such as :py:func:`wavepacket.grid.dvr_density`.
+    transformation behind the scenes, such as :py:func:`wavepacket.dvr_density`.
 
     Parameters
     ----------

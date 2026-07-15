@@ -58,7 +58,7 @@ class LaserField(TimeDependentOperator):
         The maximum field strength E_0
     shape: Callable[[float], float]
         The pulse shape f(t). For easier use, it should be normalized to a maximum value of 1.
-        Wavepacket comes with several predefined shapes, such as :py:class:`wavepacket.Lorentzian`.
+        Wavepacket comes with several predefined shapes, such as :py:class:`wavepacket.special.SinSquare`.
     omega: float
         The angular frequency omega
     phi: float, default=0

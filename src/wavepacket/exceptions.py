@@ -38,7 +38,7 @@ class ExecutionError(Exception):
     """
     An unrecoverable problem was encountered in foreign code.
 
-    The main example is the :py:class:`wavepacket.solver.odesolver` getting
+    The main example is the :py:class:`wavepacket.solver.OdeSolver` getting
     an error back while integrating.
     """
 

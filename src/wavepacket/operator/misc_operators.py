@@ -18,7 +18,7 @@ class Projection(OperatorBase):
     which the operator projects.
 
     The basis functions need not be orthogonal, they are orthonormalized
-    using :func:`wp.orthonormalize`.
+    using :func:`wavepacket.orthonormalize`.
 
     Parameters
     ----------
@@ -37,7 +37,7 @@ class Projection(OperatorBase):
 
     See Also
     --------
-    wavepacket.grid.population: if you only want to calculate the population of some states.
+    wavepacket.population: if you only want to calculate the population of some states.
     """
 
     def __init__(self, basis: wp.grid.State | Sequence[wp.grid.State]) -> None:

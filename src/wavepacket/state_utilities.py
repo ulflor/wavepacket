@@ -32,7 +32,7 @@ def dvr_density(state: wp.grid.State, dof_index: int | None = None) -> wpt.RealD
 
     Parameters
     ----------
-    state : wp.grid.State
+    state: wp.grid.State
         The state (wave function or density operator) whose density should be computed.
 
     dof_index: int|None, default=None
@@ -109,7 +109,7 @@ def fbr_density(state: wp.grid.State, dof_index: int | None = None) -> wpt.RealD
 
     Parameters
     ----------
-    state : wp.grid.State
+    state: wp.grid.State
         The state (wave function or density operator) whose FBR density should be computed.
 
     dof_index: int | None, default=None
@@ -169,7 +169,7 @@ def trace(state: wp.grid.State) -> float:
 
     Parameters
     ----------
-    state : wp.grid.State
+    state: wp.grid.State
         The state (wave function or density operator) for which to calculate the trace.
 
     Returns
@@ -197,7 +197,7 @@ def normalize(state: wp.grid.State) -> wp.grid.State:
 
     Parameters
     ----------
-    state : wp.grid.State
+    state: wp.grid.State
         The state (wave function or density operator) that should be normalized.
 
     Returns
@@ -283,8 +283,8 @@ def population(state: wp.grid.State, target: wp.grid.State) -> float:
     The return value is simply the absolute square of the scalar product of
     the two states. The target state is normalized before the calculation.
     This operation can be thought of as a shortcut for creating a
-    :py:class:`wp.operator.Projection` with the target and calculating
-    the :py:func:`wp.expectation_value` of the input state.
+    :py:class:`wavepacket.operator.Projection` with the target and calculating
+    the :py:func:`wavepacket.expectation_value` of the input state.
 
     Parameters
     ----------

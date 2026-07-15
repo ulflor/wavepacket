@@ -14,11 +14,11 @@ def expectation_value(
 
     Parameters
     ----------
-    op : wp.operator.OperatorBase
+    op: wp.operator.OperatorBase
         The operator whose expectation value is calculated.
-    state : wp.grid.State
+    state: wp.grid.State
         The wave function or density operator that is used for the calculation.
-    t : float | None
+    t: float | None
         The time at which the operator should be evaluated.
          Only required for time-dependent operators.
 
@@ -51,7 +51,7 @@ def diagonalize(
 
     This function is a wrapper around `numpy.linalg.eigh` that calculates
     a matrix representation of the operator transforms the calculated eigenstates
-    into a :py:class:`wp.grid.State` for easier consumption, and provides a generator
+    into a :py:class:`wavepacket.grid.State` for easier consumption, and provides a generator
     for looping instead of a matrix with all eigenvalues in one go.
     This function diagonalizes a full, dense operator matrix, so it requires
 

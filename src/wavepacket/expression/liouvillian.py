@@ -46,7 +46,7 @@ class OneSidedLiouvillian(ExpressionBase):
     """
     An expression that simply applies an operator from the left or right of a density operator.
 
-    This operator is basically the same as the :py:class:`wp.expression.SchroedingerEquation`
+    This operator is basically the same as the :py:class:`wavepacket.expression.SchroedingerEquation`
     but applies the operator onto a density operator, and it lacks the factor of "-1j".
 
     This expression is found occasionally in the context of open quantum systems or when relaxing

@@ -183,8 +183,8 @@ class ChannelProjectionTransformation(TransformationBase):
         """
         Transforms the wave function
 
-        Parameter
-        ---------
+        Parameters
+        ----------
         state: wavepacket.grid.State
             the input state to transform
         **kwargs:
