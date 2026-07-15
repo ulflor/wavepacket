@@ -27,7 +27,7 @@ To get there, the code ended up with a few common concepts.
   and we did not cover every potential pitfall. Avoid breaking this guarantee, however,
   because doing so can corrupt object consistency (and therefore results) in
   subtle ways. In particular, if you create a :py:class:`wavepacket.grid.State`
-  directly from a numpy array (very advanced use case), dispose the array and
+  directly from a numpy array (very advanced use case), forget about this array and
   do not modify it afterwards.
 
 

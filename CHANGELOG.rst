@@ -14,9 +14,10 @@ Major changes:
 - (#25) Added coupled channels consisting of a degree of freedom, a transformation,
   two operators and a few convenience functions.
 
-- added new tutorials / examples / theory pages
-  - (#39) Effect of an environment on system states (decoherence) for a simple example
-  - (#25) Introduction and usage of coupled channels
+New documentation / examples:
+
+- (#39) Effect of an environment on system states (decoherence) for a simple example
+- (#25) Introduction and usage of coupled channels
 
 Minor changes:
 
@@ -26,6 +27,7 @@ Bug fixes:
 
 - (#63) removed some warnings due to incorrect formula escaping
   - fixed a type error with recent scipy versions when using a SphericalHarmonicsDof
+- (#41) fixed broken references in the documentation
 
 0.4.1
 -----
