@@ -32,7 +32,7 @@ electronic Hamiltonian that parametrically depends on the atomic coordinates,
 
 \begin{gather*}
     \hat H(\mathbf{R}, \mathbf{r}) = \hat T_\mathbf{R}
-        + \hat H_\mathrm{el}(\mathbf{r}; \mathbf{R}),
+        + \hat H_\mathrm{el}(\mathbf{r}; \mathbf{R})
     .
 \end{gather*}
 
@@ -136,7 +136,7 @@ eV = 0.0367493
 Channels are treated as a special degree of freedom (DOF).
 You can initialize a channel DOF either with the number of channels,
 or by explicitly labeling the individual channels.
-These labels can be optionally used to reference channels in a more readable way,
+These labels can be used to reference channels in a more readable way,
 so choose preferably short, descriptive names
 
 ```{code-cell}
@@ -261,6 +261,6 @@ but even depopulates the excited state channel again.
 This suggests that a first-order perturbation theory picture, where the molecule absorbs only one photon
 to reach the excited state, is not sufficient.
 You need to take multi-photon excitation into account and consider higher excited states as well.
-In fact, the field is so strong that you should expect significant multiphoton ionisation.
+In fact, this particular field is so strong that you should expect significant multiphoton ionisation.
 
 So as usual: Always be critical of your simulation results.

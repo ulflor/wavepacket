@@ -159,6 +159,8 @@ $$
     .
 $$
 
+This effect is discussed in depth in {doc}`/advanced/reduced_density`
+
 If we choose the direct product of the initial wave function (*coherent* summation), we recover
 the oscillations, of course.
 

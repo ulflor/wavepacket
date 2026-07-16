@@ -61,7 +61,7 @@ I currently lack a formal procedure for new contributors, but you are
 very welcome to contribute to the project. If you do not know what to do,
 use one of the support channels from the previous section ; there is enough
 work for multiple developers, also for non-coding skills (there is never enough
-documentation).
+documentation, for example).
 
 
 History
