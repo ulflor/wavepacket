@@ -2,7 +2,7 @@
 A package for solving Schrödinger and Liouville von Neumann equations.
 """
 
-__version__ = "0.4.1"
+__version__ = "0.5"
 
 __all__ = [
     "__version__",
