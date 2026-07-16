@@ -45,7 +45,6 @@ dependencies = [
 
 [project.optional-dependencies]
 test = ["pytest >= 8.3"]
-coverage = ["coverage >= 7"]
 formatting = ["black  == 26.*"]
 
 
@@ -78,6 +77,7 @@ exclude = ['.git*', '.readthedocs*']
 exclude_also = ["raise NotImplementedError()"]
 show_missing = true
 skip_covered = true
+fail_under = 100
 omit = ["*/wavepacket/plot/*.py",
         "*/wavepacket/testing/*.py"]
 
@@ -92,7 +92,7 @@ skip_glob = ["doc/*", "**/__init__.py"]
 
 [tool.tox]
 requires = ["tox >= 4.30"]
-env_list = ["py311", "py312", "py313", "py314", "py311-min", "py312-min", "py313-min"]
+env_list = ["py311", "py312", "py313", "py314", "py311-min", "py312-min", "py313-min", "coverage"]
 
 [tool.tox.env_run_base]
 description = "Run unit tests under {python_base}; Standard environments like py313 implicitly inherit this."
@@ -109,3 +109,8 @@ dependency_groups = ["minimum_dependencies", "test"]
 [tool.tox.env.py313-min]
 dependency_groups = ["minimum_dependencies", "test"]
 
+[tool.tox.env.coverage]
+dependency_groups = ["test"]
+deps = ["coverage >= 7"]
+commands = [["coverage", "run", "-m", "pytest", "test", "test_acceptance"],
+            ["coverage", "report"]]
