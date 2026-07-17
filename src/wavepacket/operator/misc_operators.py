@@ -114,3 +114,53 @@ class Constant(OperatorBase):
 
     def apply_from_right(self, rho: wpt.ComplexData, t: float) -> wpt.ComplexData:
         return self.value * rho
+
+
+class TensorOperator(OperatorBase):
+    """
+    Operator that wraps around a general tensor.
+
+    This is one of the most general, but also slowest and most awkward operator.
+    It essentially wraps around an operator matrix that is multiplied with a state
+    vector or density matrix.
+
+    In most cases, you do not set up such an operator manually, but it can be the
+    result, for example, when transforming an operator into a subspace.
+
+    Parameters
+    ----------
+    grid: wavepacket.grid.Grid
+        The grid on which this operator is defined.
+    tensor: wavepacket.testing.ComplexData
+        The operator matrix in tensor form. A_{i1,i2, ... , j1,j2, ...} defines the
+        mapping from the DVR basis function at (x_j1, x_j2, ...) to that at
+        (x_i1, x_i2, ...).
+
+    Raises
+    ------
+    wavepacket.InvalidValueError
+        Raised if the input tensor has the wrong shape.
+    """
+
+    def __init__(self, grid: wp.grid.Grid, tensor: wpt.ComplexData) -> None:
+        if tensor.shape != grid.operator_shape:
+            raise wp.InvalidValueError("Input must be shaped like an operator.")
+
+        self._matrix = np.reshape(tensor.copy(), (grid.size, grid.size))
+
+        super().__init__(grid, False)
+
+    def apply_to_wave_function(self, psi: wpt.ComplexData, t: float) -> wpt.ComplexData:
+        tmp = np.reshape(psi, self.grid.size)
+        result = np.tensordot(self._matrix, tmp, axes=(1, 0))
+        return np.reshape(result, self.grid.shape)
+
+    def apply_from_left(self, rho: wpt.ComplexData, t: float) -> wpt.ComplexData:
+        tmp = np.reshape(rho, (self.grid.size, self.grid.size))
+        result = np.tensordot(self._matrix, tmp, axes=(1, 0))
+        return np.reshape(result, self.grid.operator_shape)
+
+    def apply_from_right(self, rho: wpt.ComplexData, t: float) -> wpt.ComplexData:
+        tmp = np.reshape(rho, (self.grid.size, self.grid.size))
+        result = np.tensordot(tmp, self._matrix, axes=(1, 0))
+        return np.reshape(result, self.grid.operator_shape)

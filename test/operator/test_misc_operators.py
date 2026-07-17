@@ -109,3 +109,52 @@ def test_non_orthogonal_states(grid_1d):
     input_state = wp.testing.random_state(grid_1d, 10)
 
     assert_close(projection1.apply(input_state, 0), projection2.apply(input_state, 0), 1e-12)
+
+
+def test_reject_incorrectly_sized_tensor(grid_1d):
+    tensor = np.ones(grid_1d.shape)
+    with pytest.raises(wp.InvalidValueError):
+        wp.operator.TensorOperator(grid_1d, tensor)
+
+
+def test_apply_tensor_operator():
+    dof1 = wp.grid.PlaneWaveDof(1, 2, 5)
+    dof2 = wp.grid.ChannelDof(2)
+    grid = wp.grid.Grid([dof1, dof2])
+
+    psi = wp.testing.random_state(grid, 42)
+
+    target_psi = wp.testing.random_state(grid, 43)
+    tensor = wp.builder.direct_product(target_psi, psi).data
+    const = 2j
+    op = wp.operator.TensorOperator(grid, const * tensor)
+
+    # wave function
+    result = op.apply_to_wave_function(psi.data, 0)
+    expected = target_psi.data * const * wp.trace(psi)
+    assert_allclose(expected, result, rtol=0, atol=1e-12)
+
+    # density operator from left
+    rho = wp.builder.pure_density(psi)
+    result = op.apply_from_left(rho.data, 0)
+    expected = wp.builder.direct_product(target_psi, psi).data * const * wp.trace(psi)
+    assert_allclose(expected, result, rtol=0, atol=1e-12)
+
+    # density operator from right
+    tensor = wp.builder.direct_product(psi, target_psi).data
+    op = wp.operator.TensorOperator(grid, const * tensor)
+    result = op.apply_from_right(rho.data, 0)
+    expected = wp.builder.direct_product(psi, target_psi).data * const * wp.trace(psi)
+    assert_allclose(expected, result, rtol=0, atol=1e-12)
+
+
+def test_tensor_operator_copies_input():
+    grid = wp.grid.Grid(wp.grid.PlaneWaveDof(1, 2, 5))
+    tensor = np.arange(25).reshape(grid.operator_shape)
+    op = wp.operator.TensorOperator(grid, tensor)
+
+    tensor[:, :] = 0
+    test_state = wp.testing.random_state(grid, 42)
+    result = op.apply(test_state, 0)
+
+    assert wp.trace(result) > 1e-12

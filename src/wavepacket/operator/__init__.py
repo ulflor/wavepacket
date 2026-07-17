@@ -15,6 +15,7 @@ __all__ = [
     "Potential1D",
     "Projection",
     "Constant",
+    "TensorOperator",
 ]
 
 from .operatorbase import OperatorBase
@@ -25,6 +26,6 @@ from .fbroperators import (
     RotationalKineticEnergy,
 )
 from .channel_operators import Channel, Coupling
-from .misc_operators import Projection, Constant
+from .misc_operators import Projection, Constant, TensorOperator
 from .time_dependent_operators import TimeDependentOperator, LaserField
 from .potentials import Potential1D
