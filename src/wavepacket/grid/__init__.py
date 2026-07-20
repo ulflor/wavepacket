@@ -11,6 +11,7 @@ __all__ = [
     "PlaneWaveDof",
     "SphericalHarmonicsDof",
     "State",
+    "SubspaceTransformation",
     "TransformationBase",
 ]
 
@@ -23,5 +24,6 @@ from .state import State
 from .transformation import (
     ChannelProjectionTransformation,
     PartialTraceTransformation,
+    SubspaceTransformation,
     TransformationBase,
 )

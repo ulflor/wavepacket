@@ -1,5 +1,6 @@
 import math
 from abc import ABC, abstractmethod
+from collections.abc import Sequence
 from typing import Final
 
 import numpy as np
@@ -235,3 +236,81 @@ class ChannelProjectionTransformation(TransformationBase):
             return wp.grid.State(self.target_grid, result)
         else:
             raise wp.BadStateError("Invalid state cannot be transformed.")
+
+
+class SubspaceTransformation(TransformationBase):
+    """
+    Transform into a subspace spanned by some basis vectors.
+
+    Note that the subspace does not retain any structure; wave functions
+    are just a set of coefficients of the basis vectors with no useful
+    further representation, e.g., for plotting.
+
+    Parameters
+    ----------
+    subspace: list[wavepacket.grid.State]
+        The list of vectors that span the subspace. They are orthonormalized
+        internally. However, they must be linearly independent, otherwise the
+        orthonormalization picks up noise as an additional basis vector.
+
+    Raises
+    ------
+    wp.InvalidValueError
+        Raised if the subspace parameter is not defined or empty, or if
+        any wave function has norm zero.
+    wp.BadGridError
+        Raised if the subspace vectors are defined on different grids.
+    wp.BadStateError
+        Raised if any subspace vector is not a wave function.
+    """
+
+    def __init__(self, subspace: Sequence[State]) -> None:
+        if not subspace:
+            raise wp.InvalidValueError("Subspace definition required for transformation.")
+
+        grid = subspace[0].grid
+        if any(s.grid != grid for s in subspace):
+            raise wp.BadGridError("Subspace vectors are not defined on a common grid.")
+        if any(not s.is_wave_function() for s in subspace):
+            raise wp.BadStateError("Subspace definition must only contain wave functions.")
+        if any(wp.trace(s) == 0 for s in subspace):
+            raise wp.InvalidValueError("Basis functions must have finite norm.")
+
+        basis = [np.ravel(s.data) for s in wp.orthonormalize(subspace)]
+        self._from_right = np.stack(basis, axis=1)
+        self._from_left = self._from_right.T.conj()
+
+        target_grid = wp.grid.Grid(wp.grid.ChannelDof(len(subspace)))
+        super().__init__(subspace[0].grid, target_grid)
+
+    def transform(self, state: State, **kwargs) -> State:
+        if state.grid is not self.source_grid:
+            raise wp.BadGridError("State is defined on wrong grid.")
+
+        if state.is_wave_function():
+            tmp = state.data.ravel()
+            transformed = np.tensordot(self._from_left, tmp, axes=(1, 0))
+        elif state.is_density_operator():
+            tmp = np.reshape(state.data, (self.source_grid.size, self.source_grid.size))
+            left_side = np.tensordot(self._from_left, tmp, axes=(1, 0))
+            transformed = np.tensordot(left_side, self._from_right, axes=(1, 0))
+        else:
+            raise wp.BadStateError("Invalid state cannot be transformed.")
+
+        return State(self.target_grid, transformed)
+
+    def transform_back(self, state: State) -> State:
+        if state.grid is not self.target_grid:
+            raise wp.BadGridError("State is defined on wrong grid.")
+
+        if state.is_wave_function():
+            tmp = np.tensordot(state.data, self._from_right, axes=(0, 1))
+            transformed = np.reshape(tmp, self.source_grid.shape)
+        elif state.is_density_operator():
+            tmp = np.tensordot(self._from_right, state.data, axes=(1, 0))
+            tmp = np.tensordot(tmp, self._from_left, axes=(1, 0))
+            transformed = np.reshape(tmp, self.source_grid.operator_shape)
+        else:
+            raise wp.BadStateError("Invalid state cannot be transformed.")
+
+        return wp.grid.State(self.source_grid, transformed)
