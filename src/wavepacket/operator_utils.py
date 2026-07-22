@@ -103,3 +103,52 @@ def diagonalize(
         psi_data = np.reshape(vecs[:, i], grid.shape)
         psi = wp.grid.State(grid, psi_data)
         yield vals[i], psi
+
+
+def transform_operator(
+    op: wp.operator.OperatorBase, transform: wp.grid.TransformationBase, **kwargs
+) -> wp.operator.TensorOperator:
+    """
+    Transforms an operator with a given transformation.
+
+    You plug in an operator from the transformation's source grid, and obtain
+    an operator in the transformation's target grid. Be aware that this function
+    does o sophisticated magic. It merely assembles the matrix form of the operator,
+    transforms it using the given transformation, and wraps the result in a
+    :py:class:`wavepacket.operator.TensorOperator`.
+
+    As a result, the function needs to construct a (large) operator matrix, may
+    prouce a less efficient operator, and works only for certain transformations,
+    in particular those that are effectively a projection (e.g.,
+    :py:class:`wavepacket.grid.ChannelTransformation`). If you attempt a partial
+    trace of the operator matrix, you might get unintended results.
+
+    Parameters
+    ----------
+    op: wavepacket.operator.OperatorBase
+        The operator that should be transformed.
+    transform: wavepacket.grid.TransformationBase
+        The transformation that should be applied to the operator.
+    kwargs:
+        Any additional parameters that need to be passed to the transformation.
+        An example is the "channel" argument for the
+        :py:class:`wavepacket.grid.ChannelTransformation`.
+
+    Returns
+    -------
+    wavepacket.operator.TensorOperator
+        The transformed operator defined on the target grid.
+
+    Raises
+    ------
+    wavepacket.BadGridError
+        Raised if the operator is not defined on the transformations's source grid.
+    """
+    if op.grid is not transform.source_grid:
+        raise wp.BadGridError("Grids of operator and transformation do not match.")
+
+    unit_density = wp.builder.unit_density(op.grid)
+    op_matrix = op.apply(unit_density, 0)
+    transformed_matrix = transform.transform(op_matrix, **kwargs)
+
+    return wp.operator.TensorOperator(transformed_matrix.grid, transformed_matrix.data)

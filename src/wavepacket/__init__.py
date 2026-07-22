@@ -28,6 +28,7 @@ __all__ = [
     "trace",
     "diagonalize",
     "expectation_value",
+    "transform_operator",
 ]
 
 # order matters, because subpackages depend on each other at times.
@@ -59,4 +60,4 @@ from .state_utilities import (
     population,
     trace,
 )
-from .operator_utils import diagonalize, expectation_value
+from .operator_utils import diagonalize, expectation_value, transform_operator

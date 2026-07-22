@@ -115,3 +115,29 @@ def test_diagonalize_forwards_time_correctly(grid_1d):
     energies_t2 = [e for e, _ in wp.diagonalize(op, 2.0)]
 
     assert abs(energies_t2[0] - 2.0) < 1e-12
+
+
+def test_reject_operator_transformations_on_the_wrong_grid(grid_1d):
+    op_grid = wp.grid.Grid(wp.grid.ChannelDof(2))
+    op = wp.operator.Constant(op_grid, 5.0)
+    transform = wp.grid.SubspaceTransformation([wp.testing.random_state(grid_1d, 42)])
+
+    with pytest.raises(wp.BadGridError):
+        wp.transform_operator(op, transform)
+
+
+def test_transform_operator():
+    grid = wp.grid.Grid([wp.grid.PlaneWaveDof(-10, 10, 128), wp.grid.ChannelDof(2)])
+    test_state = wp.testing.random_state(grid, 42)
+
+    kin = wp.operator.CartesianKineticEnergy(grid, 0, 1.0)
+    channel0 = wp.operator.Channel(grid, 0)
+    channel1 = wp.operator.Channel(grid, 1)
+    op = kin + kin * channel1
+
+    transform = wp.grid.ChannelProjectionTransformation(grid)
+    transformed_op = wp.transform_operator(op, transform, channel=0)
+
+    result1 = transform.transform(op.apply(test_state, 0), channel=0)
+    result2 = transformed_op.apply(transform.transform(test_state, channel=0), 0)
+    assert_close(result1, result2, 1e-12)
