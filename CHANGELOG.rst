@@ -2,6 +2,24 @@
 ChangeLog
 =========
 
+0.6
+---
+
+Breaking changes:
+
+Major changes:
+- (#28) Added a SubspaceTransformation to transform into a subspace
+        spanned by a basis. For example a few Hamiltonian eigenstates.
+  - added a SubspaceTransformation class
+  - added a utility function to transform operators given a Transformation
+  - added a TensorOperator into which every other operator can be transformed
+
+New documentation / examples:
+
+Minor changes:
+
+Bug fixes:
+
 0.5
 ---
 
