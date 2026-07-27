@@ -9,14 +9,13 @@ dynamic = ["version", "description"]
 readme = "README.rst"
 license = "MIT"
 license-files = ["LICENSE"]
-requires-python = ">=3.11"
+requires-python = ">=3.12"
 classifiers = [
     "Development Status :: 3 - Alpha",
     "Intended Audience :: Science/Research",
     "Operating System :: MacOS :: MacOS X",
     "Operating System :: Microsoft :: Windows",
     "Operating System :: POSIX",
-    "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
     "Programming Language :: Python :: 3.13",
     "Programming Language :: Python :: 3.14",
@@ -92,7 +91,7 @@ skip_glob = ["doc/*", "**/__init__.py"]
 
 [tool.tox]
 requires = ["tox >= 4.30"]
-env_list = ["py311", "py312", "py313", "py314", "py311-min", "py312-min", "py313-min", "coverage"]
+env_list = ["py312", "py313", "py314", "py312-min", "py313-min", "py314-min", "coverage"]
 
 [tool.tox.env_run_base]
 description = "Run unit tests under {python_base}; Standard environments like py313 implicitly inherit this."
@@ -100,13 +99,13 @@ set_env = { "PIP_ONLY_BINARY" = ":all:" }
 dependency_groups = ["test"]
 commands = [["pytest", "test", "test_acceptance"]]
 
-[tool.tox.env.py311-min]
-dependency_groups = ["minimum_dependencies", "test"]
-
 [tool.tox.env.py312-min]
 dependency_groups = ["minimum_dependencies", "test"]
 
 [tool.tox.env.py313-min]
+dependency_groups = ["minimum_dependencies", "test"]
+
+[tool.tox.env.py314-min]
 dependency_groups = ["minimum_dependencies", "test"]
 
 [tool.tox.env.coverage]
