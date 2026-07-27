@@ -3,7 +3,7 @@ import numpy as np
 import wavepacket.typing as wpt
 
 
-def broadcast(data: wpt.AnyData, ndim: int, index: int) -> wpt.AnyData:
+def broadcast[T: (wpt.ComplexData, wpt.RealData)](data: T, ndim: int, index: int) -> T:
     """
     Reshape an array by appending dummy indices.
 
@@ -21,7 +21,7 @@ def broadcast(data: wpt.AnyData, ndim: int, index: int) -> wpt.AnyData:
     return np.reshape(data, shape)
 
 
-def clone_readonly(data: wpt.AnyData) -> wpt.AnyData:
+def clone_readonly[T: (wpt.ComplexData, wpt.RealData)](data: T) -> T:
     clone = data.copy()
     clone.setflags(write=False)
     return clone

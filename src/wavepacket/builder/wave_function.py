@@ -8,7 +8,7 @@ import wavepacket.typing as wpt
 
 def product_wave_function(
     grid: wp.grid.Grid,
-    generators: wpt.Generator | int | str | Sequence[wpt.Generator | int | str],
+    generators: wpt.Generator | wpt.IndexOrName | Sequence[wpt.Generator | wpt.IndexOrName],
     normalize: bool = True,
 ) -> wp.grid.State:
     """
@@ -18,7 +18,7 @@ def product_wave_function(
     ----------
     grid : wp.grid.Grid
            The grid on which the product wave function is assembled
-    generators : wpt.Generator | int | Sequence[wp.typing.Generator | int]
+    generators : wpt.Generator | wpt.IndexOrName | Sequence[wp.typing.Generator | wpt.IndexOrName]
                 Normally a list containing for each degree of freedom either
                 a callable that take the DVR grid points as input and returns
                 the raw wave function value as output, or the index of the

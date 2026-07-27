@@ -19,7 +19,7 @@ class Channel(OperatorBase):
     ----------
     grid: wavepacket.grid.Grid
         The grid on which the operator acts.
-    channel: int | str
+    channel: wpt.IndexOrName
         The channel on which to project. This can be given either as index
         or the name of the channel.
 
@@ -32,7 +32,7 @@ class Channel(OperatorBase):
         (index out of bounds or name unknown).
     """
 
-    def __init__(self, grid: wp.grid.Grid, channel: int | str):
+    def __init__(self, grid: wp.grid.Grid, channel: wpt.IndexOrName) -> None:
         channel_dof = grid.get_single_channel_dof()
         if channel_dof is None:
             raise wp.BadGridError("Grid has no channel degree of freedom.")
@@ -78,9 +78,9 @@ class Coupling(OperatorBase):
     ----------
     grid: wavepacket.grid.Grid
         The grid on which the operator acts.
-    from_channel: int | str
+    from_channel: wpt.IndexOrName
         The index or the name of the first coupled channel.
-    to_channel: int | str
+    to_channel: wpt.IndexOrName
         The index or the name of the second coupled channel.
 
     Raises
@@ -92,7 +92,9 @@ class Coupling(OperatorBase):
         or if both channels are identical.
     """
 
-    def __init__(self, grid: wp.grid.Grid, from_channel: int | str, to_channel: int | str):
+    def __init__(
+        self, grid: wp.grid.Grid, from_channel: wpt.IndexOrName, to_channel: wpt.IndexOrName
+    ) -> None:
         channel_dof = grid.get_single_channel_dof()
         if channel_dof is None:
             raise wp.BadGridError("Grid has no channel degree of freedom.")

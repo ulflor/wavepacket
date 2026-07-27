@@ -65,7 +65,7 @@ class ChannelDof(DofBase):
         grid = np.arange(num_channels, dtype=float)
         super().__init__(grid, grid)
 
-    def get_index(self, channel: int | str) -> int | None:
+    def get_index(self, channel: wpt.IndexOrName) -> int | None:
         """
         Returns the index/number of a channel that is given as a number or a name.
 

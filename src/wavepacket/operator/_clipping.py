@@ -3,9 +3,9 @@ import numpy as np
 import wavepacket.typing as wpt
 
 
-def clip_real(
-    data: wpt.AnyData, lower: float | None = None, upper: float | None = None
-) -> wpt.AnyData:
+def clip_real[T: (wpt.RealData, wpt.ComplexData)](
+    data: T, lower: float | None = None, upper: float | None = None
+) -> T:
     """
     Clips only the real part of a potentially complex-valued array.
 
