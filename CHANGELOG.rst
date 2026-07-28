@@ -7,6 +7,8 @@ ChangeLog
 
 Breaking changes:
 
+- Dropped support for Python 3.11
+
 Major changes:
 - (#28) Added a SubspaceTransformation to transform into a subspace
         spanned by a basis. For example a few Hamiltonian eigenstates.
@@ -17,6 +19,9 @@ Major changes:
 New documentation / examples:
 
 Minor changes:
+
+- (#51) Lots of typing improvements and static checker fixes after upgrade to
+        Python 3.12
 
 Bug fixes:
 
