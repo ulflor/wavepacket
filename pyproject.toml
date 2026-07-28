@@ -55,10 +55,20 @@ Issues = "https://github.com/ulflor/wavepacket/issues"
 
 [dependency-groups]
 test = ["pytest >= 8.3"]
-minimum_dependencies = [
+mindeps_py312 = [
     "numpy == 2.1.3",
     "scipy == 1.14.1",
     "matplotlib == 3.10"
+]
+mindeps_py313 = [
+    "numpy == 2.1.3",
+    "scipy == 1.14.1",
+    "matplotlib == 3.10"
+]
+mindeps_py314 = [
+    "numpy == 2.3.2",
+    "scipy == 1.16.1",
+    "matplotlib == 3.10.5"
 ]
 doc = [
     "sphinx >= 8.1.3",
@@ -100,13 +110,13 @@ dependency_groups = ["test"]
 commands = [["pytest", "test", "test_acceptance"]]
 
 [tool.tox.env.py312-min]
-dependency_groups = ["minimum_dependencies", "test"]
+dependency_groups = ["mindeps_py312", "test"]
 
 [tool.tox.env.py313-min]
-dependency_groups = ["minimum_dependencies", "test"]
+dependency_groups = ["mindeps_py313", "test"]
 
 [tool.tox.env.py314-min]
-dependency_groups = ["minimum_dependencies", "test"]
+dependency_groups = ["mindeps_py314", "test"]
 
 [tool.tox.env.coverage]
 dependency_groups = ["test"]
