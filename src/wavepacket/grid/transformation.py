@@ -1,7 +1,7 @@
 import math
 from abc import ABC, abstractmethod
 from collections.abc import Sequence
-from typing import Final
+from typing import Final, override
 
 import numpy as np
 
@@ -89,6 +89,7 @@ class PartialTraceTransformation(TransformationBase):
         self._dof_index = dof_index
         super().__init__(source_grid, target_grid)
 
+    @override
     def transform(self, state: State, **kwargs) -> State:
         """
         Transforms the input state into a reduced density operator in the target grid.
@@ -180,6 +181,7 @@ class ChannelProjectionTransformation(TransformationBase):
 
         super().__init__(grid, wp.grid.Grid(before + after))
 
+    @override
     def transform(self, state: State, **kwargs) -> State:
         """
         Transforms the wave function
@@ -283,6 +285,7 @@ class SubspaceTransformation(TransformationBase):
         target_grid = wp.grid.Grid(wp.grid.ChannelDof(len(subspace)))
         super().__init__(grid, target_grid)
 
+    @override
     def transform(self, state: State, **kwargs) -> State:
         if state.grid is not self.source_grid:
             raise wp.BadGridError("State is defined on wrong grid.")

@@ -1,4 +1,5 @@
 from abc import ABC, abstractmethod
+from typing import override
 
 import matplotlib.pyplot as plt
 import numpy as np
@@ -189,6 +190,7 @@ class ContourPlot2D(BaseContourPlot2D):
 
         self.max_marginals = (wp.dvr_density(state, 0).max(), wp.dvr_density(state, 1).max())
 
+    @override
     def plot(self, t: float, state: wp.grid.State) -> plt.Axes:
         # Plot the 2D contour plot
         self._contour(self._axes, t, state)
@@ -277,6 +279,7 @@ class StackedContourPlot2D(BaseContourPlot2D):
                 ax = self.figure.add_axes((0.07 + col * 0.3, 0.67 - row * 0.3, 0.27, 0.27))
                 self._axes.append(ax)
 
+    @override
     def plot(self, t: float, state: wp.grid.State) -> plt.Axes:
         axes = self._axes[self._index]
         super()._contour(axes, t, state)

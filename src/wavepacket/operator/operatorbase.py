@@ -1,7 +1,7 @@
 import numbers
 from abc import ABC, abstractmethod
 from collections.abc import Iterable
-from typing import Final
+from typing import Final, override
 
 import numpy as np
 
@@ -214,6 +214,7 @@ class OperatorSum(OperatorBase):
 
         super().__init__(grid, any(op.time_dependent for op in self._ops))
 
+    @override
     def apply_to_wave_function(self, psi: wpt.ComplexData, t: float) -> wpt.ComplexData:
         result = np.zeros(self.grid.shape, dtype=np.complex128)
         for op in self._ops:
@@ -221,6 +222,7 @@ class OperatorSum(OperatorBase):
 
         return result
 
+    @override
     def apply_from_left(self, rho: wpt.ComplexData, t: float) -> wpt.ComplexData:
         result = np.zeros(self.grid.operator_shape, dtype=np.complex128)
         for op in self._ops:
@@ -228,6 +230,7 @@ class OperatorSum(OperatorBase):
 
         return result
 
+    @override
     def apply_from_right(self, rho: wpt.ComplexData, t: float) -> wpt.ComplexData:
         result = np.zeros(self.grid.operator_shape, dtype=np.complex128)
         for op in self._ops:
@@ -265,18 +268,21 @@ class OperatorProduct(OperatorBase):
 
         super().__init__(grid, any(op.time_dependent for op in self._ops))
 
+    @override
     def apply_to_wave_function(self, psi: wpt.ComplexData, t: float) -> wpt.ComplexData:
         result = psi
         for op in reversed(self._ops):
             result = op.apply_to_wave_function(result, t)
         return result
 
+    @override
     def apply_from_left(self, rho: wpt.ComplexData, t: float) -> wpt.ComplexData:
         result = rho
         for op in reversed(self._ops):
             result = op.apply_from_left(result, t)
         return result
 
+    @override
     def apply_from_right(self, rho: wpt.ComplexData, t: float) -> wpt.ComplexData:
         result = rho
         for op in self._ops:

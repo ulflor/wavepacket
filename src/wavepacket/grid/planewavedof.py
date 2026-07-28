@@ -1,3 +1,5 @@
+from typing import override
+
 import numpy as np
 
 import wavepacket as wp
@@ -68,6 +70,7 @@ class PlaneWaveDof(DofBase):
         self._phase: wpt.ComplexData = np.exp(-1j * fbr * xmin) / np.sqrt(n)
         self._conj_phase: wpt.ComplexData = n * np.conj(self._phase)
 
+    @override
     def to_fbr(
         self, data: wpt.ComplexData, index: int, is_ket: bool = True
     ) -> wpt.ComplexData:
@@ -80,6 +83,7 @@ class PlaneWaveDof(DofBase):
 
         return phase * transformed
 
+    @override
     def from_fbr(
         self, data: wpt.ComplexData, index: int, is_ket: bool = True
     ) -> wpt.ComplexData:
@@ -92,10 +96,12 @@ class PlaneWaveDof(DofBase):
             untransformed = phase * data
             return np.fft.fft(np.fft.ifftshift(untransformed, axes=index), axis=index)
 
+    @override
     def to_dvr(self, data: wpt.ComplexData, index: int) -> wpt.ComplexData:
         conversion_factor = broadcast(self._sqrt_weights, data.ndim, index)
         return data / conversion_factor
 
+    @override
     def from_dvr(self, data: wpt.ComplexData, index: int) -> wpt.ComplexData:
         conversion_factor = broadcast(self._sqrt_weights, data.ndim, index)
         return data * conversion_factor

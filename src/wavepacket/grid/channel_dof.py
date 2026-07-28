@@ -1,7 +1,7 @@
 import numbers
 from collections.abc import Sequence
 from copy import deepcopy
-from typing import Final
+from typing import Final, override
 
 import numpy as np
 
@@ -95,17 +95,21 @@ class ChannelDof(DofBase):
             else:
                 return None
 
+    @override
     def from_fbr(
         self, data: wpt.ComplexData, index: int, is_ket: bool = True
     ) -> wpt.ComplexData:
         return data
 
+    @override
     def to_dvr(self, data: wpt.ComplexData, index: int) -> wpt.ComplexData:
         return data
 
+    @override
     def from_dvr(self, data: wpt.ComplexData, index: int) -> wpt.ComplexData:
         return data
 
+    @override
     def to_fbr(
         self, data: wpt.ComplexData, index: int, is_ket: bool = True
     ) -> wpt.ComplexData:

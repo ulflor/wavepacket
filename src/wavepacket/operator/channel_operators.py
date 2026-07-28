@@ -1,3 +1,5 @@
+from typing import override
+
 import numpy as np
 
 import wavepacket as wp
@@ -48,18 +50,21 @@ class Channel(OperatorBase):
 
         super().__init__(grid, False)
 
+    @override
     def apply_to_wave_function(self, psi: wpt.ComplexData, t: float) -> wpt.ComplexData:
         tmp = np.swapaxes(psi, 0, self._ket_index)
         result = np.zeros_like(tmp)
         result[self._channel, ...] = tmp[self._channel, ...]
         return np.swapaxes(result, 0, self._ket_index)
 
+    @override
     def apply_from_left(self, rho: wpt.ComplexData, t: float) -> wpt.ComplexData:
         tmp = np.swapaxes(rho, 0, self._ket_index)
         result = np.zeros_like(tmp)
         result[self._channel, ...] = tmp[self._channel, ...]
         return np.swapaxes(result, 0, self._ket_index)
 
+    @override
     def apply_from_right(self, rho: wpt.ComplexData, t: float) -> wpt.ComplexData:
         tmp = np.swapaxes(rho, 0, self._bra_index)
         result = np.zeros_like(tmp)
@@ -121,6 +126,7 @@ class Coupling(OperatorBase):
 
         super().__init__(grid, False)
 
+    @override
     def apply_to_wave_function(self, psi: wpt.ComplexData, t: float) -> wpt.ComplexData:
         tmp = np.swapaxes(psi, 0, self._ket_index)
         result = np.zeros_like(tmp)
@@ -128,6 +134,7 @@ class Coupling(OperatorBase):
         result[self._from_index, ...] = tmp[self._to_index, ...]
         return np.swapaxes(result, 0, self._ket_index)
 
+    @override
     def apply_from_left(self, rho: wpt.ComplexData, t: float) -> wpt.ComplexData:
         tmp = np.swapaxes(rho, 0, self._ket_index)
         result = np.zeros_like(tmp)
@@ -135,6 +142,7 @@ class Coupling(OperatorBase):
         result[self._from_index, ...] = tmp[self._to_index, ...]
         return np.swapaxes(result, 0, self._ket_index)
 
+    @override
     def apply_from_right(self, rho: wpt.ComplexData, t: float) -> wpt.ComplexData:
         tmp = np.swapaxes(rho, 0, self._bra_index)
         result = np.zeros_like(tmp)

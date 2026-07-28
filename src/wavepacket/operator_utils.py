@@ -141,7 +141,7 @@ def transform_operator(
     Raises
     ------
     wavepacket.BadGridError
-        Raised if the operator is not defined on the transformations's source grid.
+        Raised if the operator is not defined on the transformation's source grid.
     """
     if op.grid is not transform.source_grid:
         raise wp.BadGridError("Grids of operator and transformation do not match.")

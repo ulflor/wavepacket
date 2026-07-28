@@ -1,5 +1,5 @@
 import itertools
-from typing import Final
+from typing import Final, override
 
 import numpy as np
 import scipy
@@ -80,6 +80,7 @@ class ChebychevSolver(SolverBase):
         self.alpha: Final[float] = alpha
         self.order: Final[int] = len(self._coeffs) - 1
 
+    @override
     def step(self, state: wp.grid.State, t: float) -> wp.grid.State:
         # Note that we solve a differential equation of the form
         # dX/dt = L[X]
@@ -169,6 +170,7 @@ class RelaxationSolver(SolverBase):
         self.alpha: Final[float] = alpha
         self.order: Final[int] = len(self._coeffs) - 1
 
+    @override
     def step(self, state: wp.grid.State, t: float) -> wp.grid.State:
         term_minus2 = state
         term_minus1 = -self._apply_normalized(state)
