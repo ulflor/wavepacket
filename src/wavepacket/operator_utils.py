@@ -3,7 +3,6 @@ from typing import Iterator
 import numpy as np
 
 import wavepacket as wp
-import wavepacket.typing as wpt
 
 
 def expectation_value(
@@ -43,7 +42,7 @@ def expectation_value(
 
 def diagonalize(
     op: wp.operator.OperatorBase, t: float | None = None
-) -> Iterator[tuple[float, wpt.ComplexData]]:
+) -> Iterator[tuple[float, wp.grid.State]]:
     """
     Calculates the eigenstates and -values of an operator.
 

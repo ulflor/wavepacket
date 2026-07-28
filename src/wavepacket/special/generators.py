@@ -8,7 +8,7 @@ import wavepacket as wp
 import wavepacket.typing as wpt
 
 
-class Gaussian(wpt.Generator):
+class Gaussian:
     """
     Callable that defines a one-dimensional Gaussian function.
 
@@ -79,7 +79,7 @@ class Gaussian(wpt.Generator):
         return np.exp(arg)
 
 
-class PlaneWave(wpt.Generator):
+class PlaneWave:
     """
     Callable that defines a plane wave.
 
@@ -101,7 +101,7 @@ class PlaneWave(wpt.Generator):
         return np.exp(1j * self._k * x)
 
 
-class SphericalHarmonic(wpt.RealGenerator):
+class SphericalHarmonic:
     """
     Callable that returns a spherical harmonic Y_l^m(theta, phi=0).
 

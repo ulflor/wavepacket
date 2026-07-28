@@ -3,11 +3,12 @@ import pytest
 from numpy.testing import assert_allclose
 
 import wavepacket as wp
+import wavepacket.typing as wpt
 from wavepacket.operator._clipping import clip_real
 
 
 @pytest.fixture
-def input_data() -> wp.typing.ComplexData:
+def input_data() -> wpt.ComplexData:
     return np.linspace(-5, 5, 20) + 1j * np.linspace(-10, 10, 20)
 
 
