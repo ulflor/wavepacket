@@ -39,6 +39,11 @@ def test_invalid_projection_inputs(grid_1d):
     with pytest.raises(wp.BadStateError):
         wp.operator.Projection([good_state, zero_state])
 
+    other_grid = wp.grid.Grid(wp.grid.ChannelDof(2))
+    other_grid_state = wp.testing.random_state(other_grid, 42)
+    with pytest.raises(wp.BadGridError):
+        wp.operator.Projection([good_state, other_grid_state])
+
 
 def test_project_wave_function(grid_2d):
     p, q = orthogonal_states(grid_2d)

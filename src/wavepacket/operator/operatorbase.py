@@ -1,6 +1,6 @@
 import numbers
 from abc import ABC, abstractmethod
-from collections.abc import Sequence
+from collections.abc import Iterable
 from typing import Final
 
 import numpy as np
@@ -204,14 +204,15 @@ class OperatorSum(OperatorBase):
         If the operators are defined on different grids.
     """
 
-    def __init__(self, ops: Sequence[OperatorBase]) -> None:
-        for op in ops:
-            if op.grid != ops[0].grid:
+    def __init__(self, ops: Iterable[OperatorBase]) -> None:
+        self._ops = list(ops)
+
+        grid = self._ops[0].grid
+        for op in self._ops:
+            if op.grid != grid:
                 raise wp.BadGridError("All grids in a sum operator must be equal.")
 
-        self._ops = ops
-
-        super().__init__(ops[0].grid, any(op.time_dependent for op in ops))
+        super().__init__(grid, any(op.time_dependent for op in self._ops))
 
     def apply_to_wave_function(self, psi: wpt.ComplexData, t: float) -> wpt.ComplexData:
         result = np.zeros(self.grid.shape, dtype=np.complex128)
@@ -254,14 +255,15 @@ class OperatorProduct(OperatorBase):
         If the operators are defined on different grids.
     """
 
-    def __init__(self, ops: Sequence[OperatorBase]) -> None:
-        for op in ops:
-            if op.grid != ops[0].grid:
+    def __init__(self, ops: Iterable[OperatorBase]) -> None:
+        self._ops = list(ops)
+
+        grid = self._ops[0].grid
+        for op in self._ops:
+            if op.grid != grid:
                 raise wp.BadGridError("All grids in a sum operator must be equal.")
 
-        self._ops = ops
-
-        super().__init__(ops[0].grid, any(op.time_dependent for op in ops))
+        super().__init__(grid, any(op.time_dependent for op in self._ops))
 
     def apply_to_wave_function(self, psi: wpt.ComplexData, t: float) -> wpt.ComplexData:
         result = psi

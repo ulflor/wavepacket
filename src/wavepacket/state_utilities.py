@@ -1,4 +1,4 @@
-from collections.abc import Sequence
+from collections.abc import Iterable
 
 import numpy as np
 
@@ -220,7 +220,7 @@ def normalize(state: wp.grid.State) -> wp.grid.State:
         raise wp.BadStateError("Input is not a valid state.")
 
 
-def orthonormalize(states: Sequence[wp.grid.State]) -> list[wp.grid.State]:
+def orthonormalize(states: Iterable[wp.grid.State]) -> list[wp.grid.State]:
     """
     Orthogonalizes and normalizes a set of linearly independent wave functions.
 
@@ -252,8 +252,9 @@ def orthonormalize(states: Sequence[wp.grid.State]) -> list[wp.grid.State]:
     if not states:
         return []
 
-    grid = states[0].grid
-    for state in states:
+    input_states = list(states)
+    grid = input_states[0].grid
+    for state in input_states:
         if not state.is_wave_function():
             raise wp.BadStateError("Orthonormalization available only for wave functions.")
 
@@ -264,9 +265,8 @@ def orthonormalize(states: Sequence[wp.grid.State]) -> list[wp.grid.State]:
             raise wp.BadStateError("Cannot orthonormalize state with norm zero.")
 
     result: list[wpt.ComplexData] = []
-    for state in states:
+    for state in input_states:
         a = state.data
-        state.data.sum()
         for b in result:
             a = _normalize(a)
             overlap = (np.conj(b) * a).sum()

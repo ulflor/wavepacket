@@ -1,4 +1,4 @@
-from collections.abc import Sequence
+from collections.abc import Iterable
 
 import numpy as np
 
@@ -8,7 +8,7 @@ import wavepacket.typing as wpt
 
 def product_wave_function(
     grid: wp.grid.Grid,
-    generators: wpt.Generator | wpt.IndexOrName | Sequence[wpt.Generator | wpt.IndexOrName],
+    generators: wpt.Generator | wpt.IndexOrName | Iterable[wpt.Generator | wpt.IndexOrName],
     normalize: bool = True,
 ) -> wp.grid.State:
     """
@@ -18,7 +18,7 @@ def product_wave_function(
     ----------
     grid : wp.grid.Grid
            The grid on which the product wave function is assembled
-    generators : wpt.Generator | wpt.IndexOrName | Sequence[wp.typing.Generator | wpt.IndexOrName]
+    generators : wpt.Generator | wpt.IndexOrName | Iterable[wpt.Generator | wpt.IndexOrName]
                 Normally a list containing for each degree of freedom either
                 a callable that take the DVR grid points as input and returns
                 the raw wave function value as output, or the index of the
@@ -43,8 +43,9 @@ def product_wave_function(
     wp.InvalidValueError
         If the number of generators does not match the grid dimensions.
     """
-    generator_list = generators
-    if not isinstance(generator_list, Sequence):
+    if isinstance(generators, Iterable):
+        generator_list = list(generators)
+    else:
         generator_list = [generators]
 
     if len(generator_list) != len(grid.dofs):

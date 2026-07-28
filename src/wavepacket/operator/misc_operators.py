@@ -1,4 +1,5 @@
-from typing import Final, Sequence
+from collections.abc import Iterable
+from typing import Final
 
 import numpy as np
 
@@ -30,39 +31,46 @@ class Projection(OperatorBase):
     Raises
     ------
     wp.BadStateException
-        Thrown if any basis function is not a wave function or has norm zero.
+        Raised if any basis function is not a wave function or has norm zero.
 
     wp.InvalidValueError
-        Thrown if no basis functions are supplied.
+        Raised if no basis functions are supplied.
+
+    wp.BadGridError
+        Raised if the input states are not defined on the same grid.
 
     See Also
     --------
     wavepacket.population: if you only want to calculate the population of some states.
     """
 
-    def __init__(self, basis: wp.grid.State | Sequence[wp.grid.State]) -> None:
+    def __init__(self, basis: wp.grid.State | Iterable[wp.grid.State]) -> None:
         if isinstance(basis, wp.grid.State):
-            basis = [basis]
+            basis_list = [basis]
+        else:
+            basis_list = list(basis)
 
-        if not basis:
+        if not basis_list:
             raise wp.InvalidValueError(
                 "Projection operator requires at least one state to project onto."
             )
 
-        for state in basis:
+        for state in basis_list:
             if not state.is_wave_function():
                 raise wp.BadStateError("Can only project onto wave functions.")
 
             if wp.trace(state) == 0:
                 raise wp.BadStateError("Basis functions must not have norm zero.")
 
-        orthonormal_basis = wp.orthonormalize(basis)
+        orthonormal_basis = wp.orthonormalize(basis_list)
 
         self._ket_nd = np.stack([s.data for s in orthonormal_basis])
         self._bra_nd = np.conj(self._ket_nd)
-        self._ket_ravelled = np.reshape(self._ket_nd, (len(basis), basis[0].grid.size))
+        self._ket_ravelled = np.reshape(
+            self._ket_nd, (len(basis_list), basis_list[0].grid.size)
+        )
         self._bra_ravelled = np.conj(self._ket_ravelled)
-        super().__init__(basis[0].grid, False)
+        super().__init__(basis_list[0].grid, False)
 
     def apply_to_wave_function(self, psi: wpt.ComplexData, t: float) -> wpt.ComplexData:
         tmp = np.reshape(psi, self.grid.size)

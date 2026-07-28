@@ -281,7 +281,7 @@ class SubspaceTransformation(TransformationBase):
         self._from_left = self._from_right.T.conj()
 
         target_grid = wp.grid.Grid(wp.grid.ChannelDof(len(subspace)))
-        super().__init__(subspace[0].grid, target_grid)
+        super().__init__(grid, target_grid)
 
     def transform(self, state: State, **kwargs) -> State:
         if state.grid is not self.source_grid:
