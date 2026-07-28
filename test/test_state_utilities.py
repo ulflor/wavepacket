@@ -207,13 +207,13 @@ def test_result_is_orthonormal_and_spans_same_subspace(grid_2d):
 
 def test_orthonormalize_from_first_element_on():
     grid = wp.grid.Grid(wp.grid.PlaneWaveDof(0, 1, 3))
-    input = [
+    input_states = [
         wp.grid.State(grid, np.array([2, 0, 0])),
         wp.grid.State(grid, np.array([3, 0, 2])),
         wp.grid.State(grid, np.array([1, 1, 1])),
     ]
 
-    got = wp.orthonormalize(input)
+    got = wp.orthonormalize(input_states)
     expected = [
         wp.grid.State(grid, np.array([1, 0, 0])),
         wp.grid.State(grid, np.array([0, 0, 1])),

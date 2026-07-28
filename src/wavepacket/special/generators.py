@@ -103,7 +103,7 @@ class PlaneWave:
 
 class SphericalHarmonic:
     """
-    Callable that returns a spherical harmonic Y_l^m(theta, phi=0).
+    Callable that returns a spherical harmonic :math:`Y_l^m(\\theta, \\phi=0)`.
 
     Usually, this callable will be used for initial states. Note that the
     phi-dependence of a spherical harmonic is trivial exp(i m phi), and

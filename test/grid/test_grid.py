@@ -81,7 +81,7 @@ def test_broadcast():
 
 def test_operator_broadcast():
     shape = (6, 4, 2)
-    data = np.arange(4)
+    data = np.arange(4.0)
     grid = build_grid(shape)
 
     result = grid.operator_broadcast(data, 1)
@@ -101,7 +101,7 @@ def test_operator_broadcast():
 
 def test_bad_broadcast():
     shape = (4, 3, 2)
-    data = np.arange(5)
+    data = np.arange(5.0)
     grid = build_grid(shape)
 
     with pytest.raises(ValueError):

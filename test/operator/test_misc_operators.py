@@ -155,7 +155,7 @@ def test_apply_tensor_operator():
 
 def test_tensor_operator_copies_input():
     grid = wp.grid.Grid(wp.grid.PlaneWaveDof(1, 2, 5))
-    tensor = np.arange(25).reshape(grid.operator_shape)
+    tensor = np.arange(25.0).reshape(grid.operator_shape)
     op = wp.operator.TensorOperator(grid, tensor)
 
     tensor[:, :] = 0

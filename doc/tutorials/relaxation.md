@@ -167,7 +167,7 @@ A few notes about the code:
   If I had chosen an even or odd function as initial state, I would only get excited states of that parity.
 * The code exploits a semi-internal detail of the orthonormalization function; it normalizes the first entry, then
   orthonormalizes the second etc., so that the last entry is our wave function with the other components removed.
-* We manipulate the state while we evolve it in time. Therefore we can no longer `propagate()` in one go, but must
+* We manipulate the state while we evolve it in time. Therefore, we can no longer `propagate()` in one go, but must
   explicitly step through the solution.
 
 In theory, you can now go on to get arbitrary excited states with this technique.

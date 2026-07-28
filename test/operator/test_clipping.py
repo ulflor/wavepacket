@@ -2,7 +2,6 @@ import numpy as np
 import pytest
 from numpy.testing import assert_allclose
 
-import wavepacket as wp
 import wavepacket.typing as wpt
 from wavepacket.operator._clipping import clip_real
 

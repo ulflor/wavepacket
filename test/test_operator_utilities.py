@@ -131,7 +131,6 @@ def test_transform_operator():
     test_state = wp.testing.random_state(grid, 42)
 
     kin = wp.operator.CartesianKineticEnergy(grid, 0, 1.0)
-    channel0 = wp.operator.Channel(grid, 0)
     channel1 = wp.operator.Channel(grid, 1)
     op = kin + kin * channel1
 
