@@ -10,7 +10,9 @@ def _truncate(value: float, truncation: float | None) -> float:
         return 0.0
 
 
-def _print_expectation_values(state: wp.grid.State, precision: int, truncate: float) -> None:
+def _print_expectation_values(
+    state: wp.grid.State, precision: int, truncate: float | None
+) -> None:
     normalized_state = wp.normalize(state)
     for index, dof in enumerate(state.grid.dofs):
         x = wp.operator.Potential1D(state.grid, index, lambda dvr_grid: dvr_grid)

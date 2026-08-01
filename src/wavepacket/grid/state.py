@@ -1,5 +1,4 @@
 from dataclasses import dataclass
-from typing import Self
 
 import wavepacket as wp
 import wavepacket.typing as wpt
@@ -74,42 +73,42 @@ class State:
         """
         return self.data.shape == self.grid.operator_shape
 
-    def __add__(self, other: Self | complex) -> Self:
+    def __add__(self, other: "State | complex") -> "State":
         if isinstance(other, State):
             self._check_same_type(other)
             return State(self.grid, self.data + other.data)
         else:
             return State(self.grid, self.data + other)
 
-    def __radd__(self, other: complex) -> Self:
+    def __radd__(self, other: complex) -> "State":
         return self + other
 
-    def __sub__(self, other: Self | complex) -> Self:
+    def __sub__(self, other: "State | complex") -> "State":
         if isinstance(other, State):
             self._check_same_type(other)
             return State(self.grid, self.data - other.data)
         else:
             return State(self.grid, self.data - other)
 
-    def __rsub__(self, other: complex) -> Self:
+    def __rsub__(self, other: complex) -> "State":
         return State(self.grid, other - self.data)
 
-    def __mul__(self, other: complex) -> Self:
+    def __mul__(self, other: complex) -> "State":
         return State(self.grid, self.data * other)
 
-    def __rmul__(self, other: complex) -> Self:
+    def __rmul__(self, other: complex) -> "State":
         return self * other
 
-    def __truediv__(self, other: complex) -> Self:
+    def __truediv__(self, other: complex) -> "State":
         if other == 0.0:
             raise ZeroDivisionError("State cannot be divided by zero.")
 
         return State(self.grid, self.data / other)
 
-    def __neg__(self) -> Self:
+    def __neg__(self) -> "State":
         return State(self.grid, -self.data)
 
-    def _check_same_type(self, other: Self) -> None:
+    def _check_same_type(self, other: "State") -> None:
         if self.grid != other.grid:
             raise wp.BadGridError(
                 "Binary operations with states on different grids are not supported."

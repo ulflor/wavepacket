@@ -46,7 +46,7 @@ class Potential1D(OperatorBase):
         grid: wp.grid.Grid,
         dof_index: int,
         generator: wpt.Generator,
-        cutoff: float = None,
+        cutoff: float | None = None,
     ) -> None:
         data = generator(grid.dofs[dof_index].dvr_points).copy()
 
