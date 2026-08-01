@@ -30,6 +30,8 @@ def expectation_value(
         raise wp.InvalidValueError(
             "You must supply a time value for time-dependent operators."
         )
+    if t is None:
+        t = 0.0
 
     new = op.apply(state, t)
 
@@ -88,6 +90,8 @@ def diagonalize(
         raise wp.InvalidValueError(
             "Time-dependent operators require a time whn to diagonalize."
         )
+    if t is None:
+        t = 0.0
 
     grid = op.grid
 
