@@ -46,7 +46,8 @@ dependencies = [
 test = ["pytest >= 8.3"]
 formatting = ["black  == 26.*"]
 dev = ["mypy >= 2.3",
-       "coverage >= 7"
+       "coverage >= 7",
+       "scipy-stubs"
 ]
 
 
