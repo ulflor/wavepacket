@@ -13,7 +13,7 @@ def _inner_solver(
     t: float, y: wpt.ComplexData, eq: wp.expression.ExpressionBase, grid: wp.grid.Grid
 ) -> wpt.ComplexData:
     # 1. Reconstruct a state from the data array y
-    if len(y) == grid.size:
+    if y.size == grid.size:
         state = wp.grid.State(grid, np.reshape(y, grid.shape))
     else:
         state = wp.grid.State(grid, np.reshape(y, grid.operator_shape))
