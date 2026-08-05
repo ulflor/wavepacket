@@ -1,6 +1,7 @@
 from abc import ABC, abstractmethod
 from typing import override
 
+from matplotlib.axes import Axes
 import matplotlib.pyplot as plt
 import numpy as np
 
@@ -85,7 +86,7 @@ class BasePlot1D(ABC):
             self.conversion_factor = (self.ylim[1] - energy) / max_density
 
     @abstractmethod
-    def plot(self, t: float, state: wp.grid.State) -> plt.Axes:
+    def plot(self, t: float, state: wp.grid.State) -> Axes:
         """
         Plots a state, possibly together with the potential.
 
@@ -102,7 +103,7 @@ class BasePlot1D(ABC):
 
         Returns
         -------
-        plt.Axes
+        Axes
             The Matplotlib axes object on which we plotted the state for possible
             further manipulation.
         """
@@ -114,7 +115,7 @@ class BasePlot1D(ABC):
         else:
             return self._transform.transform(state, channel=channel)
 
-    def _plot(self, axes: plt.Axes, t: float, state: wp.grid.State) -> None:
+    def _plot(self, axes: Axes, t: float, state: wp.grid.State) -> None:
         """
         Internal plotting function that actually draws the density on a given Axes.
         """
@@ -220,7 +221,7 @@ class SimplePlot1D(BasePlot1D):
         super().__init__(state, potential, hamiltonian)
 
     @override
-    def plot(self, t: float, state: wp.grid.State) -> plt.Axes:
+    def plot(self, t: float, state: wp.grid.State) -> Axes:
         super()._plot(self._axes, t, state)
 
         self._axes.set_xlabel("x [a.u.]")
@@ -290,8 +291,8 @@ class StackedPlot1D(BasePlot1D):
         super().__init__(state, potential, hamiltonian)
 
     @override
-    def plot(self, t: float, state: wp.grid.State) -> plt.Axes:
-        axes: plt.Axes = self._axes.flat[self._index]
+    def plot(self, t: float, state: wp.grid.State) -> Axes:
+        axes: Axes = self._axes.flat[self._index]
         self._index = min(self._index + 1, self._axes.size - 1)
 
         super()._plot(axes, t, state)

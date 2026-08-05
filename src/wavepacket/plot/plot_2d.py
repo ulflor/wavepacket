@@ -1,6 +1,7 @@
 from abc import ABC, abstractmethod
 from typing import override
 
+from matplotlib.axes import Axes
 import matplotlib.pyplot as plt
 import numpy as np
 
@@ -63,7 +64,7 @@ class BaseContourPlot2D(ABC):
 
         if potential is None:
             self._potential = None
-            self.potential_contours = []
+            self.potential_contours = np.empty(0)
         else:
             self._potential = potential
             potential_values = get_potential_values(potential, 0)
@@ -72,7 +73,7 @@ class BaseContourPlot2D(ABC):
             )
 
     @abstractmethod
-    def plot(self, t: float, state: wp.grid.State) -> plt.Axes:
+    def plot(self, t: float, state: wp.grid.State) -> Axes:
         """
         Draws the contour plot and returns the axis of the contour plot.
 
@@ -89,7 +90,7 @@ class BaseContourPlot2D(ABC):
 
         Returns
         -------
-        plt.Axes
+        Axes
             The Matplotlib axes object on which we plotted the state for possible
             further manipulation.
         """
@@ -101,7 +102,7 @@ class BaseContourPlot2D(ABC):
         else:
             return self._transform.transform(state, channel=channel)
 
-    def _contour(self, axes: plt.Axes, t: float, state: wp.grid.State) -> None:
+    def _contour(self, axes: Axes, t: float, state: wp.grid.State) -> None:
         """
         Internal plotting function that actually draws the contours on a given Axes.
         """
@@ -191,7 +192,7 @@ class ContourPlot2D(BaseContourPlot2D):
         self.max_marginals = (wp.dvr_density(state, 0).max(), wp.dvr_density(state, 1).max())
 
     @override
-    def plot(self, t: float, state: wp.grid.State) -> plt.Axes:
+    def plot(self, t: float, state: wp.grid.State) -> Axes:
         # Plot the 2D contour plot
         self._contour(self._axes, t, state)
 
@@ -280,7 +281,7 @@ class StackedContourPlot2D(BaseContourPlot2D):
                 self._axes.append(ax)
 
     @override
-    def plot(self, t: float, state: wp.grid.State) -> plt.Axes:
+    def plot(self, t: float, state: wp.grid.State) -> Axes:
         axes = self._axes[self._index]
         super()._contour(axes, t, state)
 

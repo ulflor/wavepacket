@@ -1,7 +1,7 @@
 import math
 from abc import ABC, abstractmethod
 from collections.abc import Sequence
-from typing import Final, override
+from typing import Any, Final, override
 
 import numpy as np
 
@@ -32,7 +32,7 @@ class TransformationBase(ABC):
         self.target_grid: Final[Grid] = target_grid
 
     @abstractmethod
-    def transform(self, state: State, **kwargs) -> State:
+    def transform(self, state: State, **kwargs: Any) -> State:
         """
         Transforms a state from the source to the target grid.
 
@@ -90,7 +90,7 @@ class PartialTraceTransformation(TransformationBase):
         super().__init__(source_grid, target_grid)
 
     @override
-    def transform(self, state: State, **kwargs) -> State:
+    def transform(self, state: State, **kwargs: Any) -> State:
         """
         Transforms the input state into a reduced density operator in the target grid.
 
@@ -182,7 +182,7 @@ class ChannelProjectionTransformation(TransformationBase):
         super().__init__(grid, wp.grid.Grid(before + after))
 
     @override
-    def transform(self, state: State, **kwargs) -> State:
+    def transform(self, state: State, **kwargs: Any) -> State:
         """
         Transforms the wave function
 
@@ -220,7 +220,8 @@ class ChannelProjectionTransformation(TransformationBase):
             )
 
         channel = kwargs["channel"]
-        channel_index = self.source_grid.get_single_channel_dof().get_index(channel)
+        # Note: We checked already that the source_grid has channel != None
+        channel_index = self.source_grid.get_single_channel_dof().get_index(channel)  # type: ignore
         if channel_index is None:
             raise wp.InvalidValueError(f"Invalid channel: '{channel_index}'")
 
@@ -286,7 +287,7 @@ class SubspaceTransformation(TransformationBase):
         super().__init__(grid, target_grid)
 
     @override
-    def transform(self, state: State, **kwargs) -> State:
+    def transform(self, state: State, **kwargs: Any) -> State:
         if state.grid is not self.source_grid:
             raise wp.BadGridError("State is defined on wrong grid.")
 

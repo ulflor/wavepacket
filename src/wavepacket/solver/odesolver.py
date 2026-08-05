@@ -1,4 +1,4 @@
-from typing import override
+from typing import Any, override
 
 import numpy as np
 from scipy.integrate import solve_ivp
@@ -50,7 +50,7 @@ class OdeSolver(SolverBase):
     .. [1] https://sourceforge.net/p/wavepacket/cpp/blog/2021/04/convergence-2
     """
 
-    def __init__(self, expr: wp.expression.ExpressionBase, dt: float, **kwargs) -> None:
+    def __init__(self, expr: wp.expression.ExpressionBase, dt: float, **kwargs: Any) -> None:
         super().__init__(dt)
 
         self._expression = expr

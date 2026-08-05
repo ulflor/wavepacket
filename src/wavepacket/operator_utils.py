@@ -1,4 +1,5 @@
-from typing import Iterator
+from collections.abc import Iterator
+from typing import Any
 
 import numpy as np
 
@@ -109,7 +110,9 @@ def diagonalize(
 
 
 def transform_operator(
-    op: wp.operator.OperatorBase, transform: wp.grid.TransformationBase, **kwargs
+    op: wp.operator.OperatorBase,
+    transform: wp.grid.TransformationBase,
+    **kwargs: Any,
 ) -> wp.operator.TensorOperator:
     """
     Transforms an operator with a given transformation.

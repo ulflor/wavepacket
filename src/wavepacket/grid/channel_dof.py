@@ -46,7 +46,7 @@ class ChannelDof(DofBase):
     """
 
     def __init__(self, channels: int | Sequence[str]):
-        if isinstance(channels, numbers.Integral):
+        if isinstance(channels, int):
             if channels <= 0:
                 raise wp.InvalidValueError(
                     f"Number of channels must be positive, got {channels}"
