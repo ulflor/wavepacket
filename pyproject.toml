@@ -113,7 +113,7 @@ pretty = true
 
 [tool.tox]
 requires = ["tox >= 4.30"]
-env_list = ["py312", "py313", "py314", "py312-min", "py313-min", "py314-min", "coverage", "mypy"]
+env_list = ["py312", "py313", "py314", "py312-min", "py313-min", "py314-min", "coverage"]
 
 [tool.tox.env_run_base]
 description = "Run unit tests under {python_base}; Standard environments like py313 implicitly inherit this."

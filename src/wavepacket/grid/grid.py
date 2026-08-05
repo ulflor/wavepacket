@@ -78,7 +78,7 @@ class Grid:
         else:
             return index
 
-    def broadcast[T: (wpt.RealData, wpt.ComplexData)](self, data: T, index: int) -> T:
+    def broadcast(self, data: wpt.ComplexData, index: int) -> wpt.ComplexData:
         """
         Transforms a 1D array into a more suitable form for scaling.
 
@@ -102,9 +102,9 @@ class Grid:
         new_shape[index] = self.dofs[index].size
         return np.reshape(data, new_shape)
 
-    def operator_broadcast[T: (wpt.RealData, wpt.ComplexData)](
-        self, data: T, dof_index: int, is_ket: bool = True
-    ) -> T:
+    def operator_broadcast(
+        self, data: wpt.ComplexData, dof_index: int, is_ket: bool = True
+    ) -> wpt.ComplexData:
         """
         Similar to broadcast, but blows up the array into a form suitable for multiplication with operators.
 
