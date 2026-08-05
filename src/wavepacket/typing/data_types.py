@@ -3,12 +3,12 @@ from typing import Callable
 import numpy as np
 import numpy.typing as npt
 
-type RealData = npt.NDArray[np.float64]
+type RealData = npt.NDArray[np.double]
 """
 Type for real-valued input or output data.
 """
 
-type ComplexData = npt.NDArray[np.float64] | npt.NDArray[np.complex128]
+type ComplexData = npt.NDArray[np.double] | npt.NDArray[np.cdouble]
 """
 Type for complex-valued input or output data.
 
