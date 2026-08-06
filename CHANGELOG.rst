@@ -22,8 +22,11 @@ Minor changes:
 
 - (#51) Lots of typing improvements and static checker fixes after upgrade to
         Python 3.12
+- (#61) Added mypy settings
 
 Bug fixes:
+- (#61) Fixed some incorrect handling of "t = None"
+        fixed changing argument names when overriding a function
 
 0.5
 ---
