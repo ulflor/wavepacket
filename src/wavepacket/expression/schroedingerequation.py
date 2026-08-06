@@ -33,13 +33,13 @@ class SchroedingerEquation(ExpressionBase):
         super().__init__(hamiltonian.time_dependent)
 
     @override
-    def apply(self, psi: wp.grid.State, t: float) -> wp.grid.State:
-        if psi.grid != self._hamiltonian.grid:
+    def apply(self, state: wp.grid.State, t: float) -> wp.grid.State:
+        if state.grid != self._hamiltonian.grid:
             raise wp.BadGridError("Input state has wrong grid.")
 
-        if not psi.is_wave_function():
+        if not state.is_wave_function():
             raise wp.BadStateError("SchroedingerEquation requires a wave function.")
 
         return wp.grid.State(
-            psi.grid, -1j * self._hamiltonian.apply_to_wave_function(psi.data, t)
+            state.grid, -1j * self._hamiltonian.apply_to_wave_function(state.data, t)
         )

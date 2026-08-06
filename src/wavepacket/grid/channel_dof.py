@@ -1,4 +1,3 @@
-import numbers
 from collections.abc import Sequence
 from copy import deepcopy
 from typing import Final, override
@@ -83,7 +82,7 @@ class ChannelDof(DofBase):
             If the channel exists, returns the index of the referenced channel.
             If the channel does not exist, returns None.
         """
-        if isinstance(channel, numbers.Integral):
+        if isinstance(channel, int):
             if -self.size <= channel < self.size:
                 return channel
             else:
