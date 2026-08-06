@@ -1,4 +1,5 @@
 from collections.abc import Iterable
+import math
 
 import numpy as np
 
@@ -14,7 +15,7 @@ def _take_diagonal(data: wpt.ComplexData, grid: wp.grid.Grid) -> wpt.RealData:
 
 
 def _normalize(u: wpt.ComplexData) -> wpt.ComplexData:
-    return u / np.sqrt(np.abs(u**2).sum())
+    return u / math.sqrt(np.abs(u**2).sum())
 
 
 def dvr_density(state: wp.grid.State, dof_index: int | None = None) -> wpt.RealData:
@@ -36,8 +37,9 @@ def dvr_density(state: wp.grid.State, dof_index: int | None = None) -> wpt.RealD
         The state (wave function or density operator) whose density should be computed.
 
     dof_index: int|None, default=None
-        If set, return the reduced density, i.e., the density integrated over all degrees of freedom
-        except the one with the given index.
+        If set, return the density integrated over all degrees of freedom
+        except the one with the given index. This gives you the marginal probability distribution
+        over this index.
 
     Returns
     -------
@@ -62,7 +64,6 @@ def dvr_density(state: wp.grid.State, dof_index: int | None = None) -> wpt.RealD
             weighted_density = _take_diagonal(state.data, state.grid)
         else:
             raise wp.BadStateError("Input is not a valid state.")
-
         weighted_density = weighted_density.swapaxes(0, dof_index)
         indices_to_sum = tuple(range(1, len(state.grid.dofs)))
         reduced_density = weighted_density.sum(indices_to_sum)
@@ -318,13 +319,11 @@ def population(state: wp.grid.State, target: wp.grid.State) -> float:
     target_trace = trace(target)
     if state.is_wave_function():
         coefficient = (np.conj(target.data) * state.data).sum()
-        return np.abs(coefficient) ** 2 / target_trace
+        return abs(coefficient) ** 2 / target_trace
     elif state.is_density_operator():
         matrix_form = np.reshape(state.data, [state.grid.size, state.grid.size])
         flat_target = np.ravel(target.data)
         left_summation = np.tensordot(np.conj(flat_target), matrix_form, axes=(0, 0))
-        return np.abs(
-            np.tensordot(left_summation, flat_target, axes=(0, 0)).sum() / target_trace
-        )
+        return abs(np.tensordot(left_summation, flat_target, axes=(0, 0)).sum() / target_trace)
     else:
         raise wp.BadStateError("Input is not a valid state.")

@@ -1,4 +1,5 @@
 from abc import ABC, abstractmethod
+from collections.abc import Sequence
 from typing import override
 
 from matplotlib.axes import Axes
@@ -44,7 +45,7 @@ class BasePlot1D(ABC):
             self._transform = None
             self._plot_grid = state.grid
             self._num_channels = 1
-            self._labels = [""]
+            self._labels: Sequence[str] = [""]
         else:
             assert len(state.grid.dofs) == 2
             self._transform = wp.grid.ChannelProjectionTransformation(state.grid)

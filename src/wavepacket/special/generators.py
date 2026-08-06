@@ -73,7 +73,7 @@ class Gaussian:
     def __call__(self, x: float) -> complex: ...
     @overload
     def __call__(self, x: wpt.RealData) -> wpt.ComplexData: ...
-    def __call__(self, x):
+    def __call__(self, x: float | wpt.RealData) -> complex | wpt.ComplexData:
         shifted = x - self._x
         arg = -(shifted**2) / (2 * self._rms**2) + 1j * self._p * shifted
         return np.exp(arg)

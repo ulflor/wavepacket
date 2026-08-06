@@ -171,8 +171,8 @@ class ChannelProjectionTransformation(TransformationBase):
             raise wp.BadGridError("Transformation requires more than one degree of freedom.")
 
         dof_index = grid.dofs.index(channel_dof)
-        before = grid.dofs[:dof_index]
-        after = grid.dofs[dof_index + 1 :]
+        before = list(grid.dofs[:dof_index])
+        after = list(grid.dofs[dof_index + 1 :])
 
         points_before = math.prod([dof.size for dof in before])  # math.prod([]) == 1 !
         points = channel_dof.size

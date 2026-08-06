@@ -61,7 +61,7 @@ class ChannelDof(DofBase):
             num_channels = len(channels)
             names = deepcopy(channels)
 
-        self.names: Final[list[str]] = names
+        self.names: Final[Sequence[str]] = names
         grid = np.arange(num_channels, dtype=float)
         super().__init__(grid, grid)
 

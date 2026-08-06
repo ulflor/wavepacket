@@ -1,5 +1,5 @@
-import math
 from collections.abc import Sequence
+import math
 from typing import Final, Iterable
 
 import numpy as np
@@ -56,7 +56,7 @@ class Grid:
         self.shape: Final[tuple[int, ...]] = tuple(dof.size for dof in dofs)
         self.operator_shape: Final[tuple[int, ...]] = self.shape + self.shape
         self.size: Final[int] = math.prod(dof.size for dof in dofs)
-        self.dofs: Final[list[wp.grid.DofBase]] = list(dofs)
+        self.dofs: Final[Sequence[wp.grid.DofBase]] = list(dofs)
 
     def normalize_index(self, index: int) -> int:
         """
