@@ -1,9 +1,9 @@
 from abc import ABC, abstractmethod
 from typing import override
 
-from matplotlib.axes import Axes
 import matplotlib.pyplot as plt
 import numpy as np
+from matplotlib.axes import Axes
 
 import wavepacket as wp
 

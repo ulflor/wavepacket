@@ -2,9 +2,9 @@ from abc import ABC, abstractmethod
 from collections.abc import Sequence
 from typing import override
 
-from matplotlib.axes import Axes
 import matplotlib.pyplot as plt
 import numpy as np
+from matplotlib.axes import Axes
 
 import wavepacket as wp
 from wavepacket.operator import OperatorBase
