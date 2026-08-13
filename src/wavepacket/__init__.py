@@ -43,6 +43,7 @@ from . import solver
 from . import plot
 from . import special
 from . import testing
+from . import unit
 
 from .exceptions import (
     BadFunctionCall,

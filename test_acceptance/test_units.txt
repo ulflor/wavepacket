@@ -1,0 +1,18 @@
+>>> import wavepacket.unit as wpu
+>>>
+>>> print(f"kg = {wpu.kg:.6}    g = {wpu.g:.6}    amu = {wpu.amu:.6}")
+kg = 1.09777e+30    g = 1.09777e+27    amu = 1822.89
+>>> print(f"m = {wpu.m:.6}   cm = {wpu.cm:.6}   nm = {wpu.nm:.6}   pm = {wpu.pm:.6}   AA = {wpu.AA:.6}")
+m = 1.88973e+10   cm = 1.88973e+08   nm = 18.8973   pm = 0.0188973   AA = 1.88973
+>>> print(f"kcal = {wpu.kcal:.6}, mol = {wpu.mol:.6}")
+kcal = 9.59689e+20, mol = 6.02214e+23
+>>> print(f"J = {wpu.J:.6}   eV = {wpu.eV:.6}   meV = {wpu.meV:.6}   kcal/mol = {wpu.kcal_mol:.6}   cm^-1 = {wpu.cm_1:.6}")
+J = 2.29371e+17   eV = 0.0367493   meV = 3.67493e-05   kcal/mol = 0.0015936   cm^-1 = 4.55634e-06
+>>> print(f"s = {wpu.s:.6}   ps = {wpu.ps:.6}   fs = {wpu.fs:.6}   Hz = {wpu.Hz:.6}")
+s = 4.13414e+16   ps = 41341.4   fs = 41.3414   Hz = 2.41889e-17
+>>> print(f"C = {wpu.C:.6}   Cm  = {wpu.Cm:.6}   D = {wpu.D:.6}")
+C = 6.24151e+18   Cm  = 1.17947e+29   D = 0.39343
+>>> print(f"V = {wpu.V:.6}   V/m = {wpu.V_m:.6}   W/cm^2 = {wpu.W_cm2:.6}")
+V = 0.0367493   V/m = 1.94469e-12   W/cm^2 = 2.84946e-17
+>>> print(f"K = {wpu.K:.6}")
+K = 3.16681e-06
