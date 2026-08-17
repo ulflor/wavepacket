@@ -65,8 +65,9 @@ From lowest to highest layer, these are:
     Hence, this module requires knowledge of the expression module.
 
 
-Two other modules stand apart from this hierarchy:
+Three other modules stand apart from this hierarchy:
 
+* :py:mod:`wavepacket.unit` defines factors to convert data that is not in atomic units.
 * :py:mod:`wavepacket.typing` contains definitions for type hinting.
 * :py:mod:`wavepacket.testing` contains some test helpers,
   for example :py:func:`wavepacket.testing.assert_close` to compare two states with each other.

@@ -9,51 +9,45 @@ Note:
 
 >>> import numpy as np
 >>> import wavepacket as wp
->>> 
->>> unit_amu = 1e-3 / 9.10938215E-31 / 6.0221408E23
->>> unit_angstroem = 1.88973
->>> unit_debye = 1e10 / 1.60217662E-19 * 1e-21 / 299792458
->>> unit_mv_per_cm = 0.000194469
->>> unit_fs = 41.3414
->>> unit_inv_cm = 4.55634e-06
+>>> import wavepacket.unit as wpu
 >>> 
 >>> def morse_potential(x):
 ...     return  0.1994 * (1 - np.exp(-1.189 * (x - 1.821))) ** 2
 >>> 
 >>> def mecke_dipole(x):
-...     q0 = 7.85 * unit_debye
-...     r0 = 0.6 * unit_angstroem
+...     q0 = 7.85 * wpu.D / wpu.AA
+...     r0 = 0.6 * wpu.AA
 ...     return q0 * x * np.exp(-x / r0)
 >>> 
->>> mass_H1 = 1.0078250 * unit_amu
->>> mass_O16 = 15.994915 * unit_amu
+>>> mass_H1 = 1.0078250 * wpu.amu
+>>> mass_O16 = 15.994915 * wpu.amu
 >>> mu = mass_H1 * mass_O16 / (mass_H1 + mass_O16)
 >>> 
->>> dof = wp.grid.PlaneWaveDof(0.7, 8, 64)
+>>> dof = wp.grid.PlaneWaveDof(0.7, 6, 64)
 >>> grid = wp.grid.Grid(dof)
 >>> 
 >>> kinetic = wp.operator.CartesianKineticEnergy(grid, 0, mass=mu, cutoff=0.3)
 >>> potential = wp.operator.Potential1D(grid, 0, morse_potential, cutoff=0.3)
 >>> dipole = wp.operator.Potential1D(grid, 0, mecke_dipole)
 >>> laser = wp.operator.LaserField(grid,
-...                                max_field=328.5 * unit_mv_per_cm,
-...                                shape=wp.special.SinSquare(500 * unit_fs, 500 * unit_fs),
-...                                omega=3424.19 * unit_inv_cm)
+...                                max_field=328.5 * 1e8 * wpu.V_m,
+...                                shape=wp.special.SinSquare(500 * wpu.fs, 500 * wpu.fs),
+...                                omega=3424.19 * wpu.cm_1)
 >>> equation = wp.expression.CommutatorLiouvillian(kinetic + potential - dipole * laser)
 >>> 
 >>> bound_states = [state for energy, state in wp.diagonalize(kinetic + potential) if energy < 0.1994]
 >>>                 
->>> psi_0 = wp.builder.product_wave_function(grid, lambda x: bound_states[0].data)
+>>> psi_0 = bound_states[0]
 >>> rho_0 = wp.builder.pure_density(psi_0)
 >>> 
->>> solver = wp.solver.OdeSolver(equation, 50.0 * unit_fs)
+>>> solver = wp.solver.OdeSolver(equation, 50.0 * wpu.fs)
 >>> populations = np.zeros((9, 8))
 >>> time_index = 0
 >>> for t, rho in solver.propagate(rho_0, 0.0, 8):
 ...     for state_index in range(8):
 ...         populations[time_index, state_index] = wp.population(rho, bound_states[state_index])
 ...     time_index += 1
->>> 
+>>>
 >>> populations[np.abs(populations) < 1e-10] = 0
 >>> 
 >>> for i in range(7):
@@ -82,10 +76,10 @@ bound state 1
 0.0:   0.0
 2.067e+03:   0.0001345
 4.134e+03:   0.002225
-6.201e+03:   0.01055
+6.201e+03:   0.01054
 8.268e+03:   0.03287
 1.034e+04:   0.05944
-1.24e+04:   0.09693
+1.24e+04:   0.09692
 1.447e+04:   0.1512
 1.654e+04:   0.1706
 <BLANKLINE>
@@ -101,7 +95,7 @@ bound state 2
 1.034e+04:   0.003546
 1.24e+04:   0.01048
 1.447e+04:   0.02547
-1.654e+04:   0.03777
+1.654e+04:   0.03775
 <BLANKLINE>
 <BLANKLINE>
 bound state 3
@@ -112,10 +106,10 @@ bound state 3
 4.134e+03:   2.451e-08
 6.201e+03:   1.135e-06
 8.268e+03:   4.049e-05
-1.034e+04:   0.0003052
+1.034e+04:   0.0003051
 1.24e+04:   0.001663
-1.447e+04:   0.006138
-1.654e+04:   0.02057
+1.447e+04:   0.006136
+1.654e+04:   0.02054
 <BLANKLINE>
 <BLANKLINE>
 bound state 4
@@ -124,12 +118,12 @@ bound state 4
 0.0:   0.0
 2.067e+03:   0.0
 4.134e+03:   1.793e-10
-6.201e+03:   3.112e-08
-8.268e+03:   4.711e-06
-1.034e+04:   4.706e-05
-1.24e+04:   0.0007506
-1.447e+04:   0.006458
-1.654e+04:   0.03295
+6.201e+03:   3.111e-08
+8.268e+03:   4.709e-06
+1.034e+04:   4.707e-05
+1.24e+04:   0.0007508
+1.447e+04:   0.00646
+1.654e+04:   0.03297
 <BLANKLINE>
 <BLANKLINE>
 bound state 5
@@ -138,12 +132,12 @@ bound state 5
 0.0:   0.0
 2.067e+03:   0.0
 4.134e+03:   0.0
-6.201e+03:   2.164e-09
+6.201e+03:   2.163e-09
 8.268e+03:   1.098e-06
 1.034e+04:   4.586e-05
-1.24e+04:   0.0005787
-1.447e+04:   0.003726
-1.654e+04:   0.01069
+1.24e+04:   0.0005792
+1.447e+04:   0.003734
+1.654e+04:   0.01073
 <BLANKLINE>
 <BLANKLINE>
 bound state 6
@@ -153,9 +147,9 @@ bound state 6
 2.067e+03:   0.0
 4.134e+03:   0.0
 6.201e+03:   0.0
-8.268e+03:   7.184e-08
-1.034e+04:   1.186e-05
-1.24e+04:   0.0003607
-1.447e+04:   0.003443
-1.654e+04:   0.01842
+8.268e+03:   7.173e-08
+1.034e+04:   1.184e-05
+1.24e+04:   0.0003603
+1.447e+04:   0.003438
+1.654e+04:   0.0184
 

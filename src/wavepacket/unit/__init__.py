@@ -1,3 +1,13 @@
+"""
+This module contains conversion factors for values that are not in atomic units.
+
+The exported symbols define the named unit in atomic units.
+In general, symbols carry the canonical name of the contained unit, for example "m" refers to meter,
+"g" tp gram. Divisions, powers etc. are replaced by underscore, e.g., "cm_1" for inverse centimeters.
+To avoid symbol proliferation, SI prefixes are only added where common in molecular use cases,
+so there exists "nm", but not "MeV".
+"""
+
 import math
 
 # Constants that we need for the conversions

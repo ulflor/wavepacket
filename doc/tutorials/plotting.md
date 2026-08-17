@@ -55,7 +55,7 @@ after plotting some wave function.
 
 ## Demo system
 
-For this plotting demo, we use a one-dimensional harmonic oscillator as example system.
+For most of this plotting demo, we use a one-dimensional harmonic oscillator as example system.
 
 ```{code-cell}
 import wavepacket as wp

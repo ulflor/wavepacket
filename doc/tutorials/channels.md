@@ -123,14 +123,6 @@ def dipole(points):
     return interpolate(data_dip, points)
 ```
 
-We also define a few constants that we use for reproducing the original demo's output.
-
-```{code-cell}
-amu = 9.10938215e-28 * 6.0221408e23
-fs = 41.341
-eV = 0.0367493
-```
-
 ## Basic usage
 
 Channels are treated as a special degree of freedom (DOF).
@@ -141,11 +133,15 @@ so choose preferably short, descriptive names
 
 ```{code-cell}
 import wavepacket as wp
+import wavepacket.unit as wpu
 
 dof = wp.grid.PlaneWaveDof(1.5, 7.5, 128)
 channels = wp.grid.ChannelDof(['X', 'A'])
 grid = wp.grid.Grid([dof, channels])
 ```
+
+Small side note: We import {py:mod}`wavepacket.unit` to get access to
+some conversion factors further down.
 
 It is theoretically possible to have more than one channel DOF defined on a grid,
 but this is not well supported;
@@ -159,15 +155,15 @@ The kinetic energy operator is the same for all channels, so it needs no additio
 Note how the channels can be interchangeably denoted through the index or the name.
 
 ```{code-cell}
-kinetic = wp.operator.CartesianKineticEnergy(grid, 0, mass=0.97989 / amu, cutoff=0.7)
+kinetic = wp.operator.CartesianKineticEnergy(grid, 0, mass=0.97989 / wpu.amu, cutoff=0.7)
 pot_X = wp.operator.Potential1D(grid, 0, potential_X, cutoff=-1.2) * wp.operator.Channel(grid, "X")
 pot_A = wp.operator.Potential1D(grid, 0, potential_A, cutoff=-1.2) * wp.operator.Channel(grid, 1)
 hamiltonian = kinetic + pot_X + pot_A
 
 # The laser field is extremely strong, but at least that gives a visible effect.
 dip = wp.operator.Potential1D(grid, 0, dipole) * wp.operator.Coupling(grid, 0, "A")
-laser = wp.operator.LaserField(grid, max_field=0.5, shape=wp.special.SinSquare(1.5*fs, 1.5*fs),
-                               omega=3.52*eV, phi = np.pi/2)
+laser = wp.operator.LaserField(grid, max_field=0.5, shape=wp.special.SinSquare(1.5*wpu.fs, 1.5*wpu.fs),
+                               omega=3.52*wpu.eV, phi = np.pi/2)
 
 eq = wp.expression.SchroedingerEquation(hamiltonian - dip * laser)
 ```
@@ -227,7 +223,7 @@ psi = psi0
 for i in range(5):
     psi = relaxation.step(psi, 0)
 
-solver = wp.solver.OdeSolver(eq, 0.6 * fs)
+solver = wp.solver.OdeSolver(eq, 0.6 * wpu.fs)
 plotter = wp.plot.StackedPlot1D(6, psi0, pot_X+pot_A, hamiltonian)
 plotter.xlim = [1.5, 4]
 plotter.ylim = [-1.9, -1.45]

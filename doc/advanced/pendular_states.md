@@ -27,7 +27,7 @@ $$
 in terms of the dipole operator $\mu$, the electric field with strength $E$ and frequency $\omega$,
 and where the summation includes all excited states $\Phi_n$ with energies $E_n$.
 Calculating the energy shift is difficult, but that is not our goal here.
-Instead, we absorb all these calculations in a material-specific dynamic polarizability $\alpha(\omega)$.
+Instead, we absorb all these formulas in a material-specific dynamic polarizability $\alpha(\omega)$.
 Then only a dependency on the angle $\theta$ between the effective dipole moment and the laser
 polarization axis remains.
 
