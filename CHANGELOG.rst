@@ -15,6 +15,7 @@ Major changes:
   - added a SubspaceTransformation class
   - added a utility function to transform operators given a Transformation
   - added a TensorOperator into which every other operator can be transformed
+- (#68) Added a package with standard unit conversions
 
 New documentation / examples:
 
