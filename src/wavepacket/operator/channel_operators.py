@@ -41,12 +41,7 @@ class Channel(OperatorBase):
 
         self._ket_index = grid.dofs.index(channel_dof)
         self._bra_index = len(grid.dofs) + self._ket_index
-
         self._channel = channel_dof.get_index(channel)
-        if self._channel is None:
-            raise wp.InvalidValueError(
-                f"'{channel}' does not reference a valid channel (index out of bounds or name unknown)."
-            )
 
         super().__init__(grid, False)
 
@@ -107,10 +102,6 @@ class Coupling(OperatorBase):
         self._from_index = channel_dof.get_index(from_channel)
         self._to_index = channel_dof.get_index(to_channel)
 
-        if self._from_index is None or self._to_index is None:
-            raise wp.InvalidValueError(
-                f"'{from_channel}' and/or '{to_channel}' do not reference a valid channel (index out of bounds or name unknown)."
-            )
         if channel_dof.dvr_points[self._from_index] == channel_dof.dvr_points[self._to_index]:
             raise wp.InvalidValueError(
                 "Coupling of a channel with itself is not supported. Use 'wavepacket.operator.Channel' for that."

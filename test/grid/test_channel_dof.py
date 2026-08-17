@@ -49,6 +49,11 @@ def test_reject_empty_or_missing_names():
         wp.grid.ChannelDof(["a channel", ""])
 
 
+def test_reject_duplicate_names():
+    with pytest.raises(wp.InvalidValueError):
+        wp.grid.ChannelDof(["a", "b", "a"])
+
+
 def test_retrieve_names():
     names = ["a", "b", "c"]
     dof = wp.grid.ChannelDof(names)
@@ -69,10 +74,14 @@ def test_get_channel_index():
     assert dof.get_index(-3) == -3
     assert dof.get_index("b") == 1
 
-    assert dof.get_index(-4) is None
-    assert dof.get_index(3) is None
-    assert dof.get_index("d") is None
+    with pytest.raises(wp.InvalidValueError):
+        dof.get_index(-4)
+    with pytest.raises(wp.InvalidValueError):
+        dof.get_index(3)
+    with pytest.raises(wp.InvalidValueError):
+        dof.get_index("d")
 
     noname_dof = wp.grid.ChannelDof(3)
     assert noname_dof.get_index(-1) == -1
-    assert noname_dof.get_index("a") is None
+    with pytest.raises(wp.InvalidValueError):
+        noname_dof.get_index("a")

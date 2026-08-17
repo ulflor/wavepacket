@@ -222,8 +222,6 @@ class ChannelProjectionTransformation(TransformationBase):
         channel = kwargs["channel"]
         # Note: We checked already that the source_grid has channel != None
         channel_index = self.source_grid.get_single_channel_dof().get_index(channel)  # type: ignore
-        if channel_index is None:
-            raise wp.InvalidValueError(f"Invalid channel: '{channel_index}'")
 
         if state.is_wave_function():
             reshaped = np.reshape(state.data, self._fixed_shape)

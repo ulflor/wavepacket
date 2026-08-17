@@ -41,7 +41,7 @@ class ChannelDof(DofBase):
     ------
     wp.InvalidValueError
         If the number of channels is not positive (if the number of channels is supplied),
-        if the list of names is empty, or if any channel name is empty.
+        if the list of names is empty, if any channel name is empty, or if names are duplicate.
     """
 
     def __init__(self, channels: int | Sequence[str]):
@@ -57,6 +57,8 @@ class ChannelDof(DofBase):
                 raise wp.InvalidValueError("Need at least one channel.")
             if any(not name for name in channels):
                 raise wp.InvalidValueError("Channel names must not be empty.")
+            if len(set(channels)) != len(channels):
+                raise wp.InvalidValueError("Channel names must be unique.")
             num_channels = len(channels)
             names = deepcopy(channels)
 
@@ -78,21 +80,25 @@ class ChannelDof(DofBase):
 
         Returns
         -------
-        int | None
+        int
             If the channel exists, returns the index of the referenced channel.
-            If the channel does not exist, returns None.
+
+        Raises
+        ------
+        wavepacket.InvalidValueError
+            Raised if a channel with this name does not exist or if the index is out of range.
         """
         if isinstance(channel, int):
             if -self.size <= channel < self.size:
                 return channel
             else:
-                return None
+                raise wp.InvalidValueError(f"Channel index 'channel' is out of range.")
         else:
             assert isinstance(channel, str)
             if channel in self.names:
                 return self.names.index(channel)
             else:
-                return None
+                raise wp.InvalidValueError(f"A channel with name '{channel}' does not exist.")
 
     @override
     def from_fbr(

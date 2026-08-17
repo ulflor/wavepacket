@@ -65,9 +65,6 @@ def product_wave_function(
                 )
 
             index = dof.get_index(generator)
-            if index is None:
-                raise wp.InvalidValueError(f"Channel '{generator}' does not exist.")
-
             array = np.zeros(dof.dvr_points.shape, dtype=complex)
             array[index] = 1.0
         elif isinstance(generator, int):
