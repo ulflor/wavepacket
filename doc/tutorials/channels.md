@@ -155,7 +155,7 @@ The kinetic energy operator is the same for all channels, so it needs no additio
 Note how the channels can be interchangeably denoted through the index or the name.
 
 ```{code-cell}
-kinetic = wp.operator.CartesianKineticEnergy(grid, 0, mass=0.97989 / wpu.amu, cutoff=0.7)
+kinetic = wp.operator.CartesianKineticEnergy(grid, 0, mass=0.97989 * wpu.amu, cutoff=0.7)
 pot_X = wp.operator.Potential1D(grid, 0, potential_X, cutoff=-1.2) * wp.operator.Channel(grid, "X")
 pot_A = wp.operator.Potential1D(grid, 0, potential_A, cutoff=-1.2) * wp.operator.Channel(grid, 1)
 hamiltonian = kinetic + pot_X + pot_A
