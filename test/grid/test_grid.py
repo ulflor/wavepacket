@@ -27,24 +27,14 @@ def test_set_and_access_dofs():
     assert grid.dofs == [dof1, dof2]
 
 
-def test_size_of_grid():
-    grid = wp.grid.Grid(
-        [
-            wp.grid.PlaneWaveDof(1, 2, 3),
-            wp.grid.PlaneWaveDof(1, 2, 10),
-            wp.grid.PlaneWaveDof(1, 2, 4),
-        ]
-    )
-
-    assert grid.size == 3 * 10 * 4
-
-
-def test_shapes():
+def test_shapes_and_sizes():
     shape = (7, 5, 3)
     grid = build_grid(shape)
 
     assert grid.shape == shape
     assert grid.operator_shape == (7, 5, 3, 7, 5, 3)
+    assert grid.size == 7 * 5 * 3
+    assert grid.ndim == 3
 
 
 def test_indices():

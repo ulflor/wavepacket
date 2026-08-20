@@ -65,7 +65,7 @@ def dvr_density(state: wp.grid.State, dof_index: int | None = None) -> wpt.RealD
         else:
             raise wp.BadStateError("Input is not a valid state.")
         weighted_density = weighted_density.swapaxes(0, dof_index)
-        indices_to_sum = tuple(range(1, len(state.grid.dofs)))
+        indices_to_sum = tuple(range(1, state.grid.ndim))
         reduced_density = weighted_density.sum(indices_to_sum)
 
         # Here, we exploit that the weights are real values,
@@ -88,7 +88,7 @@ def dvr_density(state: wp.grid.State, dof_index: int | None = None) -> wpt.RealD
         # both, the bra and the ket indices are converted
         for index, dof in enumerate(grid.dofs):
             data = dof.to_dvr(data, index)
-            data = dof.to_dvr(data, index + len(grid.dofs))
+            data = dof.to_dvr(data, index + grid.ndim)
 
         return _take_diagonal(data, grid)
     else:
@@ -143,7 +143,7 @@ def fbr_density(state: wp.grid.State, dof_index: int | None = None) -> wpt.RealD
         # both, the bra and the ket indices are converted
         for index, dof in enumerate(grid.dofs):
             data = dof.to_fbr(data, index)
-            data = dof.to_fbr(data, index + len(grid.dofs), is_ket=False)
+            data = dof.to_fbr(data, index + grid.ndim, is_ket=False)
 
         density = _take_diagonal(data, grid)
     else:
@@ -156,7 +156,7 @@ def fbr_density(state: wp.grid.State, dof_index: int | None = None) -> wpt.RealD
 
         # The FBR does not contain weights, so we can sum directly
         density = density.swapaxes(0, dof_index)
-        indices_to_sum = tuple(range(1, len(state.grid.dofs)))
+        indices_to_sum = tuple(range(1, state.grid.ndim))
         return density.sum(indices_to_sum)
 
 

@@ -37,6 +37,8 @@ class Grid:
         For example, a grid with dimensions (5, 4) has operator dimensions (5, 4, 5, 4).
     size: int, readonly
         The total number of grid points
+    ndim: int, readonly
+        The number of dimensions / degrees of freedom of the grid.
     dofs: list[wavepacket.grid.DofBase], readonly
         A list of degrees of freedom that describe the degrees of freedom of the grid
 
@@ -57,6 +59,7 @@ class Grid:
         self.operator_shape: Final[tuple[int, ...]] = self.shape + self.shape
         self.size: Final[int] = math.prod(dof.size for dof in dofs)
         self.dofs: Final[Sequence[wp.grid.DofBase]] = list(dofs)
+        self.ndim: Final[int] = len(dofs)
 
     def normalize_index(self, index: int) -> int:
         """
@@ -70,11 +73,11 @@ class Grid:
         and the last N denoting ket indices. Then, the arithmetic becomes cumbersome unless we
         first map the input index onto the range [0,N].
         """
-        if index < -len(self.dofs) or index >= len(self.dofs):
+        if index < -self.ndim or index >= self.ndim:
             raise IndexError("Index of degree of freedom out of bounds.")
 
         if index < 0:
-            return index + len(self.dofs)
+            return index + self.ndim
         else:
             return index
 
@@ -98,7 +101,7 @@ class Grid:
         broadcasting rules. This reshaping is done by this function.
         """
         # Note: rather slow, only use for precomputation
-        new_shape = len(self.dofs) * [1]
+        new_shape = self.ndim * [1]
         new_shape[index] = self.dofs[index].size
         return np.reshape(data, new_shape)
 
@@ -116,11 +119,11 @@ class Grid:
         (1, 4, 1, 1, 1, 1) or (1, 1, 1, 1, 4, 1). The is_ket parameter switches between the
         two variants, we call the first three indices "ket" and the latter three "bra" indices.
         """
-        new_shape = (2 * len(self.dofs)) * [1]
+        new_shape = (2 * self.ndim) * [1]
 
         shape_index = self.normalize_index(dof_index)
         if not is_ket:
-            shape_index += len(self.dofs)
+            shape_index += self.ndim
 
         new_shape[shape_index] = self.dofs[dof_index].size
         return np.reshape(data, new_shape)

@@ -48,10 +48,10 @@ def product_wave_function(
     else:
         generator_list = [generators]
 
-    if len(generator_list) != len(grid.dofs):
+    if len(generator_list) != grid.ndim:
         raise wp.InvalidValueError(
             "To build a wave function, you need as many generators as degrees of freedoms."
-            f"Given {len(generator_list)} generators for {len(grid.dofs)} DOFs."
+            f"Given {len(generator_list)} generators for {grid.ndim} DOFs."
         )
 
     result_data = np.ones(grid.shape, dtype=complex)

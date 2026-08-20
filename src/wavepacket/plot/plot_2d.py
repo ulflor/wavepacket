@@ -39,12 +39,12 @@ class BaseContourPlot2D(ABC):
         # member function, though.
         channel_dof = state.grid.get_single_channel_dof()
         if channel_dof is None:
-            assert len(state.grid.dofs) == 2
+            assert state.grid.ndim == 2
             self._transform = None
             self._plot_grid = state.grid
             self._num_channels = 1
         else:
-            assert len(state.grid.dofs) == 3
+            assert state.grid.ndim == 3
             self._transform = wp.grid.ChannelProjectionTransformation(state.grid)
             self._plot_grid = self._transform.target_grid
             self._num_channels = channel_dof.size

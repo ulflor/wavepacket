@@ -40,7 +40,7 @@ class Channel(OperatorBase):
             raise wp.BadGridError("Grid has no channel degree of freedom.")
 
         self._ket_index = grid.dofs.index(channel_dof)
-        self._bra_index = len(grid.dofs) + self._ket_index
+        self._bra_index = grid.ndim + self._ket_index
         self._channel = channel_dof.get_index(channel)
 
         super().__init__(grid, False)
@@ -112,7 +112,7 @@ class Coupling(OperatorBase):
         data[self._to_index, self._from_index] = 1.0
 
         self._ket_index = grid.dofs.index(channel_dof)
-        self._bra_index = self._ket_index + len(grid.dofs)
+        self._bra_index = grid.ndim + self._ket_index
         self._matrix = data
 
         super().__init__(grid, False)

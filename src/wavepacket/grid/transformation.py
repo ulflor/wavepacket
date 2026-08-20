@@ -80,7 +80,7 @@ class PartialTraceTransformation(TransformationBase):
     """
 
     def __init__(self, source_grid: Grid, dof_index: int):
-        if len(source_grid.dofs) == 1:
+        if source_grid.ndim == 1:
             raise wp.BadGridError("Partial trace over one degree of freedom is not possible.")
 
         dof_index = source_grid.normalize_index(dof_index)
@@ -114,7 +114,7 @@ class PartialTraceTransformation(TransformationBase):
                 "Input state must be defined on the transformation's source grid."
             )
 
-        grid_rank = len(self.source_grid.dofs)
+        grid_rank = self.source_grid.ndim
 
         if state.is_wave_function():
             psi = np.swapaxes(state.data, 0, self._dof_index)
@@ -167,7 +167,7 @@ class ChannelProjectionTransformation(TransformationBase):
         channel_dof = grid.get_single_channel_dof()
         if channel_dof is None:
             raise wp.BadGridError("Transformation requires a grid with a single channel dof.")
-        if len(grid.dofs) == 1:
+        if grid.ndim == 1:
             raise wp.BadGridError("Transformation requires more than one degree of freedom.")
 
         dof_index = grid.dofs.index(channel_dof)

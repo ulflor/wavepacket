@@ -35,7 +35,7 @@ def test_grids(subspace_4d):
     transform = wp.grid.SubspaceTransformation(subspace_4d)
 
     assert transform.source_grid is subspace_4d[0].grid
-    assert len(transform.target_grid.dofs) == 1
+    assert transform.target_grid.ndim == 1
     assert transform.target_grid.size == len(subspace_4d)
 
 

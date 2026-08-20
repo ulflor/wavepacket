@@ -54,7 +54,7 @@ class PlaneWaveFbrOperator(OperatorBase):
 
         self._wf_index = dof_index
         self._ket_index = grid.normalize_index(dof_index)
-        self._bra_index = self._ket_index + len(grid.dofs)
+        self._bra_index = grid.ndim + self._ket_index
 
         # shifting the data here allows us to skip the fftshift() on the input data in apply*()
         data = generator(grid.dofs[dof_index].fbr_points).copy()
@@ -174,7 +174,7 @@ class FbrOperator1D(OperatorBase):
         matrix = dof.from_fbr(matrix, 1, False)
 
         self._ket_index = grid.normalize_index(dof_index)
-        self._bra_index = len(grid.dofs) + self._ket_index
+        self._bra_index = grid.ndim + self._ket_index
         self._matrix = matrix
 
         super().__init__(grid, False)

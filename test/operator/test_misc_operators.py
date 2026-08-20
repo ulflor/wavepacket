@@ -9,7 +9,7 @@ from wavepacket.testing import assert_close
 
 
 def orthogonal_states(grid: wp.grid.Grid) -> Tuple[wp.grid.State, wp.grid.State]:
-    assert len(grid.dofs) == 2
+    assert grid.ndim == 2
     lower_half = np.ones(grid.shape)
     lower_half[grid.dofs[0].size // 2 :, :] = 0.0
 
