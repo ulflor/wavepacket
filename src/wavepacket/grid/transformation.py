@@ -6,6 +6,7 @@ from typing import Any, Final, override
 import numpy as np
 
 import wavepacket as wp
+import wavepacket.typing as wpt
 
 from .grid import Grid
 from .state import State
@@ -60,8 +61,8 @@ class PartialTraceTransformation(TransformationBase):
     ----------
     source_grid: Grid
         The grid from which we transform.
-    dof_index: int
-        The index of the degree of freedom that is preserved.
+    dof: wpt.IndexOrName
+        The index / name of the degree of freedom that is preserved.
         Can be negative in which case it is counted from the end as usual with Python indices.
 
     Attributes
@@ -75,18 +76,18 @@ class PartialTraceTransformation(TransformationBase):
     ------
     wavepacket.BadGridError
         Raised if the source grid is one-dimensional. Tracing out degrees of freedom makes no sense in that case.
-    IndexError
-        Raised if the index of the preserved degree of freedom is invalid.
+    wavepacket.InvalidValueError
+        Raised if the index/name of the preserved degree of freedom is invalid.
     """
 
-    def __init__(self, source_grid: Grid, dof_index: int):
+    def __init__(self, source_grid: Grid, dof: wpt.IndexOrName):
         if source_grid.ndim == 1:
             raise wp.BadGridError("Partial trace over one degree of freedom is not possible.")
 
-        dof_index = source_grid.normalize_index(dof_index)
-        target_grid = Grid(source_grid.dofs[dof_index])
+        dof_index = source_grid.get_index(dof)
+        target_grid = Grid(source_grid.dofs[dof_index], source_grid.dof_names[dof_index])
 
-        self._dof_index = dof_index
+        self._dof_index = source_grid.normalize_index(dof_index)
         super().__init__(source_grid, target_grid)
 
     @override
@@ -172,14 +173,16 @@ class ChannelProjectionTransformation(TransformationBase):
 
         dof_index = grid.dofs.index(channel_dof)
         before = list(grid.dofs[:dof_index])
+        before_names = list(grid.dof_names[:dof_index])
         after = list(grid.dofs[dof_index + 1 :])
+        after_names = list(grid.dof_names[dof_index + 1 :])
 
         points_before = math.prod([dof.size for dof in before])  # math.prod([]) == 1 !
         points = channel_dof.size
         points_after = math.prod([dof.size for dof in after])
         self._fixed_shape = (points_before, points, points_after)
 
-        super().__init__(grid, wp.grid.Grid(before + after))
+        super().__init__(grid, wp.grid.Grid(before + after, before_names + after_names))
 
     @override
     def transform(self, state: State, **kwargs: Any) -> State:

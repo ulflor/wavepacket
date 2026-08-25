@@ -225,7 +225,7 @@ class SimplePlot1D(BasePlot1D):
     def plot(self, t: float, state: wp.grid.State) -> Axes:
         super()._plot(self._axes, t, state)
 
-        self._axes.set_xlabel("x [a.u.]")
+        self._axes.set_xlabel(f"x_{self._plot_grid.dof_names[0]}")
         self._axes.set_title(f"t = {t:.4g} a.u.")
 
         return self._axes
@@ -278,6 +278,8 @@ class StackedPlot1D(BasePlot1D):
         potential: OperatorBase | None = None,
         hamiltonian: OperatorBase | None = None,
     ) -> None:
+        super().__init__(state, potential, hamiltonian)
+
         # First, create, layout and expose the figure
         self.figure, self._axes = plt.subplots(num_plots, 1, sharex=True)
         self._index = 0
@@ -287,9 +289,7 @@ class StackedPlot1D(BasePlot1D):
 
         for ax in self._axes.flat:
             ax.set_yticks([])
-            ax.set_xlabel("x [a.u.]")
-
-        super().__init__(state, potential, hamiltonian)
+            ax.set_xlabel(f"x_{self._plot_grid.dof_names[0]}")
 
     @override
     def plot(self, t: float, state: wp.grid.State) -> Axes:

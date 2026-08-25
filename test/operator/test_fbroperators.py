@@ -27,11 +27,14 @@ def op(grid) -> wp.operator.FbrOperator1D:
 
 
 def test_reject_bad_indices(grid):
-    with pytest.raises(IndexError):
+    with pytest.raises(wp.InvalidValueError):
         wp.operator.FbrOperator1D(grid, 3, dummy_func)
 
-    with pytest.raises(IndexError):
+    with pytest.raises(wp.InvalidValueError):
         wp.operator.FbrOperator1D(grid, -4, dummy_func)
+
+    with pytest.raises(wp.InvalidValueError):
+        wp.operator.FbrOperator1D(grid, "invalid", dummy_func)
 
 
 def test_apply_to_wave_function(op, grid):
@@ -63,7 +66,7 @@ def test_apply_to_density_operator(op, grid):
 
 
 def test_negative_indices(grid):
-    op_positive = wp.operator.FbrOperator1D(grid, 1, dummy_func)
+    op_positive = wp.operator.FbrOperator1D(grid, grid.dof_names[1], dummy_func)
     op_negative = wp.operator.FbrOperator1D(grid, -2, dummy_func)
     psi = wp.testing.random_state(grid, 47)
     rho = wp.builder.pure_density(psi)

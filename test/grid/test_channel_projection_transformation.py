@@ -10,7 +10,7 @@ def grid_with_channel_dof() -> wp.grid.Grid:
     channel_dof = wp.grid.ChannelDof(2)
     dof2 = wp.grid.SphericalHarmonicsDof(4, 1)
 
-    return wp.grid.Grid([dof1, channel_dof, dof2])
+    return wp.grid.Grid([dof1, channel_dof, dof2], ["dof1", "dof2", "dof3"])
 
 
 def test_require_grid_with_channel_dof_and_more(grid_1d):
@@ -22,12 +22,13 @@ def test_require_grid_with_channel_dof_and_more(grid_1d):
         wp.grid.ChannelProjectionTransformation(grid)
 
 
-def test_target_grid_has_no_channel_dof():
+def test_target_grid_correctly_set_up():
     grid = grid_with_channel_dof()
     trafo = wp.grid.ChannelProjectionTransformation(grid)
 
     assert isinstance(grid.dofs[1], wp.grid.ChannelDof)
     assert trafo.target_grid.dofs == [grid.dofs[0], grid.dofs[2]]
+    assert trafo.target_grid.dof_names == [grid.dof_names[0], grid.dof_names[2]]
 
 
 def test_transformation_requires_valid_input(grid_1d):

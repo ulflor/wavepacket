@@ -19,12 +19,16 @@ def test_throw_on_invalid_index():
     grid = _build_grid()
 
     wp.grid.PartialTraceTransformation(grid, 2)
-    with pytest.raises(IndexError):
+    with pytest.raises(wp.InvalidValueError):
         wp.grid.PartialTraceTransformation(grid, 3)
 
     wp.grid.PartialTraceTransformation(grid, -3)
-    with pytest.raises(IndexError):
+    with pytest.raises(wp.InvalidValueError):
         wp.grid.PartialTraceTransformation(grid, -4)
+
+    wp.grid.PartialTraceTransformation(grid, "1")
+    with pytest.raises(wp.InvalidValueError):
+        wp.grid.PartialTraceTransformation(grid, "3")
 
 
 def test_throw_on_invalid_grid(grid_1d):
@@ -37,9 +41,11 @@ def test_target_grid_has_only_corresponding_dof():
 
     transformation = wp.grid.PartialTraceTransformation(grid, 1)
     assert transformation.target_grid.dofs == [grid.dofs[1]]
+    assert transformation.target_grid.dof_names == [grid.dof_names[1]]
 
     transformation = wp.grid.PartialTraceTransformation(grid, -1)
     assert transformation.target_grid.dofs == [grid.dofs[2]]
+    assert transformation.target_grid.dof_names == [grid.dof_names[2]]
 
 
 def test_reject_invalid_input():

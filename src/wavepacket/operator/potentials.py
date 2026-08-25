@@ -19,8 +19,8 @@ class Potential1D(OperatorBase):
     ----------
     grid : wp.grid.Grid
         The grid on which the operator is defined
-    dof_index : int
-        the index of the degree of freedom along which the potential is defined.
+    dof : wpt.IndexOrName
+        the index or name of the degree of freedom along which the potential is defined.
     generator : wpt.Generator
         A callable that generates a potential energy value for each grid point of the respective DOF.
         Potential energy values may be complex, then the imaginary part describes absorption or emission
@@ -44,10 +44,11 @@ class Potential1D(OperatorBase):
     def __init__(
         self,
         grid: wp.grid.Grid,
-        dof_index: int,
+        dof: wpt.IndexOrName,
         generator: wpt.Generator,
         cutoff: float | None = None,
     ) -> None:
+        dof_index = grid.get_index(dof)
         data = generator(grid.dofs[dof_index].dvr_points).copy()
 
         if cutoff is not None:

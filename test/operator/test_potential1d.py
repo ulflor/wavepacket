@@ -16,8 +16,11 @@ def op(grid_2d) -> wp.operator.Potential1D:
 
 
 def test_reject_invalid_degree_of_freedom(grid_2d):
-    with pytest.raises(IndexError):
+    with pytest.raises(wp.InvalidValueError):
         wp.operator.Potential1D(grid_2d, 2, dummy_func)
+
+    with pytest.raises(wp.InvalidValueError):
+        wp.operator.Potential1D(grid_2d, "non existing", dummy_func)
 
 
 def test_apply_to_data(grid_2d, op):
@@ -59,7 +62,7 @@ def test_negative_indices(grid_2d):
 
 def test_cutoff(grid_1d):
     cutoff = 5
-    raw_potential = wp.operator.Potential1D(grid_1d, 0, dummy_func)
+    raw_potential = wp.operator.Potential1D(grid_1d, grid_1d.dof_names[0], dummy_func)
     cut_potential = wp.operator.Potential1D(grid_1d, 0, dummy_func, cutoff)
     psi = wp.builder.unit_wave_function(grid_1d)
 

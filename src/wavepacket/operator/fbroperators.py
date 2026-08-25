@@ -26,8 +26,8 @@ class PlaneWaveFbrOperator(OperatorBase):
     ----------
     grid : wp.grid.Grid
         The grid on which the operator is defined.
-    dof_index : int
-        The degree of freedom along which the operator is defined.
+    dof : wpt.IndexOrName
+        The index or name of the degree of freedom along which the operator is defined.
     generator : wpt.Generator
         A callable that gives the operator value for each FBR point.
     cutoff: float | None, default None
@@ -37,16 +37,18 @@ class PlaneWaveFbrOperator(OperatorBase):
     Raises
     ------
     wp.InvalidValueError
-        If the supplied degree of freedom is not a plane wave expansion.
+        If the supplied degree of freedom is invalid or not a plane wave expansion.
     """
 
     def __init__(
         self,
         grid: wp.grid.Grid,
-        dof_index: int,
+        dof: wpt.IndexOrName,
         generator: wpt.Generator,
         cutoff: float | None = None,
     ) -> None:
+        dof_index = grid.get_index(dof)
+
         if not isinstance(grid.dofs[dof_index], wp.grid.PlaneWaveDof):
             raise wp.BadGridError(
                 f"PlaneWaveFbrOperator requires a PlaneWaveDof, but got {grid.dofs[dof_index].__class__}"
@@ -147,8 +149,8 @@ class FbrOperator1D(OperatorBase):
     ----------
     grid : wp.grid.Grid
         The grid on which the operator is defined.
-    dof_index : int
-        Degree of freedom along which the operator acts
+    dof : wpt.IndexOrName
+        Index / Name of degree of freedom along which the operator acts
     generator : wpt.Generator
         A callable that gives the operator value for each FBR point.
     cutoff: float | None, default None
@@ -159,19 +161,20 @@ class FbrOperator1D(OperatorBase):
     def __init__(
         self,
         grid: wp.grid.Grid,
-        dof_index: int,
+        dof: wpt.IndexOrName,
         generator: wpt.Generator,
         cutoff: float | None = None,
     ) -> None:
-        dof = grid.dofs[dof_index]
-        fbr_values = generator(dof.fbr_points).copy()
+        dof_index = grid.get_index(dof)
+        dof_obj = grid.dofs[dof_index]
 
+        fbr_values = generator(dof_obj.fbr_points).copy()
         if cutoff is not None:
             fbr_values = clip_real(fbr_values, -cutoff, cutoff)
 
         matrix = np.diagflat(fbr_values)
-        matrix = dof.from_fbr(matrix, 0)
-        matrix = dof.from_fbr(matrix, 1, False)
+        matrix = dof_obj.from_fbr(matrix, 0)
+        matrix = dof_obj.from_fbr(matrix, 1, False)
 
         self._ket_index = grid.normalize_index(dof_index)
         self._bra_index = grid.ndim + self._ket_index

@@ -25,8 +25,11 @@ def op(grid) -> wp.operator.PlaneWaveFbrOperator:
 
 
 def test_reject_bad_constructor_args(grid):
-    with pytest.raises(IndexError):
+    with pytest.raises(wp.InvalidValueError):
         wp.operator.PlaneWaveFbrOperator(grid, 2, dummy_func)
+
+    with pytest.raises(wp.InvalidValueError):
+        wp.operator.PlaneWaveFbrOperator(grid, "invalid", dummy_func, 2)
 
     with pytest.raises(wp.BadGridError):
         wp.operator.PlaneWaveFbrOperator(grid, 1, dummy_func)
@@ -55,7 +58,7 @@ def test_apply_to_density(grid, op):
 
 
 def test_negative_indices(grid):
-    op_positive = wp.operator.PlaneWaveFbrOperator(grid, 0, dummy_func)
+    op_positive = wp.operator.PlaneWaveFbrOperator(grid, grid.dof_names[0], dummy_func)
     op_negative = wp.operator.PlaneWaveFbrOperator(grid, -2, dummy_func)
     psi = wp.testing.random_state(grid, 42)
     rho = wp.builder.pure_density(psi)

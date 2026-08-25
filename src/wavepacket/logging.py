@@ -14,8 +14,8 @@ def _print_expectation_values(
     state: wp.grid.State, precision: int, truncate: float | None
 ) -> None:
     normalized_state = wp.normalize(state)
-    for index, dof in enumerate(state.grid.dofs):
-        x = wp.operator.Potential1D(state.grid, index, lambda dvr_grid: dvr_grid)
+    for name, dof in zip(state.grid.dof_names, state.grid.dofs):
+        x = wp.operator.Potential1D(state.grid, name, lambda dvr_grid: dvr_grid)
 
         x_val = wp.expectation_value(x, normalized_state).real
         x2_val = wp.expectation_value(x * x, normalized_state).real
@@ -23,9 +23,9 @@ def _print_expectation_values(
         x_avg = _truncate(x_val, truncate)
         dx = _truncate(math.sqrt(x2_val - x_avg**2), truncate)
 
-        # In exotic cases, the error dx**2 can become negative, so we trade
+        # In exotic cases, the error dx**2 can become minimally negative, so we trade
         # correctness for robustness here by taking its absolute value.
-        print(f"    <x_{index}> = {x_avg:.{precision}}  +/- {dx:.{precision}}")
+        print(f"    <x_{name}> = {x_avg:.{precision}}  +/- {dx:.{precision}}")
 
 
 def log(

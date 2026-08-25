@@ -18,7 +18,7 @@ def _normalize(u: wpt.ComplexData) -> wpt.ComplexData:
     return u / math.sqrt(np.abs(u**2).sum())
 
 
-def dvr_density(state: wp.grid.State, dof_index: int | None = None) -> wpt.RealData:
+def dvr_density(state: wp.grid.State, dof: wpt.IndexOrName | None = None) -> wpt.RealData:
     """
     Returns the density of the input state at the DVR grid points.
 
@@ -36,10 +36,10 @@ def dvr_density(state: wp.grid.State, dof_index: int | None = None) -> wpt.RealD
     state: wp.grid.State
         The state (wave function or density operator) whose density should be computed.
 
-    dof_index: int|None, default=None
+    dof: wpt.IndexOrName | None, default=None
         If set, return the density integrated over all degrees of freedom
-        except the one with the given index. This gives you the marginal probability distribution
-        over this index.
+        except the one with the given index/name. This gives you the marginal probability distribution
+        over this degree of freedom.
 
     Returns
     -------
@@ -54,7 +54,8 @@ def dvr_density(state: wp.grid.State, dof_index: int | None = None) -> wpt.RealD
     IndexError
         If the dof_index is out of range.
     """
-    if dof_index is not None:
+    if dof is not None:
+        dof_index = state.grid.get_index(dof)
         dof_index = state.grid.normalize_index(dof_index)
 
         # We need to sum in weighted DVR first, then transform to DVR
@@ -95,7 +96,7 @@ def dvr_density(state: wp.grid.State, dof_index: int | None = None) -> wpt.RealD
         raise wp.BadStateError("Input is not a valid state.")
 
 
-def fbr_density(state: wp.grid.State, dof_index: int | None = None) -> wpt.RealData:
+def fbr_density(state: wp.grid.State, dof: wpt.IndexOrName | None = None) -> wpt.RealData:
     """
     Returns the FBR density of the input state at the FBR grid points.
 
@@ -113,9 +114,9 @@ def fbr_density(state: wp.grid.State, dof_index: int | None = None) -> wpt.RealD
     state: wp.grid.State
         The state (wave function or density operator) whose FBR density should be computed.
 
-    dof_index: int | None, default=None
+    dof: wpt.IndexOrNone | None, default=None
         If set, return the reduced density, i.e., the density integrated over all degrees of freedom
-        except the one with the given index.
+        except the one with the given index / name.
 
     Returns
     -------
@@ -132,8 +133,8 @@ def fbr_density(state: wp.grid.State, dof_index: int | None = None) -> wpt.RealD
     """
     if state.is_wave_function():
         data = state.data
-        for index, dof in enumerate(state.grid.dofs):
-            data = dof.to_fbr(data, index)
+        for index, dof_obj in enumerate(state.grid.dofs):
+            data = dof_obj.to_fbr(data, index)
 
         density = np.abs(data * data)
     elif state.is_density_operator():
@@ -141,17 +142,18 @@ def fbr_density(state: wp.grid.State, dof_index: int | None = None) -> wpt.RealD
         grid = state.grid
 
         # both, the bra and the ket indices are converted
-        for index, dof in enumerate(grid.dofs):
-            data = dof.to_fbr(data, index)
-            data = dof.to_fbr(data, index + grid.ndim, is_ket=False)
+        for index, dof_obj in enumerate(grid.dofs):
+            data = dof_obj.to_fbr(data, index)
+            data = dof_obj.to_fbr(data, index + grid.ndim, is_ket=False)
 
         density = _take_diagonal(data, grid)
     else:
         raise wp.BadStateError("Input is not a valid state.")
 
-    if dof_index is None:
+    if dof is None:
         return density
     else:
+        dof_index = state.grid.get_index(dof)
         dof_index = state.grid.normalize_index(dof_index)
 
         # The FBR does not contain weights, so we can sum directly

@@ -220,13 +220,13 @@ class ContourPlot2D(BaseContourPlot2D):
         self._axes.yaxis.set_tick_params(labelleft=False, tickdir="in", right=True)
 
         self._ax_bottom.set_yticks([])
-        self._ax_bottom.set_xlabel("x (a.u.)")
+        self._ax_bottom.set_xlabel(f"x_{self._plot_grid.dof_names[0]}")
 
         self._ax_right.set_xticks([])
         self._ax_right.yaxis.set_tick_params(
             labelleft=False, labelright=True, left=False, right=True
         )
-        self._ax_right.set_ylabel("y (a.u.)")
+        self._ax_right.set_ylabel(self._plot_grid.dof_names[1])
         self._ax_right.yaxis.set_label_position("right")
 
         return self._axes
@@ -297,12 +297,12 @@ class StackedContourPlot2D(BaseContourPlot2D):
         if self._cur_col() != 0:
             axes.set_yticks([])
         else:
-            axes.set_ylabel("y (a.u.)")
+            axes.set_ylabel(self._plot_grid.dof_names[1])
 
         if self._cur_row() != self._shape[0] - 1:
             axes.set_xticks([])
         else:
-            axes.set_xlabel("x (a.u.)")
+            axes.set_xlabel(f"x_{self._plot_grid.dof_names[0]}")
 
         self._index += 1
         if self._index >= len(self._axes):

@@ -36,10 +36,10 @@ def test_reject_invalid_states(grid_2d):
     with pytest.raises(wp.BadStateError):
         wp.population(invalid_state, good_state)
 
-    with pytest.raises(IndexError):
+    with pytest.raises(wp.InvalidValueError):
         wp.dvr_density(good_state, -3)
 
-    with pytest.raises(IndexError):
+    with pytest.raises(wp.InvalidValueError):
         wp.fbr_density(good_state, 2)
 
 
@@ -116,17 +116,25 @@ def test_reduced_dvr_and_fbr_densities_from_density_operators(grid_2d):
     rho = wp.builder.pure_density(psi1) + wp.builder.pure_density(psi2)
 
     assert_allclose(
-        wp.dvr_density(rho, 0), wp.dvr_density(psi1, 0) + wp.dvr_density(psi2, 0), 1e-12
+        wp.dvr_density(rho, grid_2d.dof_names[0]),
+        wp.dvr_density(psi1, 0) + wp.dvr_density(psi2, 0),
+        1e-12,
     )
     assert_allclose(
-        wp.dvr_density(rho, 1), wp.dvr_density(psi1, 1) + wp.dvr_density(psi2, 1), 1e-12
+        wp.dvr_density(rho, grid_2d.dof_names[1]),
+        wp.dvr_density(psi1, 1) + wp.dvr_density(psi2, 1),
+        1e-12,
     )
 
     assert_allclose(
-        wp.fbr_density(rho, 0), wp.fbr_density(psi1, 0) + wp.fbr_density(psi2, 0), 1e-12
+        wp.fbr_density(rho, grid_2d.dof_names[0]),
+        wp.fbr_density(psi1, 0) + wp.fbr_density(psi2, 0),
+        1e-12,
     )
     assert_allclose(
-        wp.fbr_density(rho, 1), wp.fbr_density(psi1, 1) + wp.fbr_density(psi2, 1), 1e-12
+        wp.fbr_density(rho, grid_2d.dof_names[1]),
+        wp.fbr_density(psi1, 1) + wp.fbr_density(psi2, 1),
+        1e-12,
     )
 
 
