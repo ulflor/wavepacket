@@ -21,9 +21,12 @@ class Grid:
 
     Parameters
     ----------
-    dofs : Sequence[wp.grid.DofBase] | DofBase
+    dofs : Iterable[wp.grid.DofBase] | DofBase
         The degree(s) of freedom that make up the grid. The order determines the order of
         the coefficient array indices.
+    names: Iterable[str] | str | None, optional
+        If supplied, a list of names for the individual degrees of freedom. These names can
+        be used instead of indices to reference the degrees of freedom later.
 
     Attributes
     ----------
@@ -39,8 +42,11 @@ class Grid:
         The total number of grid points
     ndim: int, readonly
         The number of dimensions / degrees of freedom of the grid.
-    dofs: list[wavepacket.grid.DofBase], readonly
+    dofs: Sequence[wavepacket.grid.DofBase], readonly
         A list of degrees of freedom that describe the degrees of freedom of the grid
+    dof_names: Sequence[str], readonly
+        A list of names for the degrees of freedom. If not supplied in __init__(), these
+        are just generic names "0", "1", ...
 
     Raises
     ------
@@ -48,9 +54,11 @@ class Grid:
         If no degrees of freedom are supplied.
     """
 
-    def __init__(self, dofs: Iterable[DofBase] | DofBase) -> None:
+    def __init__(
+        self, dofs: Iterable[DofBase] | DofBase, names: Iterable[str] | str | None = None
+    ) -> None:
         if dofs is None:
-            raise wp.InvalidValueError("A grid needs at least one Degree of freedom defined.")
+            raise wp.InvalidValueError("A grid needs at least one degree of freedom defined.")
 
         if isinstance(dofs, DofBase):
             dofs = [dofs]
@@ -60,6 +68,44 @@ class Grid:
         self.size: Final[int] = math.prod(dof.size for dof in dofs)
         self.dofs: Final[Sequence[wp.grid.DofBase]] = list(dofs)
         self.ndim: Final[int] = len(dofs)
+
+        # names need dofs for processing (we want a len() function)
+        if names is None:
+            names = [str(n) for n in range(self.ndim)]
+        if isinstance(names, str):
+            names = [names]
+
+        self.dof_names: Final[Sequence[str]] = list(names)
+
+        if len(self.dof_names) != len(self.dofs):
+            raise wp.InvalidValueError(
+                "Number of names differs from number of degrees of freedom."
+            )
+        if any(not n for n in self.dof_names):
+            raise wp.InvalidValueError("Empty names are not allowed.")
+        if len(set(self.dof_names)) != len(self.dof_names):
+            raise wp.InvalidValueError("Duplicate names are not allowed.")
+
+        # fast, convenient lookup
+        self._index_lookup = {n: n for n in range(-self.ndim, self.ndim)}
+        self._index_lookup.update({name: index for index, name in enumerate(self.dof_names)})
+
+    def get_index(self, index: wpt.IndexOrName) -> int:
+        """
+        Translates a dof index or name into the dof index.
+
+        This piece of machinery allows functions to conveniently refer to a
+        degree of freedom using either its index or its name. (Valid) indices
+        are returned untouched, for names the index is returned.
+
+        Invalid names or indices raise an exception.
+        """
+        try:
+            return self._index_lookup[index]
+        except KeyError:
+            raise wp.InvalidValueError(
+                f"Index '{index}' does not refer to an existing degree of freedom."
+            )
 
     def normalize_index(self, index: int) -> int:
         """

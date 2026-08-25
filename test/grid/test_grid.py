@@ -18,6 +18,20 @@ def test_require_at_least_one_dof():
         wp.grid.Grid(None)
 
 
+def test_if_names_supplied_they_need_to_be_valid():
+    dofs = [wp.grid.PlaneWaveDof(1, 2, n) for n in range(1, 4)]
+
+    wp.grid.Grid(dofs[0], "aname")
+    wp.grid.Grid(dofs, ["1", "2", "3"])
+
+    with pytest.raises(wp.InvalidValueError):
+        wp.grid.Grid(dofs, ["1", "2"])
+    with pytest.raises(wp.InvalidValueError):
+        wp.grid.Grid(dofs, ["1", "2", ""])
+    with pytest.raises(wp.InvalidValueError):
+        wp.grid.Grid(dofs, ["1", "2", "2"])
+
+
 def test_set_and_access_dofs():
     dof1 = wp.grid.PlaneWaveDof(10, 20, 10)
     dof2 = wp.grid.PlaneWaveDof(0, 10, 5)
@@ -37,7 +51,7 @@ def test_shapes_and_sizes():
     assert grid.ndim == 3
 
 
-def test_indices():
+def test_normalized_indices():
     grid = build_grid([1, 2, 3, 1, 2])
 
     assert grid.normalize_index(4) == 4
@@ -48,6 +62,23 @@ def test_indices():
 
     with pytest.raises(IndexError):
         grid.normalize_index(-6)
+
+
+def test_indices_or_names():
+    dof = wp.grid.PlaneWaveDof(1, 2, 3)
+    grid = wp.grid.Grid([dof, dof, dof], ["name1", "name2", "name3"])
+
+    assert grid.get_index(2) == 2
+    assert grid.get_index(-3) == -3
+    with pytest.raises(wp.InvalidValueError):
+        grid.get_index(3)
+    with pytest.raises(wp.InvalidValueError):
+        grid.get_index(-4)
+
+    assert grid.get_index("name2") == 1
+    assert grid.get_index("name3") == 2
+    with pytest.raises(wp.InvalidValueError):
+        grid.get_index("name4")
 
 
 def test_broadcast():
