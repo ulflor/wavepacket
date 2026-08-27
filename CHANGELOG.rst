@@ -9,13 +9,22 @@ Breaking changes:
 
 - Dropped support for Python 3.11
 
+- renamed some function arguments from "dof_index" to "dof"; this affects those
+  that now accept degree of freedom names in addition to indices.
+
 Major changes:
+
 - (#28) Added a SubspaceTransformation to transform into a subspace
-        spanned by a basis. For example a few Hamiltonian eigenstates.
+        spanned by a basis, for example, by a few Hamiltonian eigenstates.
   - added a SubspaceTransformation class
   - added a utility function to transform operators given a Transformation
   - added a TensorOperator into which every other operator can be transformed
+
 - (#68) Added a package with standard unit conversions
+
+- (#71) You can assign names to degrees of freedom in a grid.
+        These are used for output (plotting, logging), and for
+        optional more readable referencing the degree of freedom in lieu of indices.
 
 New documentation / examples:
 
@@ -24,8 +33,11 @@ Minor changes:
 - (#51) Lots of typing improvements and static checker fixes after upgrade to
         Python 3.12
 - (#61) Added mypy settings
+- (#71) Channel operators throw more often on errors (invalid channels)
+- (#71) The grid now has a "ndim" property for the number of dimensions / degrees of freedom
 
 Bug fixes:
+
 - (#61) Fixed some incorrect handling of "t = None"
         fixed changing argument names when overriding a function
 
