@@ -226,7 +226,7 @@ class ContourPlot2D(BaseContourPlot2D):
         self._ax_right.yaxis.set_tick_params(
             labelleft=False, labelright=True, left=False, right=True
         )
-        self._ax_right.set_ylabel(self._plot_grid.dof_names[1])
+        self._ax_right.set_ylabel(f"x_{self._plot_grid.dof_names[1]}")
         self._ax_right.yaxis.set_label_position("right")
 
         return self._axes
@@ -297,7 +297,7 @@ class StackedContourPlot2D(BaseContourPlot2D):
         if self._cur_col() != 0:
             axes.set_yticks([])
         else:
-            axes.set_ylabel(self._plot_grid.dof_names[1])
+            axes.set_ylabel(f"x_{self._plot_grid.dof_names[1]}")
 
         if self._cur_row() != self._shape[0] - 1:
             axes.set_xticks([])
