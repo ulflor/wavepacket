@@ -33,10 +33,10 @@ import wavepacket as wp
 
 # 1. One-dimensional grid with a plane wave expansion DOF == equally-spaced grid
 dof = wp.grid.PlaneWaveDof(-20, 20, 128)
-grid = wp.grid.Grid(dof)
+grid = wp.grid.Grid(dof, "r")
 
 # 2. The Hamiltonian consists of only the kinetic energy p^2/2m.
-hamiltonian = wp.operator.CartesianKineticEnergy(grid, 0, mass=1.0)
+hamiltonian = wp.operator.CartesianKineticEnergy(grid, "r", mass=1.0)
 ```
 
 A few notes about the code so far:
@@ -46,6 +46,10 @@ A few notes about the code so far:
   This pattern avoids unintended, surprising side effects from modifying objects used already elsewhere.
   Note, though, that the Python interpreter does not always enforce this immutability,
   only IDEs or static checkers will complain.
+- When defining a grid, you can assign a name to the individual DOFs.
+  The names are used for output (plots, log output),
+  and can be used to reference the DOF in a more readable way than indices.
+  DOF names are optional though; we could have set up the operator with index 0 instead of "r".
 - For multidimensional grids, just supply a list of DOFs instead of a single DOF,
   e.g., `wp.grid.Grid([dof, dof])`.
   We use this pattern of applying either a single object or a list of objects

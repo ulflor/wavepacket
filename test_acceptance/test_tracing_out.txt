@@ -5,7 +5,7 @@
 >>>
 >>> system_dof = wp.grid.PlaneWaveDof(-10, 10, 96)
 >>> environment_dof = wp.grid.PlaneWaveDof(-5, 5, 96)
->>> full_grid = wp.grid.Grid([system_dof, environment_dof])
+>>> full_grid = wp.grid.Grid([system_dof, environment_dof], ["sys", "env"])
 >>>
 >>> trafo = wp.grid.PartialTraceTransformation(full_grid, 0)
 >>> system_grid = trafo.target_grid
@@ -16,8 +16,8 @@
 
 >>> # One-dimensional system only
 >>>
->>> kinetic_sys = wp.operator.CartesianKineticEnergy(system_grid, 0, mass=1, cutoff=40)
->>> potential_sys = wp.operator.Potential1D(system_grid, 0, lambda x: 0.5 * x**2, cutoff=40)
+>>> kinetic_sys = wp.operator.CartesianKineticEnergy(system_grid, "sys", mass=1, cutoff=40)
+>>> potential_sys = wp.operator.Potential1D(system_grid, "sys", lambda x: 0.5 * x**2, cutoff=40)
 >>> equation_sys = wp.expression.SchroedingerEquation(kinetic_sys + potential_sys)
 >>>
 >>> psi0_sys = math.sqrt(0.5) * (
@@ -32,28 +32,28 @@
 t = 0.0,     trace = 1.0
 ===================================================
 <BLANKLINE>
-    <x_0> = 0.0  +/- 5.012
+    <x_sys> = 0.0  +/- 5.012
 <BLANKLINE>
 t = 0.5236,     trace = 1.0
 ===================================================
 <BLANKLINE>
-    <x_0> = 0.0  +/- 4.398
+    <x_sys> = 0.0  +/- 4.398
 <BLANKLINE>
 t = 1.047,     trace = 1.0
 ===================================================
 <BLANKLINE>
-    <x_0> = -1.343e-07  +/- 2.789
+    <x_sys> = -1.343e-07  +/- 2.789
 <BLANKLINE>
 t = 1.571,     trace = 1.0
 ===================================================
 <BLANKLINE>
-    <x_0> = -1.741e-07  +/- 1.414
+    <x_sys> = -1.741e-07  +/- 1.414
 
 >>> # System-bath, but no coupling and product state
->>> kinetic_full = (wp.operator.CartesianKineticEnergy(full_grid, 0, mass=1, cutoff=40)
-...                + wp.operator.CartesianKineticEnergy(full_grid, 1, mass=1, cutoff=40))
->>> potential_full = (wp.operator.Potential1D(full_grid, 0, lambda x: 0.5 * x**2, cutoff=40)
-...                  + wp.operator.Potential1D(full_grid, 1, lambda x: 0.5 * (2*x)**2, cutoff=40))
+>>> kinetic_full = (wp.operator.CartesianKineticEnergy(full_grid, "sys", mass=1, cutoff=40)
+...                + wp.operator.CartesianKineticEnergy(full_grid, "env", mass=1, cutoff=40))
+>>> potential_full = (wp.operator.Potential1D(full_grid, "sys", lambda x: 0.5 * x**2, cutoff=40)
+...                  + wp.operator.Potential1D(full_grid, "env", lambda x: 0.5 * (2*x)**2, cutoff=40))
 >>> equation_uncoupled = wp.expression.SchroedingerEquation(kinetic_full + potential_full)
 >>>
 >>> psi0_full = math.sqrt(0.5) * (
@@ -69,26 +69,26 @@ t = 1.571,     trace = 1.0
 t = 0.0,     trace = 1.0
 ===================================================
 <BLANKLINE>
-    <x_0> = 0.0  +/- 5.012
+    <x_sys> = 0.0  +/- 5.012
 <BLANKLINE>
 t = 0.5236,     trace = 1.0
 ===================================================
 <BLANKLINE>
-    <x_0> = 0.0  +/- 4.398
+    <x_sys> = 0.0  +/- 4.398
 <BLANKLINE>
 t = 1.047,     trace = 1.0
 ===================================================
 <BLANKLINE>
-    <x_0> = -1.343e-07  +/- 2.789
+    <x_sys> = -1.343e-07  +/- 2.789
 <BLANKLINE>
 t = 1.571,     trace = 1.0
 ===================================================
 <BLANKLINE>
-    <x_0> = -1.741e-07  +/- 1.414
+    <x_sys> = -1.741e-07  +/- 1.414
 
 >>> # System + bath with coupling -> mixed reduced density
->>> coupling = -0.5 * (wp.operator.Potential1D(full_grid, 0, lambda x: x)
-...                  * wp.operator.Potential1D(full_grid, 1, lambda x: x))
+>>> coupling = -0.5 * (wp.operator.Potential1D(full_grid, "sys", lambda x: x)
+...                  * wp.operator.Potential1D(full_grid, "env", lambda x: x))
 >>> equation_coupled = wp.expression.SchroedingerEquation(kinetic_full + potential_full + coupling)
 >>>
 >>> solver = wp.solver.ChebychevSolver(equation_coupled, math.pi/6, (0, 210))
@@ -99,20 +99,20 @@ t = 1.571,     trace = 1.0
 t = 0.0,     trace = 1.0
 ===================================================
 <BLANKLINE>
-    <x_0> = 0.0  +/- 5.012
+    <x_sys> = 0.0  +/- 5.012
 <BLANKLINE>
 t = 0.5236,     trace = 1.0
 ===================================================
 <BLANKLINE>
-    <x_0> = 0.0  +/- 4.402
+    <x_sys> = 0.0  +/- 4.402
 <BLANKLINE>
 t = 1.047,     trace = 1.0
 ===================================================
 <BLANKLINE>
-    <x_0> = -2.357e-08  +/- 2.838
+    <x_sys> = -2.357e-08  +/- 2.838
 <BLANKLINE>
 t = 1.571,     trace = 1.0
 ===================================================
 <BLANKLINE>
-    <x_0> = -1.396e-08  +/- 1.467
+    <x_sys> = -1.396e-08  +/- 1.467
 

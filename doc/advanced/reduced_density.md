@@ -73,9 +73,9 @@ import wavepacket as wp
 
 system_dof = wp.grid.PlaneWaveDof(-10, 10, 96)
 environment_dof = wp.grid.PlaneWaveDof(-5, 5, 96)
-full_grid = wp.grid.Grid([system_dof, environment_dof])
+full_grid = wp.grid.Grid([system_dof, environment_dof], ["sys", "env"])
 
-trafo = wp.grid.PartialTraceTransformation(full_grid, 0)
+trafo = wp.grid.PartialTraceTransformation(full_grid, "sys")
 system_grid = trafo.target_grid
 ```
 
@@ -87,13 +87,13 @@ from a state defined on the system+environment grid.
 For system and environment, we define different harmonic oscillators
 
 ```{code-cell}
-kinetic_sys = wp.operator.CartesianKineticEnergy(system_grid, 0, mass=1, cutoff=40)
-potential_sys = wp.operator.Potential1D(system_grid, 0, lambda x: 0.5 * x**2, cutoff=40)
+kinetic_sys = wp.operator.CartesianKineticEnergy(system_grid, "sys", mass=1, cutoff=40)
+potential_sys = wp.operator.Potential1D(system_grid, "sys", lambda x: 0.5 * x**2, cutoff=40)
 
-kinetic_full = (wp.operator.CartesianKineticEnergy(full_grid, 0, mass=1, cutoff=40)
-               + wp.operator.CartesianKineticEnergy(full_grid, 1, mass=1, cutoff=40))
-potential_full = (wp.operator.Potential1D(full_grid, 0, lambda x: 0.5 * x**2, cutoff=40)
-                 + wp.operator.Potential1D(full_grid, 1, lambda x: 0.5 * (2*x)**2, cutoff=40))
+kinetic_full = (wp.operator.CartesianKineticEnergy(full_grid, "sys", mass=1, cutoff=40)
+               + wp.operator.CartesianKineticEnergy(full_grid, "env", mass=1, cutoff=40))
+potential_full = (wp.operator.Potential1D(full_grid, "sys", lambda x: 0.5 * x**2, cutoff=40)
+                 + wp.operator.Potential1D(full_grid, "env", lambda x: 0.5 * (2*x)**2, cutoff=40))
 ```
 
 ## Dynamics with and without environment

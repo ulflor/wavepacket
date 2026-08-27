@@ -93,7 +93,7 @@ They should not be understood as examples of typical physics, but as numerical e
 
 The first approach directly constructs the thermal density operator, $\hat \varrho_\mathrm{th}$.
 The exponentiation is difficult, therefore we use a roundabout way also described in {doc}`/tutorials/relaxation`.
-It can be checked that, the initial-value problem
+It can be checked that the initial-value problem
 
 $$
     \frac{\partial \hat \varrho}{\partial t} = - \hat H \hat \varrho(t)
@@ -134,7 +134,7 @@ Note that the solver is rather inefficient due to the mostly small alpha values,
 but in practice this would not matter.
 You prepare the initial state once, and any time evolution dwarves the cost of the relaxation.
 If you do not need the partition sum explicitly,
-you can avoid its calculation by directly normalizing the resulting density operator.
+you can skip its calculation and directly normalize the relaxed density operator.
 
 ### Conclusions
 
@@ -255,10 +255,10 @@ there are a lot of them, and they compensate their small weights with sheer numb
 The method based on energy eigenstates can have superior efficiency compared to the density operator approach
 for a moderate increase in conceptual complexity.
 For that reason, you will find it widely adopted in the literature.
-However, it has two mighty limitations: you need to converge with few enough states, and you need
-an efficient method to determine these states.
-The principal feasibility of this scheme can usually be checked with back-of-an-envelope calculations
-and a few test propagations,
+However, it has two mighty limitations: you need low enough temperatures
+to reach convergence with few enough states, and you need an efficient method to determine these states.
+The principal feasibility of this scheme for a given system can usually be checked
+with back-of-an-envelope calculations and a few test propagations,
 but you should still always monitor the convergence.
 
 The cost scales with the number basis functions that you need.
@@ -368,10 +368,10 @@ Non-orthogonality is uniformly bad; it means for example that you may count cont
 and this problem only averages out over large samples.
 The coverage can be advantageous; instead of requiring many rigorous basis functions, you just construct a
 coherent superposition of many and get "all results in one go".
-Depending on the relative importance of these two factors, the results may be terrific or terrible.
+Depending on the relative importance of these two factors, the results can range from terrific to terrible.
 Practice and even more diffuse hand waving suggests the former.
 
-The final bit of theory concerns the construction of the random wave functions.
+As a final discussion, how do we construct the random wave functions?
 A convenient basis is the DVR; that is, we just assign a random coefficient to each grid point.
 This saves additional transformations.
 Then, we only need any scheme that is uncorrelated and normalized,
@@ -423,7 +423,7 @@ The implementation demo already shows the good parts of random thermal wave func
 You can get reasonable results very cheaply.
 This is also a finding in the literature. [^random-orig1][^random-orig2] [^random][^random2]
 You get pretty good results already with ensembles of ten or even fewer random wave functions.
-And the results are uniformly ok for very different temperatures.
+And the results are uniformly good for very different temperatures.
 
 There are two caveats, though.
 
